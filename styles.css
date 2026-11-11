@@ -1,0 +1,57 @@
+:root {
+  color-scheme: light;
+  --navy: #07172f;
+  --gold: #d4af57;
+  --muted: #485a70;
+  --line: #d8e1eb;
+  font: 16px/1.6 system-ui, sans-serif;
+  color: var(--navy);
+  background: #f1f5f9;
+}
+* { box-sizing: border-box; }
+body { margin: 0; }
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: .75rem 2rem;
+  padding: 1rem max(1.25rem, calc((100% - 70rem) / 2));
+  background: var(--navy);
+  border-bottom: 3px solid var(--gold);
+}
+header a { color: white; text-decoration: none; }
+header a:hover { text-decoration: underline; }
+.brand { font-weight: 800; letter-spacing: .1em; }
+.brand span { color: var(--gold); }
+nav { display: flex; flex-wrap: wrap; gap: 1rem; }
+main { width: min(calc(100% - 2.5rem), 70rem); margin: 0 auto 4rem; }
+.public { max-width: 56rem; }
+.intro { padding: clamp(2.5rem, 8vw, 6rem) 0 1.5rem; }
+h1, h2 { line-height: 1.1; margin: 0 0 1rem; }
+h1 { font: 500 clamp(2.4rem, 6vw, 4.75rem)/1.05 Georgia, serif; }
+.intro p, .note { color: var(--muted); }
+.panel { background: white; border: 1px solid var(--line); border-radius: .75rem; padding: clamp(1.25rem, 4vw, 2.5rem); }
+label { display: block; font-weight: 650; margin-bottom: .35rem; }
+.controls { display: flex; flex-wrap: wrap; gap: .75rem; }
+input, button { font: inherit; border-radius: .35rem; padding: .65rem .85rem; }
+input { min-width: 0; flex: 1 1 12rem; border: 1px solid #76879b; }
+button { background: var(--navy); color: white; border: 1px solid var(--navy); cursor: pointer; }
+a { color: #174c86; }
+:focus-visible { outline: 3px solid #377dda; outline-offset: 3px; }
+#result:not(:empty) { padding: .8rem 1rem; background: #eef4fa; border-left: 3px solid #174c86; }
+details { border-top: 1px solid var(--line); padding: 1rem 0; }
+summary { cursor: pointer; }
+summary span { margin-inline-start: .6rem; color: var(--muted); }
+dt { font-weight: 650; }
+dd { margin: 0 0 .5rem; }
+textarea {
+  display: block;
+  width: min(100%, 42rem);
+  font: inherit;
+  padding: .65rem .85rem;
+  border: 1px solid #76879b;
+  border-radius: .35rem;
+}
+details form label { margin-top: .75rem; }
+.evidence { white-space: pre-wrap; overflow-wrap: anywhere; }

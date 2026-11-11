@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>WTC GEM LAB | Report Verification</title><link rel="stylesheet" href="styles.css"><script src="verify.js" defer></script></head>
+<body>
+<header><a class="brand" href="index.html">WTC <span>GEM LAB</span></a><nav aria-label="Main"><a href="#verify">Verify a report</a><a href="staff/index.html">Staff sign-in</a></nav></header>
+<main class="public">
+<section class="intro"><h1>Gemstone report verification</h1><p>Enter the report number printed on your WTC GEM LAB document to look up its record.</p></section>
+<section id="verify" class="panel" aria-labelledby="verify-title"><h2 id="verify-title">Verify a report</h2>
+<form action="index.html" method="get"><label for="report">Report number</label><div class="controls"><input id="report" name="report" required maxlength="64"><button>Verify report</button></div></form>
+
+<div id="result" role="status" aria-live="polite"></div></section>
+</main>
+</body></html>
