@@ -44,6 +44,8 @@ import {
 } from '@/lib/certificateStore';
 import StaffAuthGate from '@/components/StaffAuthGate';
 import InvoiceModal from '@/components/InvoiceModal';
+import LabJobTracker from '@/components/LabJobTracker';
+import type { LabJobRecord } from '@/app/api/jobs/route';
 import EditableReportTemplates, {
   ReportTemplateFormat
 } from '@/components/EditableReportTemplates';
@@ -144,6 +146,8 @@ export default function StaffLabEnginePage() {
   // =========================================================================
   const [whatsappModalOpen, setWhatsappModalOpen] = useState<boolean>(false);
   const [invoiceModalOpen, setInvoiceModalOpen] = useState<boolean>(false);
+  const [activeJobNumber, setActiveJobNumber] = useState<string | null>(null);
+  const [jobRefreshTrigger, setJobRefreshTrigger] = useState<number>(0);
   const [wassapiEndpoint, setWassapiEndpoint] = useState<string>(
     'https://api.wassenger.com/v1/messages'
   );
@@ -513,6 +517,18 @@ export default function StaffLabEnginePage() {
     };
     setCertificate(updatedCert);
     const res = await saveCertificateToApi(updatedCert);
+    if (activeJobNumber) {
+      await fetch('/api/jobs', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          job_number: activeJobNumber,
+          status: 'Screened',
+          report_number: cleanNumber
+        })
+      }).catch(() => {});
+      setJobRefreshTrigger((n) => n + 1);
+    }
     showToast(
       res.source === 'supabase'
         ? `Official Report ${cleanNumber} published to WTC Cloud Registry (Supabase)!`
@@ -671,6 +687,28 @@ export default function StaffLabEnginePage() {
             </button>
           </div>
         </div>
+
+        {/* =================================================================
+            STONE INTAKE -> SCREENING -> HANDOVER WORKFLOW QUEUE
+           ================================================================= */}
+        <LabJobTracker
+          activeJobNumber={activeJobNumber}
+          refreshTrigger={jobRefreshTrigger}
+          onToast={(msg) => showToast(msg)}
+          onSelectJobForScreening={(job: LabJobRecord) => {
+            setActiveJobNumber(job.job_number);
+            setCertificate((prev) => ({
+              ...prev,
+              clientName: job.customer_name,
+              clientPhone: job.customer_phone,
+              weight: job.approx_weight || prev.weight
+            }));
+            if (job.report_format === 'sticker' || job.report_format === 'pvc' || job.report_format === 'a4') {
+              setActiveFormat(job.report_format);
+            }
+            showToast(`Loaded ${job.job_number} (${job.customer_name}) into Diagnostic Engine.`);
+          }}
+        />
 
         {/* =================================================================
             4-STAGE GEMOLOGICAL DIAGNOSTIC ENGINE GRID (Hidden when printing)

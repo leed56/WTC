@@ -100,3 +100,28 @@ create index if not exists idx_invoices_report_number on public.invoices (report
 
 alter table public.customers enable row level security;
 alter table public.invoices enable row level security;
+
+-- 6. Lab Job Lifecycle Tracker (Intake -> Screening -> Handover)
+create table if not exists public.lab_jobs (
+  id uuid primary key default gen_random_uuid(),
+  job_number text unique not null,
+  customer_id uuid references public.customers(id) on delete set null,
+  customer_name text not null,
+  customer_company text,
+  customer_phone text not null,
+  stone_description text not null,
+  approx_weight text,
+  report_format text not null default 'pvc',
+  fee_lkr integer not null default 1200,
+  status text not null default 'Received' check (status in ('Received', 'Screened', 'Handed Over')),
+  report_number text,
+  invoice_number text,
+  notes text,
+  received_at timestamptz not null default now(),
+  screened_at timestamptz,
+  handed_over_at timestamptz,
+  created_at timestamptz not null default now()
+);
+
+create index if not exists idx_lab_jobs_status on public.lab_jobs (status);
+alter table public.lab_jobs enable row level security;
