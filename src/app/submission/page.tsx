@@ -227,9 +227,10 @@ export default function SubmissionPage() {
                     onChange={(e) => setFormData({ ...formData, reportFormat: e.target.value })}
                     className="w-full px-3 py-2.5 rounded-lg bg-slate-950 border border-slate-700 text-amber-400 font-semibold focus:outline-none focus:border-amber-400"
                   >
-                    <option value="pvc-card">PVC Smart Card Report</option>
-                    <option value="sticker">Verbal Gem Box Sticker</option>
-                    <option value="a4-cert">Full A4 Certificate</option>
+                    <option value="pvc-card">PVC Smart Card Report (LKR 1,200)</option>
+                    <option value="sticker">Verbal Gem Box Sticker (LKR 300)</option>
+                    <option value="a4-cert">Full A4 Certificate (LKR 4,500)</option>
+                    <option value="advance-report">Advanced Report (LKR 30,000)</option>
                   </select>
                 </div>
 

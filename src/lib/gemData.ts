@@ -146,7 +146,7 @@ export const SERVICE_CATEGORIES = [
     subtitle: "Accurate Species & Variety Verification",
     description: "Determines whether a gemstone is genuine natural mineral formed in the earth or an imitation, glass, composite, or synthetic counterpart.",
     turnaround: "24 – 48 Hours",
-    priceRange: "$25 – $50",
+    priceRange: "LKR 300 – 30,000",
     features: [
       "Species and mineral variety determination",
       "Optical characterization & Refractive Index testing",
@@ -161,7 +161,7 @@ export const SERVICE_CATEGORIES = [
     subtitle: "Heated vs. Unheated Determination",
     description: "Critical screening for Corundum (Sapphire & Ruby) and other gemstones to detect thermal modification, lattice diffusion, lead-glass filling, or clarity oils.",
     turnaround: "24 – 48 Hours",
-    priceRange: "$35 – $75",
+    priceRange: "LKR 300 – 30,000",
     features: [
       "Discrimination between unheated and thermally heated stones",
       "Inspection of internal stress halos & rutile dissolution",
@@ -176,7 +176,7 @@ export const SERVICE_CATEGORIES = [
     subtitle: "Laboratory-Created & Imitation Detection",
     description: "Definitive separation of natural gemstones from flux-grown, hydrothermal, flame fusion synthetics, glass imitations, and composite stones.",
     turnaround: "24 – 48 Hours",
-    priceRange: "$35 – $75",
+    priceRange: "LKR 300 – 30,000",
     features: [
       "Detection of diagnostic synthetic growth structures",
       "Multi-wavelength ultraviolet luminescence profiling",
@@ -190,7 +190,7 @@ export const SERVICE_CATEGORIES = [
     subtitle: "Precision Instrument Measurements",
     description: "Systematic scientific assessment using sodium-light refractometry, hydrostatic specific gravity, and polariscopic strain analysis.",
     turnaround: "24 Hours (Express Available)",
-    priceRange: "$25 – $55",
+    priceRange: "LKR 300 – 30,000",
     features: [
       "Accurate Refractive Index (R.I.) and birefringence testing",
       "Hydrostatic micro-balance density calculation",

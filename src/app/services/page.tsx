@@ -46,7 +46,7 @@ export default function ServicesPage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
             {/* Format 1: Verbal Sticker */}
             <div className="p-6 rounded-2xl bg-slate-900 border border-slate-800 hover:border-amber-500/40 transition-all flex flex-col justify-between shadow-xl group">
               <div>
@@ -79,11 +79,11 @@ export default function ServicesPage() {
               </div>
               <div className="pt-4 border-t border-slate-800 flex items-center justify-between">
                 <div>
-                  <span className="text-[10px] text-slate-500 font-mono block">From</span>
-                  <span className="text-lg font-bold font-mono text-amber-400">$20 – $35</span>
+                  <span className="text-[10px] text-slate-500 font-mono block">Standard Fee</span>
+                  <span className="text-lg font-bold font-mono text-amber-400">LKR 300</span>
                 </div>
                 <Link
-                  href="/verify?id=WTC-2026-1048"
+                  href="/verify?id=WTC-26-000125"
                   className="text-xs text-amber-400 hover:text-amber-300 font-mono font-semibold"
                 >
                   Preview Sample &rarr;
@@ -126,11 +126,11 @@ export default function ServicesPage() {
               </div>
               <div className="pt-4 border-t border-slate-800 flex items-center justify-between">
                 <div>
-                  <span className="text-[10px] text-slate-500 font-mono block">From</span>
-                  <span className="text-lg font-bold font-mono text-amber-400">$35 – $65</span>
+                  <span className="text-[10px] text-slate-500 font-mono block">Standard Fee</span>
+                  <span className="text-lg font-bold font-mono text-amber-400">LKR 1,200</span>
                 </div>
                 <Link
-                  href="/verify?id=WTC-2026-1048"
+                  href="/verify?id=WTC-26-000125"
                   className="text-xs text-amber-400 hover:text-amber-300 font-mono font-semibold"
                 >
                   Preview Sample &rarr;
@@ -170,14 +170,58 @@ export default function ServicesPage() {
               </div>
               <div className="pt-4 border-t border-slate-800 flex items-center justify-between">
                 <div>
-                  <span className="text-[10px] text-slate-500 font-mono block">From</span>
-                  <span className="text-lg font-bold font-mono text-amber-400">$60 – $120</span>
+                  <span className="text-[10px] text-slate-500 font-mono block">Standard Fee</span>
+                  <span className="text-lg font-bold font-mono text-amber-400">LKR 4,500</span>
                 </div>
                 <Link
-                  href="/verify?id=WTC-2026-1048"
+                  href="/verify?id=WTC-26-000125"
                   className="text-xs text-amber-400 hover:text-amber-300 font-mono font-semibold"
                 >
                   Preview Sample &rarr;
+                </Link>
+              </div>
+            </div>
+
+            {/* Format 4: Advanced Report */}
+            <div className="p-6 rounded-2xl bg-slate-900 border border-amber-500/30 hover:border-amber-400 transition-all flex flex-col justify-between shadow-xl group">
+              <div>
+                <div className="w-12 h-12 rounded-xl bg-amber-500/15 border border-amber-400/40 flex items-center justify-center text-amber-400 mb-5 group-hover:scale-105 transition-transform">
+                  <Sparkles className="w-6 h-6" />
+                </div>
+                <div className="text-[11px] font-mono text-amber-400 uppercase tracking-wider font-semibold">
+                  Format 04 &bull; Bespoke &amp; Investment
+                </div>
+                <h3 className="text-xl font-cinzel font-bold text-white mt-1 mb-2">
+                  Advanced Report
+                </h3>
+                <p className="text-slate-400 text-xs leading-relaxed mb-4">
+                  In-depth flagship laboratory dossier for rare collector gemstones, featuring extended photomicrography, detailed diagnostic commentary, and priority handling.
+                </p>
+                <ul className="space-y-2 text-xs text-slate-300 mb-6">
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                    <span>Extended microscopic inclusion &amp; treatment dossier</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                    <span>High-resolution stone &amp; photomicrograph plates</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                    <span>Senior Gemologist verification &amp; archival seal</span>
+                  </li>
+                </ul>
+              </div>
+              <div className="pt-4 border-t border-slate-800 flex items-center justify-between">
+                <div>
+                  <span className="text-[10px] text-slate-500 font-mono block">Standard Fee</span>
+                  <span className="text-lg font-bold font-mono text-amber-400">LKR 30,000</span>
+                </div>
+                <Link
+                  href="/submission"
+                  className="text-xs text-amber-400 hover:text-amber-300 font-mono font-semibold"
+                >
+                  Request &rarr;
                 </Link>
               </div>
             </div>
@@ -255,41 +299,25 @@ export default function ServicesPage() {
             <table className="w-full text-left text-xs font-mono border-collapse">
               <thead>
                 <tr className="border-b border-slate-700 text-amber-400">
-                  <th className="py-3 px-4 uppercase">Weight Range</th>
+                  <th className="py-3 px-4 uppercase">Tier</th>
                   <th className="py-3 px-4 uppercase">1. Verbal Box Sticker</th>
                   <th className="py-3 px-4 uppercase">2. PVC Smart Card</th>
                   <th className="py-3 px-4 uppercase">3. Full A4 Certificate</th>
+                  <th className="py-3 px-4 uppercase">4. Advanced Report</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-800/80 text-slate-300">
                 <tr className="hover:bg-slate-800/40">
-                  <td className="py-3.5 px-4 font-bold text-white">0.01 – 1.99 ct</td>
-                  <td className="py-3.5 px-4">$20</td>
-                  <td className="py-3.5 px-4">$35</td>
-                  <td className="py-3.5 px-4">$60</td>
-                </tr>
-                <tr className="hover:bg-slate-800/40">
-                  <td className="py-3.5 px-4 font-bold text-white">2.00 – 4.99 ct</td>
-                  <td className="py-3.5 px-4">$25</td>
-                  <td className="py-3.5 px-4">$50</td>
-                  <td className="py-3.5 px-4">$80</td>
-                </tr>
-                <tr className="hover:bg-slate-800/40">
-                  <td className="py-3.5 px-4 font-bold text-white">5.00 – 9.99 ct</td>
-                  <td className="py-3.5 px-4">$35</td>
-                  <td className="py-3.5 px-4">$75</td>
-                  <td className="py-3.5 px-4">$110</td>
-                </tr>
-                <tr className="hover:bg-slate-800/40">
-                  <td className="py-3.5 px-4 font-bold text-white">10.00 ct and above</td>
-                  <td className="py-3.5 px-4">$50</td>
-                  <td className="py-3.5 px-4">$110</td>
-                  <td className="py-3.5 px-4">$150</td>
+                  <td className="py-3.5 px-4 font-bold text-white">Standard Single Stone</td>
+                  <td className="py-3.5 px-4 text-amber-300 font-bold">LKR 300</td>
+                  <td className="py-3.5 px-4 text-amber-300 font-bold">LKR 1,200</td>
+                  <td className="py-3.5 px-4 text-amber-300 font-bold">LKR 4,500</td>
+                  <td className="py-3.5 px-4 text-amber-300 font-bold">LKR 30,000</td>
                 </tr>
                 <tr className="hover:bg-slate-800/40 bg-amber-500/5">
                   <td className="py-3.5 px-4 font-bold text-amber-400">Parcel Screening (20+ Stones)</td>
-                  <td className="py-3.5 px-4 text-amber-300" colSpan={3}>
-                    Volume trade discount available: $15 per stone for box stickers.
+                  <td className="py-3.5 px-4 text-amber-300" colSpan={4}>
+                    Volume trade rates available for bulk verbal box stickers &amp; wholesale lots.
                   </td>
                 </tr>
               </tbody>
