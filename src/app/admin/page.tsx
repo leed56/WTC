@@ -19,10 +19,12 @@ import {
 import { GemCertificate, INITIAL_CERTIFICATES } from '@/lib/gemData';
 import {
   getStoredCertificates,
-  addOrUpdateCertificate,
-  removeCertificate,
+  fetchCertificatesFromApi,
+  saveCertificateToApi,
+  deleteCertificateFromApi,
   resetToDefaultCertificates
 } from '@/lib/certificateStore';
+import StaffAuthGate from '@/components/StaffAuthGate';
 
 export default function AdminPage() {
   const [certs, setCerts] = useState<GemCertificate[]>([]);
@@ -58,6 +60,7 @@ export default function AdminPage() {
 
   useEffect(() => {
     setCerts(getStoredCertificates());
+    fetchCertificatesFromApi().then((list) => setCerts(list));
   }, []);
 
   const showNotify = (msg: string) => {
@@ -65,10 +68,10 @@ export default function AdminPage() {
     setTimeout(() => setNotification(null), 3000);
   };
 
-  const handleDelete = (reportNumber: string) => {
+  const handleDelete = async (reportNumber: string) => {
     if (confirm(`Are you sure you want to delete report ${reportNumber}?`)) {
-      removeCertificate(reportNumber);
-      setCerts(getStoredCertificates());
+      await deleteCertificateFromApi(reportNumber);
+      setCerts(await fetchCertificatesFromApi());
       showNotify(`Deleted report ${reportNumber}`);
     }
   };
@@ -81,7 +84,7 @@ export default function AdminPage() {
     }
   };
 
-  const handleCreateCertificate = (e: React.FormEvent) => {
+  const handleCreateCertificate = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newCert.reportNumber || !newCert.variety) return;
 
@@ -109,8 +112,8 @@ export default function AdminPage() {
       status: 'Issued'
     };
 
-    addOrUpdateCertificate(fullCert);
-    setCerts(getStoredCertificates());
+    await saveCertificateToApi(fullCert);
+    setCerts(await fetchCertificatesFromApi());
     setIsModalOpen(false);
     showNotify(`Report ${fullCert.reportNumber} created successfully!`);
 
@@ -145,7 +148,8 @@ export default function AdminPage() {
   });
 
   return (
-    <div className="py-12">
+    <StaffAuthGate portalTitle="WTC Gem Lab Registry Admin">
+      <div className="py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Top Notification */}
         {notification && (
@@ -497,5 +501,6 @@ export default function AdminPage() {
         )}
       </div>
     </div>
+    </StaffAuthGate>
   );
 }

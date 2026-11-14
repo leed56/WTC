@@ -38,8 +38,10 @@ import {
 } from '@/lib/gemConstantsDb';
 import {
   addOrUpdateCertificate,
-  getStoredCertificates
+  getStoredCertificates,
+  saveCertificateToApi
 } from '@/lib/certificateStore';
+import StaffAuthGate from '@/components/StaffAuthGate';
 import EditableReportTemplates, {
   ReportTemplateFormat
 } from '@/components/EditableReportTemplates';
@@ -498,7 +500,7 @@ export default function StaffLabEnginePage() {
   };
 
   // Save & Issue Certificate to Registry
-  const handleSaveToRegistry = () => {
+  const handleSaveToRegistry = async () => {
     const cleanNumber = certificate.reportNumber.trim().toUpperCase();
     const updatedCert: GemCertificate = {
       ...certificate,
@@ -507,9 +509,11 @@ export default function StaffLabEnginePage() {
       status: 'Issued'
     };
     setCertificate(updatedCert);
-    addOrUpdateCertificate(updatedCert);
+    const res = await saveCertificateToApi(updatedCert);
     showToast(
-      `Official Report ${cleanNumber} saved to WTC Gem Lab Registry! QR verification is now live.`
+      res.source === 'supabase'
+        ? `Official Report ${cleanNumber} published to WTC Cloud Registry (Supabase)!`
+        : `Official Report ${cleanNumber} saved to WTC Gem Lab Registry! QR verification is now live.`
     );
   };
 
@@ -588,7 +592,8 @@ export default function StaffLabEnginePage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#060B18] text-slate-100 py-8">
+    <StaffAuthGate portalTitle="WTC Gem Lab Diagnostic Engine">
+      <div className="min-h-screen bg-[#060B18] text-slate-100 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
         {/* Toast Notification (Hidden when printing) */}
         {notification && (
@@ -1657,6 +1662,7 @@ export default function StaffLabEnginePage() {
           </div>
         </div>
       )}
-    </div>
+      </div>
+    </StaffAuthGate>
   );
 }

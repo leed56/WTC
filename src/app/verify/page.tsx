@@ -4,7 +4,11 @@ import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { ShieldCheck, Search, AlertCircle, FileText, Sparkles, CheckCircle2 } from 'lucide-react';
 import { GemCertificate, INITIAL_CERTIFICATES } from '@/lib/gemData';
-import { findCertificateByNumber, getStoredCertificates } from '@/lib/certificateStore';
+import {
+  fetchCertificatesFromApi,
+  findCertificateFromApi,
+  getStoredCertificates,
+} from '@/lib/certificateStore';
 import CertificateViewer from '@/components/CertificateViewer';
 
 function VerifyContent() {
@@ -18,32 +22,33 @@ function VerifyContent() {
   const [allCertificates, setAllCertificates] = useState<GemCertificate[]>(INITIAL_CERTIFICATES);
 
   useEffect(() => {
-    const list = getStoredCertificates();
-    setAllCertificates(list);
+    setAllCertificates(getStoredCertificates());
+    fetchCertificatesFromApi().then((list) => setAllCertificates(list));
 
     if (queryId) {
-      const match = findCertificateByNumber(queryId);
-      setCurrentCert(match);
-      setHasSearched(true);
       setSearchId(queryId);
+      findCertificateFromApi(queryId).then((match) => {
+        setCurrentCert(match);
+        setHasSearched(true);
+      });
     }
   }, [queryId]);
 
-  const handleSearch = (e?: React.FormEvent) => {
+  const handleSearch = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     if (!searchId.trim()) return;
 
     const trimmed = searchId.trim().toUpperCase();
     router.push(`/verify?id=${encodeURIComponent(trimmed)}`);
-    const match = findCertificateByNumber(trimmed);
+    const match = await findCertificateFromApi(trimmed);
     setCurrentCert(match);
     setHasSearched(true);
   };
 
-  const handleQuickSelect = (id: string) => {
+  const handleQuickSelect = async (id: string) => {
     setSearchId(id);
     router.push(`/verify?id=${encodeURIComponent(id)}`);
-    const match = findCertificateByNumber(id);
+    const match = await findCertificateFromApi(id);
     setCurrentCert(match);
     setHasSearched(true);
   };

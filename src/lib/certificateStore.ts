@@ -84,3 +84,77 @@ export function resetToDefaultCertificates(): GemCertificate[] {
   }
   return INITIAL_CERTIFICATES;
 }
+
+export async function fetchCertificatesFromApi(): Promise<GemCertificate[]> {
+  try {
+    const res = await fetch('/api/certificates', { cache: 'no-store' });
+    if (!res.ok) return getStoredCertificates();
+    const data = await res.json();
+    if (Array.isArray(data?.certificates) && data.certificates.length > 0) {
+      if (data.source === 'supabase') {
+        saveCertificates(data.certificates);
+        return data.certificates;
+      }
+    }
+  } catch {
+    // Fall back to localStorage
+  }
+  return getStoredCertificates();
+}
+
+export async function findCertificateFromApi(
+  reportNumber: string
+): Promise<GemCertificate | null> {
+  const clean = reportNumber.trim().toUpperCase();
+  if (!clean) return null;
+
+  try {
+    const res = await fetch(
+      `/api/certificates?reportNumber=${encodeURIComponent(clean)}`,
+      { cache: 'no-store' }
+    );
+    if (res.ok) {
+      const data = await res.json();
+      if (data?.certificate) {
+        return data.certificate as GemCertificate;
+      }
+    }
+  } catch {
+    // Fall back to localStorage
+  }
+  return findCertificateByNumber(clean);
+}
+
+export async function saveCertificateToApi(
+  cert: GemCertificate
+): Promise<{ ok: boolean; source: string; error?: string }> {
+  addOrUpdateCertificate(cert);
+  try {
+    const res = await fetch('/api/certificates', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(cert),
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      return { ok: false, source: 'local-fallback', error: data?.error };
+    }
+    return { ok: true, source: data?.source || 'supabase' };
+  } catch {
+    return { ok: false, source: 'local-fallback', error: 'Network error' };
+  }
+}
+
+export async function deleteCertificateFromApi(
+  reportNumber: string
+): Promise<void> {
+  removeCertificate(reportNumber);
+  try {
+    await fetch(
+      `/api/certificates?reportNumber=${encodeURIComponent(reportNumber)}`,
+      { method: 'DELETE' }
+    );
+  } catch {
+    // Local removal already applied
+  }
+}

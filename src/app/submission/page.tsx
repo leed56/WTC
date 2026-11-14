@@ -27,8 +27,26 @@ export default function SubmissionPage() {
     notes: ''
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    try {
+      await fetch('/api/submissions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          clientName: formData.name,
+          company: formData.company,
+          email: formData.email,
+          phone: formData.phone,
+          stoneCount: formData.stoneCount,
+          serviceTier: `${formData.serviceType} (${formData.reportFormat}${formData.isExpress ? ', Express' : ''})`,
+          shippingMethod: formData.shippingMethod,
+          notes: formData.notes,
+        }),
+      });
+    } catch {
+      // Voucher confirmation still displays
+    }
     setSubmitted(true);
   };
 

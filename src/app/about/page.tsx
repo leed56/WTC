@@ -15,7 +15,7 @@ export default function AboutPage() {
             About WTC Gem Lab
           </h1>
           <p className="mt-3 text-slate-300 text-sm leading-relaxed">
-            Headquartered at the iconic World Trade Center, No 26, 5th Floor, Colombo 01, Sri Lanka. An independent gemological testing facility dedicated to honest gemstone identification, Ceylon origin authentication, and synthetic discrimination.
+            Headquartered at the iconic World Trade Center, No 26, 5th Floor, Colombo 01, Sri Lanka. An independent gemological testing facility dedicated to honest gemstone identification, thermal treatment detection, and synthetic discrimination.
           </p>
         </div>
 
