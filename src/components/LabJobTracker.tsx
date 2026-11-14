@@ -44,6 +44,8 @@ export default function LabJobTracker({
   const [stoneDesc, setStoneDesc] = useState('');
   const [approxWeight, setApproxWeight] = useState('');
   const [formatId, setFormatId] = useState<'sticker' | 'pvc' | 'a4' | 'advanced'>('pvc');
+  const [paymentStatus, setPaymentStatus] = useState<'Paid' | 'Unpaid'>('Paid');
+  const [paymentMethod, setPaymentMethod] = useState<string>('Cash');
   const [saving, setSaving] = useState(false);
   const [waLink, setWaLink] = useState<{ label: string; url: string } | null>(null);
 
@@ -100,7 +102,33 @@ export default function LabJobTracker({
       }
 
       const tier = REPORT_FEE_TIERS.find((t) => t.id === formatId) || REPORT_FEE_TIERS[1];
-      const jobNumber = `JOB-26-${Math.floor(1000 + Math.random() * 9000)}`;
+      const suffix = Math.floor(1000 + Math.random() * 9000);
+      const jobNumber = `JOB-26-${suffix}`;
+      const invoiceNumber = `INV-26-${suffix}`;
+      const issuedDate = new Date().toISOString().split('T')[0];
+
+      // Auto-generate Invoice at Intake
+      await fetch('/api/invoices', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          invoice_number: invoiceNumber,
+          report_number: jobNumber,
+          customer_id: customerId,
+          customer_name: custName.trim(),
+          customer_company: custCompany.trim() || null,
+          customer_phone: custPhone.trim(),
+          stone_summary: `${stoneDesc.trim()}${approxWeight ? ` (${approxWeight.trim()})` : ''}`,
+          report_format: tier.label,
+          unit_price_lkr: tier.priceLkr,
+          quantity: 1,
+          discount_lkr: 0,
+          total_lkr: tier.priceLkr,
+          payment_status: paymentStatus,
+          payment_method: paymentMethod,
+          issued_date: issuedDate,
+        }),
+      });
 
       const jRes = await fetch('/api/jobs', {
         method: 'POST',
@@ -115,28 +143,35 @@ export default function LabJobTracker({
           approx_weight: approxWeight.trim() || null,
           report_format: formatId,
           fee_lkr: tier.priceLkr,
+          invoice_number: invoiceNumber,
           status: 'Received',
         }),
       });
       const jData = await jRes.json();
       if (jRes.ok && jData?.job) {
-        setJobs((prev) => [jData.job, ...prev]);
+        setJobs((prev) => [{ ...jData.job, invoice_number: invoiceNumber }, ...prev]);
         const cleanPhone = custPhone.replace(/[^\d]/g, '');
         const msg = [
-          `*WTC GEM LAB — STONE INTAKE RECEIPT*`,
+          `*WTC GEM LAB — INTAKE & OFFICIAL INVOICE*`,
+          `Invoice No: *${invoiceNumber}*`,
           `Job No: *${jData.job.job_number}*`,
           `Client: ${custName.trim()}`,
           `Stone: ${stoneDesc.trim()}${approxWeight ? ` (${approxWeight})` : ''}`,
-          `Service: ${tier.label} (LKR ${tier.priceLkr.toLocaleString()})`,
-          `Status: *Received for Screening*`,
-          `We will notify you once screening is complete.`,
+          `Service: ${tier.label}`,
+          `*Total: LKR ${tier.priceLkr.toLocaleString()}*`,
+          `Payment: *${paymentStatus}* (${paymentMethod})`,
+          `--------------------------------`,
+          `Status: *Received for Lab Screening*`,
+          `We will send your official report once screening is complete.`,
           `World Trade Center, No 26, 5th Floor, Colombo 01`,
         ].join('\n');
         setWaLink({
-          label: `Send Intake WhatsApp (${jData.job.job_number})`,
+          label: `Send Invoice WhatsApp (${invoiceNumber})`,
           url: `https://wa.me/${cleanPhone}?text=${encodeURIComponent(msg)}`,
         });
-        onToast?.(`Intake ${jData.job.job_number} recorded as Received!`);
+        onToast?.(
+          `Intake ${jData.job.job_number} & Invoice ${invoiceNumber} (${paymentStatus}) saved!`
+        );
         setStoneDesc('');
         setApproxWeight('');
         setShowIntakeForm(false);
@@ -332,22 +367,41 @@ export default function LabJobTracker({
                 </select>
               </div>
 
-              <div className="flex justify-end gap-2">
-                <button
-                  type="button"
-                  onClick={() => setShowIntakeForm(false)}
-                  className="px-3 py-1.5 rounded-lg bg-slate-800 text-slate-300"
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <select
+                  value={paymentStatus}
+                  onChange={(e) => setPaymentStatus(e.target.value as 'Paid' | 'Unpaid')}
+                  className="px-3 py-2 rounded-lg bg-slate-950 border border-slate-700 text-emerald-300 font-semibold"
                 >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  disabled={saving}
-                  className="px-4 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold inline-flex items-center gap-1.5"
+                  <option value="Paid">Payment: Paid</option>
+                  <option value="Unpaid">Payment: Unpaid</option>
+                </select>
+                <select
+                  value={paymentMethod}
+                  onChange={(e) => setPaymentMethod(e.target.value)}
+                  className="px-3 py-2 rounded-lg bg-slate-950 border border-slate-700 text-white"
                 >
-                  {saving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <CheckCircle2 className="w-3.5 h-3.5" />}
-                  <span>Save Intake Ticket</span>
-                </button>
+                  <option value="Cash">Method: Cash</option>
+                  <option value="Card">Method: Card</option>
+                  <option value="Bank Transfer">Method: Bank Transfer</option>
+                </select>
+                <div className="flex items-center justify-end gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setShowIntakeForm(false)}
+                    className="px-3 py-2 rounded-lg bg-slate-800 text-slate-300"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={saving}
+                    className="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold inline-flex items-center gap-1.5"
+                  >
+                    {saving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <CheckCircle2 className="w-3.5 h-3.5" />}
+                    <span>Save Intake &amp; Invoice</span>
+                  </button>
+                </div>
               </div>
             </form>
           )}
@@ -432,7 +486,7 @@ export default function LabJobTracker({
                           className="w-full py-1.5 px-2.5 rounded-lg bg-[#25D366] hover:bg-[#20bd5a] text-slate-950 font-bold font-mono inline-flex items-center justify-center gap-1.5"
                         >
                           <Handshake className="w-3.5 h-3.5" />
-                          <span>Handover &amp; WhatsApp</span>
+                          <span>Send Report &amp; Handover</span>
                         </button>
                       )}
                       {job.status === 'Handed Over' && (
