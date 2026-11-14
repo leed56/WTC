@@ -257,10 +257,14 @@ export default function InvoiceModal({
   if (!isOpen) return null;
 
   return (
-    <div className="no-print fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
-      <div className="w-full max-w-3xl rounded-2xl bg-[#0B132B] border border-amber-500/40 shadow-2xl overflow-hidden my-8">
+    <div
+      className={`${
+        showPrintPreview ? '' : 'no-print '
+      }fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto print:static print:bg-white print:p-0`}
+    >
+      <div className="w-full max-w-3xl rounded-2xl bg-[#0B132B] border border-amber-500/40 shadow-2xl overflow-hidden my-8 print:shadow-none print:border-0 print:my-0 print:max-w-none print:bg-white">
         {/* Header */}
-        <div className="px-6 py-4 bg-[#070D1B] border-b border-amber-500/20 flex items-center justify-between">
+        <div className="no-print px-6 py-4 bg-[#070D1B] border-b border-amber-500/20 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-amber-500/15 border border-amber-400/40 flex items-center justify-center text-amber-400">
               <Receipt className="w-5 h-5" />
@@ -285,107 +289,189 @@ export default function InvoiceModal({
         {/* Body */}
         <div className="p-6 space-y-6 max-h-[80vh] overflow-y-auto">
           {showPrintPreview ? (
-            <div className="bg-white text-slate-900 rounded-xl p-8 space-y-6 shadow-inner">
-              <div className="flex items-start justify-between border-b border-slate-200 pb-4">
-                <div>
-                  <h3 className="text-xl font-serif font-bold text-[#0B132B]">
-                    WTC GEMOLOGICAL LABORATORY
-                  </h3>
-                  <p className="text-xs text-slate-600">{LAB_CONTACT_INFO.address}</p>
-                  <p className="text-xs text-slate-600">
-                    Tel: {LAB_CONTACT_INFO.phone} &bull; {LAB_CONTACT_INFO.email}
-                  </p>
-                </div>
-                <div className="text-right">
-                  <div className="text-lg font-bold font-mono text-[#0B132B]">INVOICE</div>
-                  <div className="text-xs font-mono text-slate-600">No: {invoiceNumber}</div>
-                  <div className="text-xs font-mono text-slate-600">Date: {issuedDate}</div>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4 text-xs">
-                <div>
-                  <div className="font-bold uppercase text-slate-500 mb-1">Billed To</div>
-                  <div className="font-bold text-sm">{customerName || 'Walk-In Client'}</div>
-                  {customerCompany && <div>{customerCompany}</div>}
-                  <div>{customerPhone}</div>
-                  {customerEmail && <div>{customerEmail}</div>}
-                  {customerAddress && <div>{customerAddress}</div>}
-                </div>
-                <div className="text-right">
-                  <div className="font-bold uppercase text-slate-500 mb-1">Report Reference</div>
-                  <div className="font-mono font-bold">{certificate.reportNumber}</div>
-                  <div>{certificate.variety}</div>
-                  <div>{certificate.weight}</div>
-                </div>
-              </div>
-
-              <table className="w-full text-xs border-collapse">
-                <thead>
-                  <tr className="border-y border-slate-300 bg-slate-50 text-left">
-                    <th className="py-2 px-3">Description</th>
-                    <th className="py-2 px-3 text-right">Qty</th>
-                    <th className="py-2 px-3 text-right">Unit (LKR)</th>
-                    <th className="py-2 px-3 text-right">Amount (LKR)</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr className="border-b border-slate-200">
-                    <td className="py-3 px-3">
-                      <div className="font-semibold">{selectedTier.label}</div>
-                      <div className="text-slate-500">
-                        Report {certificate.reportNumber} — {certificate.variety} ({certificate.weight})
+            <div className="space-y-4">
+              <div
+                id="wtc-premium-invoice"
+                style={{ WebkitPrintColorAdjust: 'exact', printColorAdjust: 'exact' }}
+                className="relative rounded-2xl overflow-hidden bg-[#FCFBF7] text-slate-900 border-2 border-[#D4AF37]/60 shadow-2xl"
+              >
+                {/* Top Royal Navy & Gold Ribbon Header */}
+                <div className="relative bg-gradient-to-r from-[#070D1B] via-[#0E1B3D] to-[#132554] text-white px-7 py-6 border-b-4 border-[#D4AF37]">
+                  <div className="flex flex-wrap items-center justify-between gap-4">
+                    <div className="flex items-center gap-3.5">
+                      <div className="w-14 h-14 rounded-xl bg-white/10 border border-[#D4AF37]/60 p-1.5 flex items-center justify-center shrink-0">
+                        <img
+                          src="/brand/wtc_crest.png"
+                          alt="WTC Gem Lab"
+                          className="w-full h-full object-contain"
+                        />
                       </div>
-                    </td>
-                    <td className="py-3 px-3 text-right font-mono">{quantity}</td>
-                    <td className="py-3 px-3 text-right font-mono">
-                      {selectedTier.priceLkr.toLocaleString()}
-                    </td>
-                    <td className="py-3 px-3 text-right font-mono font-semibold">
-                      {subtotalLkr.toLocaleString()}
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-
-              <div className="flex justify-end">
-                <div className="w-64 space-y-1.5 text-xs">
-                  <div className="flex justify-between">
-                    <span className="text-slate-600">Subtotal:</span>
-                    <span className="font-mono">LKR {subtotalLkr.toLocaleString()}</span>
-                  </div>
-                  {discountLkr > 0 && (
-                    <div className="flex justify-between text-emerald-700">
-                      <span>Discount:</span>
-                      <span className="font-mono">- LKR {discountLkr.toLocaleString()}</span>
+                      <div>
+                        <div className="text-xl font-cinzel font-black tracking-wide text-[#F3D574]">
+                          WTC GEM LAB
+                        </div>
+                        <div className="text-[10px] font-mono tracking-[0.22em] text-amber-200/90 uppercase">
+                          Gemological Laboratory &bull; Analyse &bull; Identify &bull; Assure
+                        </div>
+                        <div className="text-[11px] text-slate-300 mt-1">
+                          {LAB_CONTACT_INFO.address} &bull; {LAB_CONTACT_INFO.phone}
+                        </div>
+                      </div>
                     </div>
-                  )}
-                  <div className="flex justify-between text-sm font-bold border-t border-slate-300 pt-2">
-                    <span>Total Due:</span>
-                    <span className="font-mono">LKR {totalLkr.toLocaleString()}</span>
+
+                    <div className="text-right">
+                      <span className="inline-block px-3.5 py-1 rounded-full bg-gradient-to-r from-[#D4AF37] to-[#F3D574] text-[#070D1B] font-cinzel font-black text-xs tracking-widest uppercase shadow">
+                        Official Invoice
+                      </span>
+                      <div className="text-sm font-mono font-bold text-white mt-2">
+                        {invoiceNumber}
+                      </div>
+                      <div className="text-[11px] font-mono text-amber-200/80">
+                        Date: {issuedDate}
+                      </div>
+                    </div>
                   </div>
-                  <div className="flex justify-between text-[11px] text-slate-600 pt-1">
-                    <span>Status: {paymentStatus}</span>
-                    <span>Method: {paymentMethod}</span>
+                </div>
+
+                {/* Body Content */}
+                <div className="p-7 space-y-6">
+                  {/* Billed To & Report Summary Cards */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                    <div className="p-4 rounded-xl bg-white border border-slate-200 shadow-sm space-y-1">
+                      <div className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#0E1B3D]">
+                        Billed To
+                      </div>
+                      <div className="text-base font-bold text-[#0B132B]">
+                        {customerName || 'Walk-In Client'}
+                      </div>
+                      {customerCompany && (
+                        <div className="font-semibold text-amber-700">{customerCompany}</div>
+                      )}
+                      <div className="font-mono text-slate-600">{customerPhone}</div>
+                      {customerEmail && <div className="text-slate-600">{customerEmail}</div>}
+                      {customerAddress && <div className="text-slate-600">{customerAddress}</div>}
+                    </div>
+
+                    <div className="p-4 rounded-xl bg-gradient-to-br from-[#0B132B]/5 to-amber-500/10 border border-[#D4AF37]/40 shadow-sm space-y-1.5 sm:text-right">
+                      <div className="flex sm:justify-end items-center gap-2">
+                        <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#0E1B3D]">
+                          Report &amp; Payment Status
+                        </span>
+                        <span
+                          className={`px-2.5 py-0.5 rounded-full text-[10px] font-mono font-black uppercase ${
+                            paymentStatus === 'Paid'
+                              ? 'bg-emerald-600 text-white'
+                              : 'bg-amber-500 text-slate-950'
+                          }`}
+                        >
+                          {paymentStatus}
+                        </span>
+                      </div>
+                      <div className="font-mono font-bold text-sm text-[#0B132B]">
+                        {certificate.reportNumber}
+                      </div>
+                      <div className="font-semibold text-slate-800">{certificate.variety}</div>
+                      <div className="text-slate-600">
+                        Weight: <span className="font-mono font-semibold">{certificate.weight}</span> &bull;{' '}
+                        Method: <span className="font-semibold">{paymentMethod}</span>
+                      </div>
+                    </div>
                   </div>
+
+                  {/* Colorful Luxury Itemized Table */}
+                  <div className="rounded-xl overflow-hidden border border-[#D4AF37]/40 shadow-sm">
+                    <table className="w-full text-xs border-collapse">
+                      <thead>
+                        <tr className="bg-gradient-to-r from-[#0B132B] to-[#162752] text-[#F3D574] text-left font-mono uppercase text-[11px]">
+                          <th className="py-3 px-4">Service &amp; Report Description</th>
+                          <th className="py-3 px-4 text-right">Qty</th>
+                          <th className="py-3 px-4 text-right">Unit (LKR)</th>
+                          <th className="py-3 px-4 text-right">Amount (LKR)</th>
+                        </tr>
+                      </thead>
+                      <tbody className="bg-white divide-y divide-slate-200">
+                        <tr>
+                          <td className="py-4 px-4">
+                            <div className="font-bold text-[#0B132B] text-sm">
+                              {selectedTier.label}
+                            </div>
+                            <div className="text-slate-600 mt-0.5">
+                              Certificate Ref: <span className="font-mono font-semibold text-[#0E1B3D]">{certificate.reportNumber}</span> &mdash;{' '}
+                              {certificate.variety} ({certificate.weight})
+                            </div>
+                          </td>
+                          <td className="py-4 px-4 text-right font-mono font-semibold">{quantity}</td>
+                          <td className="py-4 px-4 text-right font-mono">
+                            {selectedTier.priceLkr.toLocaleString()}
+                          </td>
+                          <td className="py-4 px-4 text-right font-mono font-bold text-[#0B132B]">
+                            {subtotalLkr.toLocaleString()}
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+
+                  {/* Totals & Notes */}
+                  <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+                    <div className="text-[11px] text-slate-600 space-y-1 max-w-sm">
+                      <div className="font-bold text-[#0B132B] uppercase font-mono text-[10px]">
+                        Online Report Verification
+                      </div>
+                      <p>
+                        Verify authenticity anytime at{' '}
+                        <span className="font-mono font-semibold text-[#0E1B3D]">
+                          www.wtcgemlab.lk/verify
+                        </span>
+                      </p>
+                      {notes && <p className="italic text-slate-500">Note: {notes}</p>}
+                    </div>
+
+                    <div className="w-full sm:w-72 rounded-xl bg-gradient-to-br from-[#070D1B] to-[#132554] text-white p-4 border border-[#D4AF37]/60 shadow-lg space-y-2 text-xs">
+                      <div className="flex justify-between text-slate-300">
+                        <span>Subtotal</span>
+                        <span className="font-mono">LKR {subtotalLkr.toLocaleString()}</span>
+                      </div>
+                      {discountLkr > 0 && (
+                        <div className="flex justify-between text-emerald-300">
+                          <span>Discount</span>
+                          <span className="font-mono">- LKR {discountLkr.toLocaleString()}</span>
+                        </div>
+                      )}
+                      <div className="flex justify-between items-center border-t border-[#D4AF37]/40 pt-2">
+                        <span className="font-cinzel font-bold text-amber-200 uppercase text-xs">
+                          Total (LKR)
+                        </span>
+                        <span className="text-xl font-mono font-black text-[#F3D574]">
+                          LKR {totalLkr.toLocaleString()}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Bottom Gold & Navy Ribbon */}
+                <div className="bg-gradient-to-r from-[#070D1B] via-[#0E1B3D] to-[#070D1B] border-t-2 border-[#D4AF37] px-7 py-3 flex flex-wrap items-center justify-between text-[10px] font-mono text-amber-200/90">
+                  <span>Thank you for choosing WTC Gemological Laboratory</span>
+                  <span>{LAB_CONTACT_INFO.email} &bull; www.wtcgemlab.lk</span>
                 </div>
               </div>
 
-              <div className="flex items-center justify-between pt-4 border-t border-slate-200">
+              <div className="no-print flex items-center justify-between pt-2">
                 <button
                   type="button"
                   onClick={() => setShowPrintPreview(false)}
-                  className="px-4 py-2 rounded-lg bg-slate-200 text-slate-800 text-xs font-semibold"
+                  className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold"
                 >
                   &larr; Back to Edit
                 </button>
                 <button
                   type="button"
                   onClick={() => window.print()}
-                  className="px-4 py-2 rounded-lg bg-[#0B132B] text-white text-xs font-semibold flex items-center gap-2"
+                  className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-slate-950 text-xs font-bold flex items-center gap-2 shadow-lg"
                 >
                   <Printer className="w-4 h-4" />
-                  <span>Print / Save PDF</span>
+                  <span>Print / Save Luxury PDF</span>
                 </button>
               </div>
             </div>
