@@ -40,22 +40,25 @@ export default function Navbar() {
             <Mail className="w-3 h-3 text-amber-400 shrink-0" />
             <span>{LAB_CONTACT_INFO.email}</span>
           </div>
-          <div className="flex items-center gap-3 pl-2 sm:border-l sm:border-slate-800">
-            <Link
-              href="/staff-lab"
-              className="flex items-center gap-1 text-amber-300 hover:text-amber-200 font-semibold transition-colors whitespace-nowrap"
-            >
-              <Sparkles className="w-3 h-3 text-amber-400 shrink-0" />
-              <span>Lab Engine</span>
-            </Link>
-            <Link
-              href="/admin"
-              className="flex items-center gap-1 text-slate-300 hover:text-amber-300 transition-colors whitespace-nowrap"
-            >
-              <User className="w-3 h-3 text-amber-400 shrink-0" />
-              <span>Staff Registry</span>
-            </Link>
-          </div>
+          {(!process.env.NEXT_PUBLIC_VERCEL_ENV ||
+            process.env.NEXT_PUBLIC_STAFF_PORTAL_ENABLED === 'true') && (
+            <div className="flex items-center gap-3 pl-2 sm:border-l sm:border-slate-800">
+              <Link
+                href="/staff-lab"
+                className="flex items-center gap-1 text-amber-300 hover:text-amber-200 font-semibold transition-colors whitespace-nowrap"
+              >
+                <Sparkles className="w-3 h-3 text-amber-400 shrink-0" />
+                <span>Lab Engine</span>
+              </Link>
+              <Link
+                href="/admin"
+                className="flex items-center gap-1 text-slate-300 hover:text-amber-300 transition-colors whitespace-nowrap"
+              >
+                <User className="w-3 h-3 text-amber-400 shrink-0" />
+                <span>Staff Registry</span>
+              </Link>
+            </div>
+          )}
         </div>
       </div>
 
@@ -316,14 +319,17 @@ export default function Navbar() {
               <span>Submit a Gemstone</span>
               <ArrowRight className="w-4 h-4" />
             </Link>
-            <Link
-              href="/admin"
-              onClick={() => setMobileMenuOpen(false)}
-              className="flex items-center justify-center gap-2 w-full py-2 rounded-xl bg-slate-800 text-slate-300 text-xs font-mono"
-            >
-              <User className="w-3.5 h-3.5 text-amber-400" />
-              <span>Staff Login / Admin</span>
-            </Link>
+            {(!process.env.NEXT_PUBLIC_VERCEL_ENV ||
+              process.env.NEXT_PUBLIC_STAFF_PORTAL_ENABLED === 'true') && (
+              <Link
+                href="/admin"
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center justify-center gap-2 w-full py-2 rounded-xl bg-slate-800 text-slate-300 text-xs font-mono"
+              >
+                <User className="w-3.5 h-3.5 text-amber-400" />
+                <span>Staff Login / Admin</span>
+              </Link>
+            )}
           </div>
         </div>
       )}
