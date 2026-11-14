@@ -57,3 +57,46 @@ create policy "Public can read certificates"
   for select
   to anon, authenticated
   using (true);
+
+-- 4. Customers / Contacts Directory (Local Staff Portal)
+create table if not exists public.customers (
+  id uuid primary key default gen_random_uuid(),
+  name text not null,
+  company text,
+  phone text not null,
+  email text,
+  address text,
+  notes text,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+create index if not exists idx_customers_phone on public.customers (phone);
+
+-- 5. Invoices (Local Staff Portal)
+create table if not exists public.invoices (
+  id uuid primary key default gen_random_uuid(),
+  invoice_number text unique not null,
+  report_number text not null,
+  customer_id uuid references public.customers(id) on delete set null,
+  customer_name text not null,
+  customer_company text,
+  customer_phone text not null,
+  customer_email text,
+  stone_summary text not null,
+  report_format text not null,
+  unit_price_lkr integer not null default 1200,
+  quantity integer not null default 1,
+  discount_lkr integer not null default 0,
+  total_lkr integer not null default 1200,
+  payment_status text not null default 'Unpaid' check (payment_status in ('Paid', 'Unpaid')),
+  payment_method text not null default 'Cash',
+  notes text,
+  issued_date text not null,
+  created_at timestamptz not null default now()
+);
+
+create index if not exists idx_invoices_report_number on public.invoices (report_number);
+
+alter table public.customers enable row level security;
+alter table public.invoices enable row level security;

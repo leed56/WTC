@@ -23,7 +23,8 @@ import {
   ExternalLink,
   AlertCircle,
   Sliders,
-  QrCode
+  QrCode,
+  Receipt
 } from 'lucide-react';
 import { GemCertificate } from '@/lib/gemData';
 import {
@@ -42,6 +43,7 @@ import {
   saveCertificateToApi
 } from '@/lib/certificateStore';
 import StaffAuthGate from '@/components/StaffAuthGate';
+import InvoiceModal from '@/components/InvoiceModal';
 import EditableReportTemplates, {
   ReportTemplateFormat
 } from '@/components/EditableReportTemplates';
@@ -141,6 +143,7 @@ export default function StaffLabEnginePage() {
   // 5. WASSAPI / WHATSAPP API STATE
   // =========================================================================
   const [whatsappModalOpen, setWhatsappModalOpen] = useState<boolean>(false);
+  const [invoiceModalOpen, setInvoiceModalOpen] = useState<boolean>(false);
   const [wassapiEndpoint, setWassapiEndpoint] = useState<string>(
     'https://api.wassenger.com/v1/messages'
   );
@@ -656,6 +659,15 @@ export default function StaffLabEnginePage() {
             >
               <Send className="w-3.5 h-3.5" />
               <span>WhatsApp / Wassapi</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setInvoiceModalOpen(true)}
+              className="px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-mono font-bold flex items-center gap-1.5 shadow-lg transition"
+            >
+              <Receipt className="w-3.5 h-3.5" />
+              <span>Generate Invoice</span>
             </button>
           </div>
         </div>
@@ -1662,6 +1674,18 @@ export default function StaffLabEnginePage() {
           </div>
         </div>
       )}
+      <InvoiceModal
+        isOpen={invoiceModalOpen}
+        onClose={() => setInvoiceModalOpen(false)}
+        certificate={certificate}
+        defaultFormat={activeFormat}
+        wassapiConfig={{
+          endpoint: wassapiEndpoint,
+          key: wassapiKey,
+          deviceId: wassapiDeviceId
+        }}
+        onSaved={(msg) => showToast(msg)}
+      />
       </div>
     </StaffAuthGate>
   );

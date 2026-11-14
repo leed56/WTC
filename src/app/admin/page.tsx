@@ -25,6 +25,7 @@ import {
   resetToDefaultCertificates
 } from '@/lib/certificateStore';
 import StaffAuthGate from '@/components/StaffAuthGate';
+import AdminCustomerInvoicePanel from '@/components/AdminCustomerInvoicePanel';
 
 export default function AdminPage() {
   const [certs, setCerts] = useState<GemCertificate[]>([]);
@@ -309,6 +310,9 @@ export default function AdminPage() {
             </table>
           </div>
         </div>
+
+        {/* Customers, Contacts & Invoices Directory */}
+        <AdminCustomerInvoicePanel />
 
         {/* Modal: Issue New Certificate */}
         {isModalOpen && (

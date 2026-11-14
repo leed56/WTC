@@ -47,6 +47,8 @@ export function proxy(request: NextRequest) {
     pathname.startsWith('/api/staff') ||
     pathname.startsWith('/api/microscope') ||
     pathname.startsWith('/api/whatsapp') ||
+    pathname.startsWith('/api/customers') ||
+    pathname.startsWith('/api/invoices') ||
     (pathname.startsWith('/api/certificates') && method !== 'GET') ||
     (pathname.startsWith('/api/submissions') && method === 'GET');
 
@@ -66,6 +68,8 @@ export const config = {
     '/api/staff/:path*',
     '/api/microscope/:path*',
     '/api/whatsapp/:path*',
+    '/api/customers/:path*',
+    '/api/invoices/:path*',
     '/api/certificates/:path*',
     '/api/submissions/:path*',
   ],
