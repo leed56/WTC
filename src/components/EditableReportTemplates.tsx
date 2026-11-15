@@ -570,7 +570,7 @@ export default function EditableReportTemplates({
                         src={
                           certificate.imageUrl.includes('?')
                             ? certificate.imageUrl
-                            : `${certificate.imageUrl}?v=3`
+                            : `${certificate.imageUrl}?v=4`
                         }
                         alt={certificate.variety}
                         className="w-full h-full object-contain drop-shadow-[0_14px_22px_rgba(0,0,0,0.65)]"
