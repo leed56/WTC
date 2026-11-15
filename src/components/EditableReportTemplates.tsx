@@ -669,22 +669,20 @@ export default function EditableReportTemplates({
             <div className="px-6 sm:px-12 pb-8 -mt-4 relative z-10">
               {/* Institutional Crest + Vertical Gold Line + Laboratory Title */}
               <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pb-5">
-                <div className="flex items-center gap-3">
+                <div className="flex flex-col items-center text-center">
                   <img
                     src="/brand/wtc_crest.png?v=3"
                     alt="WTC Gem Lab Crest"
-                    className="h-14 w-auto object-contain"
+                    className="h-12 w-auto object-contain mb-0.5"
                   />
-                  <div className="text-center">
-                    <div className="font-cinzel text-xs font-bold tracking-[0.26em] text-[#9E7823]">
-                      WTC
-                    </div>
-                    <div className="font-cinzel text-2xl font-black tracking-wider text-[#B68B29] leading-none">
-                      GEM LAB
-                    </div>
-                    <div className="text-[8px] font-mono tracking-[0.2em] text-[#0B1B3E] font-bold uppercase mt-1">
-                      GEMOLOGICAL LABORATORY
-                    </div>
+                  <div className="font-cinzel text-xs font-bold tracking-[0.28em] text-[#9E7823] leading-none">
+                    WTC
+                  </div>
+                  <div className="font-cinzel text-2xl font-black tracking-wider text-[#B68B29] leading-tight">
+                    GEM LAB
+                  </div>
+                  <div className="text-[7.5px] font-mono tracking-[0.22em] text-[#0B1B3E] font-bold uppercase mt-0.5">
+                    GEMOLOGICAL LABORATORY
                   </div>
                 </div>
 
@@ -741,16 +739,28 @@ export default function EditableReportTemplates({
                 <div className="md:col-span-5 flex flex-col items-center">
                   {certificate.imageUrl.includes('sample_sapphire') ? (
                     <div
-                      style={{ width: '215px', height: '160px' }}
-                      className="flex items-center justify-center relative"
+                      style={{ width: '215px', height: '165px' }}
+                      className="flex flex-col items-center justify-center relative"
                     >
                       <img
                         src={getDisplayStoneSrc(certificate.imageUrl)}
                         alt={certificate.variety}
-                        className="w-full h-full object-contain drop-shadow-[0_14px_20px_rgba(11,27,62,0.22)]"
+                        className="w-full h-[132px] object-contain drop-shadow-[0_10px_16px_rgba(11,27,62,0.18)] relative z-10"
+                      />
+                      {/* Subtle Studio Mirror Reflection */}
+                      <img
+                        src={getDisplayStoneSrc(certificate.imageUrl)}
+                        alt=""
+                        aria-hidden="true"
+                        style={{
+                          transform: 'scaleY(-1)',
+                          maskImage: 'linear-gradient(to bottom, rgba(0,0,0,0) 55%, rgba(0,0,0,0.28) 100%)',
+                          WebkitMaskImage: 'linear-gradient(to bottom, rgba(0,0,0,0) 55%, rgba(0,0,0,0.28) 100%)'
+                        }}
+                        className="w-full h-[36px] object-contain -mt-2 opacity-60 pointer-events-none select-none"
                       />
                       {certificate.showMicroscopeOnReport && certificate.microscopeImageUrl && (
-                        <div className="absolute bottom-1.5 right-1.5 w-14 h-14 rounded-lg border-2 border-[#C5A059] overflow-hidden shadow-md bg-slate-950">
+                        <div className="absolute bottom-1.5 right-1.5 z-20 w-14 h-14 rounded-lg border-2 border-[#C5A059] overflow-hidden shadow-md bg-slate-950">
                           <img
                             src={certificate.microscopeImageUrl}
                             alt="Inclusion"
@@ -957,23 +967,50 @@ export default function EditableReportTemplates({
                   </span>
                 </div>
 
-                {/* Right: Gold Serrated Foil Seal */}
+                {/* Right: Crisp Serrated Gold Foil Seal */}
                 <div className="flex justify-center sm:justify-end">
-                  <div className="w-28 h-28 rounded-full bg-gradient-to-br from-[#F7E08E] via-[#D4AF37] to-[#9B731A] p-1 shadow-lg border-2 border-dashed border-[#FFF3C4] flex items-center justify-center text-center">
-                    <div className="w-full h-full rounded-full border border-[#7A5912]/60 flex flex-col items-center justify-center px-2">
-                      <span className="text-[6.5px] font-mono font-bold uppercase tracking-wider text-[#422D04]">
-                        AUTHENTIC GEMOLOGICAL REPORT
-                      </span>
-                      <span className="font-cinzel font-black text-xs text-[#2B1D02] mt-1 leading-none">
+                  <div className="relative w-28 h-28 flex items-center justify-center drop-shadow-md select-none">
+                    <svg viewBox="0 0 120 120" className="w-full h-full">
+                      <defs>
+                        <radialGradient id="wtcSealGold" cx="35%" cy="30%" r="70%">
+                          <stop offset="0%" stopColor="#FFF2B2" />
+                          <stop offset="45%" stopColor="#E0B84C" />
+                          <stop offset="85%" stopColor="#B88724" />
+                          <stop offset="100%" stopColor="#8C6212" />
+                        </radialGradient>
+                        <path id="sealTopArc" d="M 22,60 A 38,38 0 1,1 98,60" />
+                        <path id="sealBotArc" d="M 21,62 A 39,39 0 0,0 99,62" />
+                      </defs>
+                      {/* Serrated Starburst Perimeter (36 points) */}
+                      <polygon
+                        fill="url(#wtcSealGold)"
+                        stroke="#7A540E"
+                        strokeWidth="0.8"
+                        points={Array.from({ length: 72 }, (_, i) => {
+                          const angle = (i * Math.PI) / 36;
+                          const r = i % 2 === 0 ? 57 : 52.5;
+                          return `${(60 + r * Math.cos(angle)).toFixed(2)},${(60 + r * Math.sin(angle)).toFixed(2)}`;
+                        }).join(' ')}
+                      />
+                      <circle cx="60" cy="60" r="46" fill="none" stroke="#6E4B0A" strokeWidth="1" opacity="0.7" />
+                      <circle cx="60" cy="60" r="32" fill="none" stroke="#6E4B0A" strokeWidth="0.9" opacity="0.7" />
+                      <text fontSize="5.4" fontWeight="700" fill="#2B1D02" letterSpacing="0.8">
+                        <textPath href="#sealTopArc" startOffset="50%" textAnchor="middle">
+                          ★ AUTHENTIC GEMOLOGICAL REPORT ★
+                        </textPath>
+                      </text>
+                      <text fontSize="5.4" fontWeight="700" fill="#2B1D02" letterSpacing="0.8">
+                        <textPath href="#sealBotArc" startOffset="50%" textAnchor="middle">
+                          TRUSTED CERTIFICATION
+                        </textPath>
+                      </text>
+                      <text x="60" y="57" textAnchor="middle" fontSize="14" fontWeight="900" fontFamily="serif" fill="#2B1D02" letterSpacing="1">
                         WTC
-                      </span>
-                      <span className="font-cinzel font-bold text-[10px] text-[#2B1D02] leading-tight">
+                      </text>
+                      <text x="60" y="70" textAnchor="middle" fontSize="8.5" fontWeight="800" fontFamily="serif" fill="#2B1D02" letterSpacing="0.6">
                         GEM LAB
-                      </span>
-                      <span className="text-[6px] font-mono font-bold uppercase tracking-wider text-[#422D04] mt-1">
-                        TRUSTED CERTIFICATION
-                      </span>
-                    </div>
+                      </text>
+                    </svg>
                   </div>
                 </div>
               </div>
