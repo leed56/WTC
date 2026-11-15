@@ -437,7 +437,7 @@ export default function EditableReportTemplates({
               <div className="flex items-center justify-between gap-4 pb-4 mb-3 border-b border-amber-400/20">
                 <div className="flex items-center gap-3">
                   <img
-                    src="/brand/wtc_crest.png"
+                    src="/brand/wtc_crest.png?v=3"
                     alt="WTC Gem Lab Crest"
                     className="h-12 w-auto object-contain"
                   />
@@ -561,33 +561,51 @@ export default function EditableReportTemplates({
 
                 {/* Right Column: Clean Stone Photo + Bottom-Right QR Code (5 cols) */}
                 <div className="sm:col-span-5 flex flex-col items-end justify-between gap-4">
-                  <div
-                    style={{ width: '156px', height: '124px' }}
-                    className={`rounded-2xl border-2 border-[#E5C158]/85 shadow-[0_10px_25px_rgba(0,0,0,0.5)] overflow-hidden relative self-center sm:self-end ${
-                      certificate.imageUrl.includes('sample_sapphire')
-                        ? 'bg-white p-1.5'
-                        : 'bg-[#070D1B]'
-                    }`}
-                  >
-                    <img
-                      src={certificate.imageUrl}
-                      alt={certificate.variety}
-                      className={`w-full h-full ${
-                        certificate.imageUrl.includes('sample_sapphire')
-                          ? 'object-contain rounded-xl'
-                          : 'object-cover'
-                      }`}
-                    />
-                    {certificate.showMicroscopeOnReport && certificate.microscopeImageUrl && (
-                      <div className="absolute bottom-1 right-1 w-10 h-10 rounded border border-amber-400 overflow-hidden shadow-md bg-slate-950">
-                        <img
-                          src={certificate.microscopeImageUrl}
-                          alt="Inclusion"
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                    )}
-                  </div>
+                  {certificate.imageUrl.includes('sample_sapphire') ? (
+                    <div
+                      style={{ width: '156px', height: '124px' }}
+                      className="relative self-center sm:self-end flex items-center justify-center"
+                    >
+                      <img
+                        src={
+                          certificate.imageUrl.includes('?')
+                            ? certificate.imageUrl
+                            : `${certificate.imageUrl}?v=3`
+                        }
+                        alt={certificate.variety}
+                        className="w-full h-full object-contain drop-shadow-[0_14px_22px_rgba(0,0,0,0.65)]"
+                      />
+                      {certificate.showMicroscopeOnReport && certificate.microscopeImageUrl && (
+                        <div className="absolute bottom-1 right-1 w-10 h-10 rounded-md border border-[#E5C158]/80 overflow-hidden shadow-lg bg-[#070D1B]">
+                          <img
+                            src={certificate.microscopeImageUrl}
+                            alt="Inclusion"
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    <div
+                      style={{ width: '156px', height: '124px' }}
+                      className="rounded-xl bg-[#070D1B] border border-[#E5C158]/75 shadow-[0_12px_28px_rgba(0,0,0,0.6)] overflow-hidden relative self-center sm:self-end"
+                    >
+                      <img
+                        src={certificate.imageUrl}
+                        alt={certificate.variety}
+                        className="w-full h-full object-cover"
+                      />
+                      {certificate.showMicroscopeOnReport && certificate.microscopeImageUrl && (
+                        <div className="absolute bottom-1 right-1 w-10 h-10 rounded-md border border-[#E5C158]/80 overflow-hidden shadow-lg bg-[#070D1B]">
+                          <img
+                            src={certificate.microscopeImageUrl}
+                            alt="Inclusion"
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                      )}
+                    </div>
+                  )}
 
                   {qrDataUrl && (
                     <div className="bg-white p-1.5 rounded-md shadow-xl border border-amber-300/60 self-center sm:self-end">
