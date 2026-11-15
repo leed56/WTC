@@ -439,7 +439,7 @@ export default function EditableReportTemplates({
                   <img
                     src="/brand/wtc_crest.png"
                     alt="WTC Gem Lab Crest"
-                    className="h-12 w-auto object-contain drop-shadow-[0_2px_10px_rgba(217,175,90,0.5)]"
+                    className="h-12 w-auto object-contain mix-blend-screen drop-shadow-[0_2px_10px_rgba(217,175,90,0.5)]"
                   />
                   <div>
                     <div className="text-[10px] font-cinzel font-bold tracking-[0.28em] text-[#F4D06F] text-center">
@@ -540,10 +540,10 @@ export default function EditableReportTemplates({
                     </span>
                   </div>
 
-                  <div className="grid grid-cols-12 items-baseline">
+                  <div className="grid grid-cols-12 items-start">
                     <span className="col-span-5 text-[#F4D06F] font-semibold">Treatment</span>
-                    <span className="col-span-7 text-emerald-300 font-semibold text-[11.5px]">
-                      :{' '}
+                    <span className="col-span-7 text-emerald-300 font-semibold text-[11px] leading-snug flex items-start gap-1">
+                      <span className="shrink-0">:</span>
                       <InlineEditable
                         value={certificate.treatment}
                         onChange={(val) => onChange({ treatment: val })}
@@ -562,13 +562,13 @@ export default function EditableReportTemplates({
                 {/* Right Column: Clean Stone Photo + Bottom-Right QR Code (5 cols) */}
                 <div className="sm:col-span-5 flex flex-col items-end justify-between gap-4">
                   <div
-                    style={{ width: '148px', height: '124px' }}
-                    className="rounded-2xl bg-white/95 p-1.5 border-2 border-[#E5C158]/80 shadow-[0_10px_25px_rgba(0,0,0,0.5)] overflow-hidden relative self-center sm:self-end"
+                    style={{ width: '154px', height: '126px' }}
+                    className="rounded-2xl bg-[#070D1B] border-2 border-[#E5C158]/85 shadow-[0_10px_25px_rgba(0,0,0,0.5)] overflow-hidden relative self-center sm:self-end"
                   >
                     <img
                       src={certificate.imageUrl}
                       alt={certificate.variety}
-                      className="w-full h-full object-contain rounded-xl"
+                      className="w-full h-full object-cover"
                     />
                     {certificate.showMicroscopeOnReport && certificate.microscopeImageUrl && (
                       <div className="absolute bottom-1 right-1 w-10 h-10 rounded border border-amber-400 overflow-hidden shadow-md bg-slate-950">
