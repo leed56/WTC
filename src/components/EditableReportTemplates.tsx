@@ -92,6 +92,13 @@ function InlineEditable({
   );
 }
 
+function getDisplayStoneSrc(url: string): string {
+  if (url.includes('sample_sapphire') && !url.includes('?')) {
+    return `${url}?v=5`;
+  }
+  return url;
+}
+
 export default function EditableReportTemplates({
   certificate,
   onChange,
@@ -363,13 +370,23 @@ export default function EditableReportTemplates({
 
               {/* Right Stone Thumbnail & QR (4 cols) */}
               <div className="col-span-4 flex flex-col items-center justify-center gap-2 border-l border-slate-800 pl-3">
-                <div className="w-16 h-16 rounded-lg bg-white p-1 border border-amber-500/40 shadow-inner overflow-hidden">
-                  <img
-                    src={certificate.imageUrl}
-                    alt={certificate.variety}
-                    className="w-full h-full object-cover rounded"
-                  />
-                </div>
+                {certificate.imageUrl.includes('sample_sapphire') ? (
+                  <div className="w-16 h-16 flex items-center justify-center">
+                    <img
+                      src={getDisplayStoneSrc(certificate.imageUrl)}
+                      alt={certificate.variety}
+                      className="w-full h-full object-contain drop-shadow-[0_4px_10px_rgba(0,0,0,0.5)]"
+                    />
+                  </div>
+                ) : (
+                  <div className="w-16 h-16 rounded-lg bg-[#070D1B] border border-amber-500/40 shadow-inner overflow-hidden">
+                    <img
+                      src={getDisplayStoneSrc(certificate.imageUrl)}
+                      alt={certificate.variety}
+                      className="w-full h-full object-cover rounded"
+                    />
+                  </div>
+                )}
                 {qrDataUrl && (
                   <div className="bg-white p-1 rounded shadow">
                     <img src={qrDataUrl} alt="QR" className="w-12 h-12" />
@@ -567,11 +584,7 @@ export default function EditableReportTemplates({
                       className="relative self-center sm:self-end flex items-center justify-center"
                     >
                       <img
-                        src={
-                          certificate.imageUrl.includes('?')
-                            ? certificate.imageUrl
-                            : `${certificate.imageUrl}?v=4`
-                        }
+                        src={getDisplayStoneSrc(certificate.imageUrl)}
                         alt={certificate.variety}
                         className="w-full h-full object-contain drop-shadow-[0_14px_22px_rgba(0,0,0,0.65)]"
                       />
@@ -658,7 +671,7 @@ export default function EditableReportTemplates({
               <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pb-5">
                 <div className="flex items-center gap-3">
                   <img
-                    src="/brand/wtc_crest.png"
+                    src="/brand/wtc_crest.png?v=3"
                     alt="WTC Gem Lab Crest"
                     className="h-14 w-auto object-contain"
                   />
@@ -726,25 +739,47 @@ export default function EditableReportTemplates({
                 </div>
 
                 <div className="md:col-span-5 flex flex-col items-center">
-                  <div
-                    style={{ width: '210px', height: '155px' }}
-                    className="rounded-xl bg-white p-2 border border-slate-200 shadow-sm flex items-center justify-center overflow-hidden relative"
-                  >
-                    <img
-                      src={certificate.imageUrl}
-                      alt={certificate.variety}
-                      className="w-full h-full object-contain"
-                    />
-                    {certificate.showMicroscopeOnReport && certificate.microscopeImageUrl && (
-                      <div className="absolute bottom-1.5 right-1.5 w-14 h-14 rounded-lg border-2 border-[#C5A059] overflow-hidden shadow-md bg-slate-950">
-                        <img
-                          src={certificate.microscopeImageUrl}
-                          alt="Inclusion"
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                    )}
-                  </div>
+                  {certificate.imageUrl.includes('sample_sapphire') ? (
+                    <div
+                      style={{ width: '215px', height: '160px' }}
+                      className="flex items-center justify-center relative"
+                    >
+                      <img
+                        src={getDisplayStoneSrc(certificate.imageUrl)}
+                        alt={certificate.variety}
+                        className="w-full h-full object-contain drop-shadow-[0_14px_20px_rgba(11,27,62,0.22)]"
+                      />
+                      {certificate.showMicroscopeOnReport && certificate.microscopeImageUrl && (
+                        <div className="absolute bottom-1.5 right-1.5 w-14 h-14 rounded-lg border-2 border-[#C5A059] overflow-hidden shadow-md bg-slate-950">
+                          <img
+                            src={certificate.microscopeImageUrl}
+                            alt="Inclusion"
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    <div
+                      style={{ width: '210px', height: '155px' }}
+                      className="rounded-xl bg-white p-1.5 border border-slate-200 shadow-sm flex items-center justify-center overflow-hidden relative"
+                    >
+                      <img
+                        src={getDisplayStoneSrc(certificate.imageUrl)}
+                        alt={certificate.variety}
+                        className="w-full h-full object-cover rounded-lg"
+                      />
+                      {certificate.showMicroscopeOnReport && certificate.microscopeImageUrl && (
+                        <div className="absolute bottom-1.5 right-1.5 w-14 h-14 rounded-lg border-2 border-[#C5A059] overflow-hidden shadow-md bg-slate-950">
+                          <img
+                            src={certificate.microscopeImageUrl}
+                            alt="Inclusion"
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -894,7 +929,7 @@ export default function EditableReportTemplates({
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 items-end pt-2">
                 {/* Left: Authorized Signatory */}
                 <div className="text-center">
-                  <div className="font-playfair italic text-2xl text-blue-800 font-bold tracking-wide -mb-1 select-none">
+                  <div className="font-playfair italic text-lg sm:text-xl whitespace-nowrap text-blue-800 font-bold tracking-wide -mb-1 select-none">
                     <InlineEditable
                       value={certificate.gemologistName || 'K. Perera'}
                       onChange={(val) => onChange({ gemologistName: val })}
