@@ -45,6 +45,7 @@ import {
 import StaffAuthGate from '@/components/StaffAuthGate';
 import InvoiceModal from '@/components/InvoiceModal';
 import LabJobTracker from '@/components/LabJobTracker';
+import LiveCameraCapture from '@/components/LiveCameraCapture';
 import type { LabJobRecord } from '@/app/api/jobs/route';
 import EditableReportTemplates, {
   ReportTemplateFormat
@@ -146,6 +147,7 @@ export default function StaffLabEnginePage() {
   // =========================================================================
   const [whatsappModalOpen, setWhatsappModalOpen] = useState<boolean>(false);
   const [invoiceModalOpen, setInvoiceModalOpen] = useState<boolean>(false);
+  const [cameraTarget, setCameraTarget] = useState<'imageUrl' | 'microscopeImageUrl' | null>(null);
   const [activeJobNumber, setActiveJobNumber] = useState<string | null>(null);
   const [jobRefreshTrigger, setJobRefreshTrigger] = useState<number>(0);
   const [wassapiEndpoint, setWassapiEndpoint] = useState<string>(
@@ -1023,16 +1025,26 @@ export default function StaffLabEnginePage() {
                       />
                     </div>
                     <div className="space-y-1.5 flex-1">
-                      <label className="cursor-pointer inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-mono font-bold text-xs transition w-full justify-center">
-                        <Upload className="w-3.5 h-3.5" />
-                        <span>Upload Stone Photo</span>
-                        <input
-                          type="file"
-                          accept="image/*"
-                          onChange={(e) => handleImageUpload(e, 'imageUrl')}
-                          className="hidden"
-                        />
-                      </label>
+                      <div className="flex gap-1.5">
+                        <label className="cursor-pointer inline-flex items-center gap-1.5 px-2.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-mono font-bold text-xs transition flex-1 justify-center">
+                          <Upload className="w-3.5 h-3.5" />
+                          <span>Upload</span>
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) => handleImageUpload(e, 'imageUrl')}
+                            className="hidden"
+                          />
+                        </label>
+                        <button
+                          type="button"
+                          onClick={() => setCameraTarget('imageUrl')}
+                          className="inline-flex items-center gap-1.5 px-2.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-mono font-bold text-xs transition flex-1 justify-center"
+                        >
+                          <Camera className="w-3.5 h-3.5" />
+                          <span>Camera</span>
+                        </button>
+                      </div>
                       <div className="flex flex-wrap gap-1">
                         {SAMPLE_STONE_PHOTOS.map((s) => (
                           <button
@@ -1153,8 +1165,8 @@ export default function StaffLabEnginePage() {
                     <Microscope className="w-3.5 h-3.5 text-purple-300" />
                     <span>
                       {certificate.microscopeImageUrl
-                        ? 'Change Microscope Image'
-                        : 'Upload Microscope Image'}
+                        ? 'Upload New'
+                        : 'Upload Photo'}
                     </span>
                     <input
                       type="file"
@@ -1163,6 +1175,15 @@ export default function StaffLabEnginePage() {
                       className="hidden"
                     />
                   </label>
+
+                  <button
+                    type="button"
+                    onClick={() => setCameraTarget('microscopeImageUrl')}
+                    className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-mono font-bold text-xs transition"
+                  >
+                    <Camera className="w-3.5 h-3.5" />
+                    <span>Microscope Camera</span>
+                  </button>
 
                   <button
                     type="button"
@@ -1723,6 +1744,25 @@ export default function StaffLabEnginePage() {
           deviceId: wassapiDeviceId
         }}
         onSaved={(msg) => showToast(msg)}
+      />
+      <LiveCameraCapture
+        isOpen={cameraTarget !== null}
+        onClose={() => setCameraTarget(null)}
+        target={cameraTarget || 'microscopeImageUrl'}
+        reportNumber={certificate.reportNumber}
+        onCapture={(dataUrl) => {
+          if (cameraTarget === 'microscopeImageUrl') {
+            setCertificate((prev) => ({
+              ...prev,
+              microscopeImageUrl: dataUrl,
+              showMicroscopeOnReport: true
+            }));
+            showToast('Microscope photo captured & applied to report!');
+          } else {
+            setCertificate((prev) => ({ ...prev, imageUrl: dataUrl }));
+            showToast('Stone macro photo captured & applied to report!');
+          }
+        }}
       />
       </div>
     </StaffAuthGate>
