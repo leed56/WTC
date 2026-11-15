@@ -439,7 +439,7 @@ export default function EditableReportTemplates({
                   <img
                     src="/brand/wtc_crest.png"
                     alt="WTC Gem Lab Crest"
-                    className="h-12 w-auto object-contain mix-blend-screen drop-shadow-[0_2px_10px_rgba(217,175,90,0.5)]"
+                    className="h-12 w-auto object-contain"
                   />
                   <div>
                     <div className="text-[10px] font-cinzel font-bold tracking-[0.28em] text-[#F4D06F] text-center">
@@ -562,13 +562,21 @@ export default function EditableReportTemplates({
                 {/* Right Column: Clean Stone Photo + Bottom-Right QR Code (5 cols) */}
                 <div className="sm:col-span-5 flex flex-col items-end justify-between gap-4">
                   <div
-                    style={{ width: '154px', height: '126px' }}
-                    className="rounded-2xl bg-[#070D1B] border-2 border-[#E5C158]/85 shadow-[0_10px_25px_rgba(0,0,0,0.5)] overflow-hidden relative self-center sm:self-end"
+                    style={{ width: '156px', height: '124px' }}
+                    className={`rounded-2xl border-2 border-[#E5C158]/85 shadow-[0_10px_25px_rgba(0,0,0,0.5)] overflow-hidden relative self-center sm:self-end ${
+                      certificate.imageUrl.includes('sample_sapphire')
+                        ? 'bg-white p-1.5'
+                        : 'bg-[#070D1B]'
+                    }`}
                   >
                     <img
                       src={certificate.imageUrl}
                       alt={certificate.variety}
-                      className="w-full h-full object-cover"
+                      className={`w-full h-full ${
+                        certificate.imageUrl.includes('sample_sapphire')
+                          ? 'object-contain rounded-xl'
+                          : 'object-cover'
+                      }`}
                     />
                     {certificate.showMicroscopeOnReport && certificate.microscopeImageUrl && (
                       <div className="absolute bottom-1 right-1 w-10 h-10 rounded border border-amber-400 overflow-hidden shadow-md bg-slate-950">
