@@ -526,10 +526,26 @@ export default function EditableReportTemplates({
                     className="h-12 w-auto object-contain"
                   />
                   <div>
-                    <div className="text-[11px] font-cinzel font-extrabold tracking-[0.28em] text-[#F0C75E] text-center drop-shadow-[0_2px_4px_rgba(0,0,0,0.65)]">
+                    <div
+                      style={{
+                        background:
+                          'linear-gradient(180deg, #FFF2B2 0%, #E8C054 45%, #B88625 80%, #F7DF8D 100%)',
+                        WebkitBackgroundClip: 'text',
+                        WebkitTextFillColor: 'transparent'
+                      }}
+                      className="text-[11px] font-cinzel font-extrabold tracking-[0.28em] text-center drop-shadow-[0_2px_4px_rgba(0,0,0,0.7)]"
+                    >
                       WTC
                     </div>
-                    <div className="font-cinzel text-xl font-black tracking-wider text-[#F0C75E] leading-none drop-shadow-[0_2px_4px_rgba(0,0,0,0.65)]">
+                    <div
+                      style={{
+                        background:
+                          'linear-gradient(180deg, #FFF2B2 0%, #E8C054 45%, #B88625 80%, #F7DF8D 100%)',
+                        WebkitBackgroundClip: 'text',
+                        WebkitTextFillColor: 'transparent'
+                      }}
+                      className="font-cinzel text-xl font-black tracking-wider leading-none drop-shadow-[0_2px_4px_rgba(0,0,0,0.7)]"
+                    >
                       GEM LAB
                     </div>
                     <div className="text-[7px] font-mono tracking-[0.22em] text-amber-200/90 uppercase mt-1">
@@ -746,10 +762,26 @@ export default function EditableReportTemplates({
                     alt="WTC Gem Lab Crest"
                     className="h-16 w-auto object-contain mb-1.5 drop-shadow-[0_6px_16px_rgba(0,0,0,0.5)]"
                   />
-                  <div className="font-cinzel text-base sm:text-lg font-extrabold tracking-[0.38em] text-[#F0C75E] leading-none mb-0.5 drop-shadow-[0_2px_5px_rgba(0,0,0,0.7)]">
+                  <div
+                    style={{
+                      background:
+                        'linear-gradient(180deg, #FFF2B2 0%, #E8C054 45%, #B88625 80%, #F7DF8D 100%)',
+                      WebkitBackgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent'
+                    }}
+                    className="font-cinzel text-base sm:text-lg font-extrabold tracking-[0.38em] leading-none mb-0.5 drop-shadow-[0_2px_5px_rgba(0,0,0,0.75)]"
+                  >
                     WTC
                   </div>
-                  <div className="font-cinzel text-3xl font-black tracking-[0.12em] text-[#F0C75E] leading-tight drop-shadow-[0_2px_6px_rgba(0,0,0,0.7)]">
+                  <div
+                    style={{
+                      background:
+                        'linear-gradient(180deg, #FFF2B2 0%, #E8C054 45%, #B88625 80%, #F7DF8D 100%)',
+                      WebkitBackgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent'
+                    }}
+                    className="font-cinzel text-3xl font-black tracking-[0.12em] leading-tight drop-shadow-[0_2px_6px_rgba(0,0,0,0.75)]"
+                  >
                     GEM LAB
                   </div>
                   <div className="text-[9px] font-mono tracking-[0.28em] text-slate-200 uppercase mt-0.5">
