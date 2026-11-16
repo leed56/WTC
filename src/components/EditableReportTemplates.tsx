@@ -633,411 +633,291 @@ export default function EditableReportTemplates({
       )}
 
       {/* =====================================================================
-          FORMAT 3: FULL A4 GEMOLOGICAL CERTIFICATE (ORIGINAL WTC DESIGN)
+          FORMAT 3: FULL A4 GEMOLOGICAL CERTIFICATE (EXACT WTC A4 TEMPLATE)
          ===================================================================== */}
       {activeFormat === 'a4' && (
         <div className="flex justify-center py-4">
           <div
-            style={{ maxWidth: '820px' }}
-            className="report-print-target w-full max-w-[820px] bg-[#FDFCF9] text-slate-900 rounded-md border border-slate-300 shadow-2xl relative overflow-hidden"
+            style={{
+              maxWidth: '794px',
+              containerType: 'inline-size',
+              backgroundImage: "url('/brand/bg_a4_clean.png')",
+              backgroundSize: '100% 100%',
+              backgroundPosition: 'center',
+              backgroundRepeat: 'no-repeat'
+            }}
+            className="report-print-target w-full aspect-[210/297] bg-[#fafbfd] text-[#0b1936] relative overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.65)] select-text"
           >
-            {/* Top Sweeping Navy & Gold Wave Header */}
-            <svg
-              viewBox="0 0 820 120"
-              className="w-full h-24 sm:h-28 block pointer-events-none"
-              preserveAspectRatio="none"
+            {/* 1. Report Number & Date of Issue */}
+            <div
+              style={{
+                top: '31.74%',
+                left: '4.97%',
+                width: '58%',
+                gap: '1.14cqw',
+                fontSize: '2.05cqw'
+              }}
+              className="absolute flex flex-col font-semibold text-[#0b1936] z-10"
             >
-              <defs>
-                <linearGradient id="a4Navy" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stopColor="#071330" />
-                  <stop offset="50%" stopColor="#0D2454" />
-                  <stop offset="100%" stopColor="#061028" />
-                </linearGradient>
-                <linearGradient id="a4Gold" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stopColor="#B88928" />
-                  <stop offset="50%" stopColor="#F5DC86" />
-                  <stop offset="100%" stopColor="#A67A1E" />
-                </linearGradient>
-              </defs>
-              <path d="M 0,0 L 820,0 L 820,88 Q 520,10 0,105 Z" fill="url(#a4Navy)" />
-              <path
-                d="M 0,102 Q 520,5 820,84 L 820,94 Q 520,16 0,114 Z"
-                fill="url(#a4Gold)"
-              />
-            </svg>
-
-            <div className="px-6 sm:px-12 pb-8 -mt-4 relative z-10">
-              {/* Institutional Crest + Vertical Gold Line + Laboratory Title */}
-              <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pb-5">
-                <div className="flex flex-col items-center text-center">
-                  <img
-                    src="/brand/wtc_crest.png?v=3"
-                    alt="WTC Gem Lab Crest"
-                    className="h-12 w-auto object-contain mb-0.5"
-                  />
-                  <div className="font-cinzel text-xs font-bold tracking-[0.28em] text-[#9E7823] leading-none">
-                    WTC
-                  </div>
-                  <div className="font-cinzel text-2xl font-black tracking-wider text-[#B68B29] leading-tight">
-                    GEM LAB
-                  </div>
-                  <div className="text-[7.5px] font-mono tracking-[0.22em] text-[#0B1B3E] font-bold uppercase mt-0.5">
-                    GEMOLOGICAL LABORATORY
-                  </div>
-                </div>
-
-                <div className="hidden sm:block h-16 w-[1.5px] bg-[#C5A059]" />
-
-                <div className="text-center sm:text-left">
-                  <div className="font-cinzel font-extrabold text-lg sm:text-xl tracking-wider text-[#0B1B3E] border-b border-[#C5A059] pb-1">
-                    GEMOLOGICAL LABORATORY
-                  </div>
-                  <div className="text-[10px] sm:text-[11px] font-cinzel font-bold tracking-[0.25em] text-[#1E335E] pt-1.5 text-center">
-                    ANALYSE &bull; IDENTIFY &bull; ASSURE
-                  </div>
-                </div>
-              </div>
-
-              {/* Centered Dark Navy Pill: GEMSTONE IDENTIFICATION REPORT */}
-              <div className="flex items-center justify-center gap-3 my-3">
-                <div className="h-[1px] flex-1 bg-gradient-to-r from-transparent to-[#C5A059]" />
-                <div className="px-6 sm:px-10 py-2 rounded-full bg-gradient-to-r from-[#071330] via-[#0E2454] to-[#071330] text-white font-cinzel font-bold text-xs sm:text-sm tracking-[0.18em] uppercase shadow-md border border-[#C5A059]/40">
-                  GEMSTONE IDENTIFICATION REPORT
-                </div>
-                <div className="h-[1px] flex-1 bg-gradient-to-l from-transparent to-[#C5A059]" />
-              </div>
-
-              {/* Report Number + Date of Issue (Left) & Large Stone Photo (Right) */}
-              <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center my-5">
-                <div className="md:col-span-7 space-y-2 text-sm font-sans">
-                  <div className="grid grid-cols-12">
-                    <span className="col-span-5 font-semibold text-[#0B1B3E]">
-                      Report Number
-                    </span>
-                    <span className="col-span-7 font-bold text-slate-950 font-mono">
-                      :{' '}
-                      <InlineEditable
-                        value={certificate.reportNumber}
-                        onChange={(val) => onChange({ reportNumber: val })}
-                      />
-                    </span>
-                  </div>
-                  <div className="grid grid-cols-12">
-                    <span className="col-span-5 font-semibold text-[#0B1B3E]">
-                      Date of Issue
-                    </span>
-                    <span className="col-span-7 font-semibold text-slate-900">
-                      :{' '}
-                      <InlineEditable
-                        value={certificate.issueDate}
-                        onChange={(val) => onChange({ issueDate: val })}
-                      />
-                    </span>
-                  </div>
-                </div>
-
-                <div className="md:col-span-5 flex flex-col items-center">
-                  {certificate.imageUrl.includes('sample_sapphire') ? (
-                    <div
-                      style={{ width: '215px', height: '165px' }}
-                      className="flex flex-col items-center justify-center relative"
-                    >
-                      <img
-                        src={getDisplayStoneSrc(certificate.imageUrl)}
-                        alt={certificate.variety}
-                        className="w-full h-[132px] object-contain drop-shadow-[0_10px_16px_rgba(11,27,62,0.18)] relative z-10"
-                      />
-                      {/* Subtle Studio Mirror Reflection */}
-                      <img
-                        src={getDisplayStoneSrc(certificate.imageUrl)}
-                        alt=""
-                        aria-hidden="true"
-                        style={{
-                          transform: 'scaleY(-1)',
-                          maskImage: 'linear-gradient(to bottom, rgba(0,0,0,0) 55%, rgba(0,0,0,0.28) 100%)',
-                          WebkitMaskImage: 'linear-gradient(to bottom, rgba(0,0,0,0) 55%, rgba(0,0,0,0.28) 100%)'
-                        }}
-                        className="w-full h-[36px] object-contain -mt-2 opacity-60 pointer-events-none select-none"
-                      />
-                      {certificate.showMicroscopeOnReport && certificate.microscopeImageUrl && (
-                        <div className="absolute bottom-1.5 right-1.5 z-20 w-14 h-14 rounded-lg border-2 border-[#C5A059] overflow-hidden shadow-md bg-slate-950">
-                          <img
-                            src={certificate.microscopeImageUrl}
-                            alt="Inclusion"
-                            className="w-full h-full object-cover"
-                          />
-                        </div>
-                      )}
-                    </div>
-                  ) : (
-                    <div
-                      style={{ width: '210px', height: '155px' }}
-                      className="rounded-xl bg-white p-1.5 border border-slate-200 shadow-sm flex items-center justify-center overflow-hidden relative"
-                    >
-                      <img
-                        src={getDisplayStoneSrc(certificate.imageUrl)}
-                        alt={certificate.variety}
-                        className="w-full h-full object-cover rounded-lg"
-                      />
-                      {certificate.showMicroscopeOnReport && certificate.microscopeImageUrl && (
-                        <div className="absolute bottom-1.5 right-1.5 w-14 h-14 rounded-lg border-2 border-[#C5A059] overflow-hidden shadow-md bg-slate-950">
-                          <img
-                            src={certificate.microscopeImageUrl}
-                            alt="Inclusion"
-                            className="w-full h-full object-cover"
-                          />
-                        </div>
-                      )}
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {/* Section Bar 1: GEMSTONE IDENTIFICATION */}
-              <div className="rounded-full bg-gradient-to-r from-[#071330] via-[#132C63] to-[#D4AF37]/30 px-5 py-1.5 mb-3">
-                <h3 className="font-cinzel font-bold text-xs sm:text-sm tracking-[0.14em] text-white uppercase">
-                  GEMSTONE IDENTIFICATION
-                </h3>
-              </div>
-
-              <div className="space-y-2 text-xs sm:text-[13px] px-2 mb-6">
-                <div className="grid grid-cols-12 py-0.5">
-                  <span className="col-span-5 sm:col-span-4 font-semibold text-slate-700">
-                    Species / Variety
-                  </span>
-                  <span className="col-span-7 sm:col-span-8 font-bold text-[#0B1B3E]">
-                    :{' '}
-                    <InlineEditable
-                      value={`${certificate.species} / ${certificate.variety}`}
-                      onChange={(val) => onChange({ variety: val })}
-                    />
-                  </span>
-                </div>
-
-                <div className="grid grid-cols-12 py-0.5">
-                  <span className="col-span-5 sm:col-span-4 font-semibold text-slate-700">
-                    Weight
-                  </span>
-                  <span className="col-span-7 sm:col-span-8 font-bold text-slate-950">
-                    :{' '}
-                    <InlineEditable
-                      value={certificate.weight}
-                      onChange={(val) => onChange({ weight: val })}
-                    />
-                  </span>
-                </div>
-
-                <div className="grid grid-cols-12 py-0.5">
-                  <span className="col-span-5 sm:col-span-4 font-semibold text-slate-700">
-                    Shape and Cutting Style
-                  </span>
-                  <span className="col-span-7 sm:col-span-8 text-slate-900">
-                    :{' '}
-                    <InlineEditable
-                      value={certificate.shapeAndCut}
-                      onChange={(val) => onChange({ shapeAndCut: val })}
-                    />
-                  </span>
-                </div>
-
-                <div className="grid grid-cols-12 py-0.5">
-                  <span className="col-span-5 sm:col-span-4 font-semibold text-slate-700">
-                    Measurements
-                  </span>
-                  <span className="col-span-7 sm:col-span-8 font-mono text-slate-900">
-                    :{' '}
-                    <InlineEditable
-                      value={certificate.dimensions}
-                      onChange={(val) => onChange({ dimensions: val })}
-                    />
-                  </span>
-                </div>
-
-                <div className="grid grid-cols-12 py-0.5">
-                  <span className="col-span-5 sm:col-span-4 font-semibold text-slate-700">
-                    Colour
-                  </span>
-                  <span className="col-span-7 sm:col-span-8 text-slate-900">
-                    :{' '}
-                    <InlineEditable
-                      value={certificate.color}
-                      onChange={(val) => onChange({ color: val })}
-                    />
-                  </span>
-                </div>
-
-                <div className="grid grid-cols-12 py-0.5">
-                  <span className="col-span-5 sm:col-span-4 font-semibold text-slate-700">
-                    Transparency
-                  </span>
-                  <span className="col-span-7 sm:col-span-8 text-slate-900">
-                    :{' '}
-                    <InlineEditable
-                      value={certificate.transparency}
-                      onChange={(val) => onChange({ transparency: val })}
-                    />
-                  </span>
-                </div>
-
-                <div className="grid grid-cols-12 py-0.5">
-                  <span className="col-span-5 sm:col-span-4 font-semibold text-slate-700">
-                    R.I. / Specific Gravity
-                  </span>
-                  <span className="col-span-7 sm:col-span-8 font-mono text-slate-900">
-                    :{' '}
-                    <InlineEditable
-                      value={certificate.refractiveIndex || '1.762 – 1.770'}
-                      onChange={(val) => onChange({ refractiveIndex: val })}
-                    />{' '}
-                    &bull; S.G.{' '}
-                    <InlineEditable
-                      value={certificate.specificGravity || '4.00'}
-                      onChange={(val) => onChange({ specificGravity: val })}
-                    />
-                  </span>
-                </div>
-
-                <div className="grid grid-cols-12 py-0.5">
-                  <span className="col-span-5 sm:col-span-4 font-semibold text-slate-700">
-                    Treatment
-                  </span>
-                  <span className="col-span-7 sm:col-span-8 font-bold text-[#0B1B3E]">
-                    :{' '}
-                    <InlineEditable
-                      value={certificate.treatment}
-                      onChange={(val) => onChange({ treatment: val })}
-                    />
-                  </span>
-                </div>
-              </div>
-
-              {/* Section Bar 2: LABORATORY OBSERVATIONS */}
-              <div className="rounded-full bg-gradient-to-r from-[#071330] via-[#132C63] to-[#D4AF37]/30 px-5 py-1.5 mb-3">
-                <h3 className="font-cinzel font-bold text-xs sm:text-sm tracking-[0.14em] text-white uppercase">
-                  LABORATORY OBSERVATIONS
-                </h3>
-              </div>
-
-              <div className="px-2 text-xs sm:text-[13px] text-slate-800 leading-relaxed mb-8 space-y-1.5">
-                <div>
+              <div
+                style={{ gridTemplateColumns: '40% 5.5% 54.5%' }}
+                className="grid items-baseline leading-[1.2] whitespace-nowrap"
+              >
+                <span>Report Number</span>
+                <span>:</span>
+                <span className="font-bold text-[#061229]">
                   <InlineEditable
-                    multiline
-                    value={certificate.microscopicObservations}
-                    onChange={(val) => onChange({ microscopicObservations: val })}
+                    value={certificate.reportNumber}
+                    onChange={(val) => onChange({ reportNumber: val })}
                   />
-                </div>
-                <div className="text-slate-600 italic text-xs">
+                </span>
+              </div>
+              <div
+                style={{ gridTemplateColumns: '40% 5.5% 54.5%' }}
+                className="grid items-baseline leading-[1.2] whitespace-nowrap"
+              >
+                <span>Date of Issue</span>
+                <span>:</span>
+                <span className="font-bold text-[#061229]">
                   <InlineEditable
-                    multiline
-                    value={certificate.comments}
-                    onChange={(val) => onChange({ comments: val })}
+                    value={certificate.issueDate}
+                    onChange={(val) => onChange({ issueDate: val })}
                   />
-                </div>
-              </div>
-
-              {/* Bottom Signature, Center QR Code & Right Gold Foil Seal */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 items-end pt-2">
-                {/* Left: Authorized Signatory */}
-                <div className="text-center">
-                  <div className="font-playfair italic text-lg sm:text-xl whitespace-nowrap text-blue-800 font-bold tracking-wide -mb-1 select-none">
-                    <InlineEditable
-                      value={certificate.gemologistName || 'K. Perera'}
-                      onChange={(val) => onChange({ gemologistName: val })}
-                    />
-                  </div>
-                  <div className="border-t border-[#C5A059] pt-1.5 mt-1">
-                    <div className="text-xs font-bold text-[#0B1B3E]">
-                      Authorized Signatory
-                    </div>
-                    <div className="text-[11px] text-slate-600">
-                      Senior Gemologist
-                    </div>
-                  </div>
-                </div>
-
-                {/* Center: QR Verification Code */}
-                <div className="flex flex-col items-center">
-                  {qrDataUrl && (
-                    <div className="bg-white p-1.5 rounded border border-slate-300 shadow-sm">
-                      <img src={qrDataUrl} alt="Verify QR" className="w-20 h-20" />
-                    </div>
-                  )}
-                  <span className="text-[11px] font-bold text-[#0B1B3E] mt-1">
-                    Verify Report
-                  </span>
-                </div>
-
-                {/* Right: Crisp Serrated Gold Foil Seal */}
-                <div className="flex justify-center sm:justify-end">
-                  <div className="relative w-28 h-28 flex items-center justify-center drop-shadow-md select-none">
-                    <svg viewBox="0 0 120 120" className="w-full h-full">
-                      <defs>
-                        <radialGradient id="wtcSealGold" cx="35%" cy="30%" r="70%">
-                          <stop offset="0%" stopColor="#FFF2B2" />
-                          <stop offset="45%" stopColor="#E0B84C" />
-                          <stop offset="85%" stopColor="#B88724" />
-                          <stop offset="100%" stopColor="#8C6212" />
-                        </radialGradient>
-                        <path id="sealTopArc" d="M 22,60 A 38,38 0 1,1 98,60" />
-                        <path id="sealBotArc" d="M 21,62 A 39,39 0 0,0 99,62" />
-                      </defs>
-                      {/* Serrated Starburst Perimeter (36 points) */}
-                      <polygon
-                        fill="url(#wtcSealGold)"
-                        stroke="#7A540E"
-                        strokeWidth="0.8"
-                        points={Array.from({ length: 72 }, (_, i) => {
-                          const angle = (i * Math.PI) / 36;
-                          const r = i % 2 === 0 ? 57 : 52.5;
-                          return `${(60 + r * Math.cos(angle)).toFixed(2)},${(60 + r * Math.sin(angle)).toFixed(2)}`;
-                        }).join(' ')}
-                      />
-                      <circle cx="60" cy="60" r="46" fill="none" stroke="#6E4B0A" strokeWidth="1" opacity="0.7" />
-                      <circle cx="60" cy="60" r="32" fill="none" stroke="#6E4B0A" strokeWidth="0.9" opacity="0.7" />
-                      <text fontSize="5.4" fontWeight="700" fill="#2B1D02" letterSpacing="0.8">
-                        <textPath href="#sealTopArc" startOffset="50%" textAnchor="middle">
-                          ★ AUTHENTIC GEMOLOGICAL REPORT ★
-                        </textPath>
-                      </text>
-                      <text fontSize="5.4" fontWeight="700" fill="#2B1D02" letterSpacing="0.8">
-                        <textPath href="#sealBotArc" startOffset="50%" textAnchor="middle">
-                          TRUSTED CERTIFICATION
-                        </textPath>
-                      </text>
-                      <text x="60" y="57" textAnchor="middle" fontSize="14" fontWeight="900" fontFamily="serif" fill="#2B1D02" letterSpacing="1">
-                        WTC
-                      </text>
-                      <text x="60" y="70" textAnchor="middle" fontSize="8.5" fontWeight="800" fontFamily="serif" fill="#2B1D02" letterSpacing="0.6">
-                        GEM LAB
-                      </text>
-                    </svg>
-                  </div>
-                </div>
-              </div>
-
-              {/* Footer Disclaimer */}
-              <div className="text-center mt-6 pt-3 border-t border-slate-200 space-y-0.5">
-                <p className="text-[10.5px] italic text-slate-600">
-                  This report is issued for identification purposes only and does not constitute a valuation.
-                </p>
-                <div className="text-xs font-bold text-[#0B1B3E]">
-                  {LAB_CONTACT_INFO.website}
-                </div>
+                </span>
               </div>
             </div>
 
-            {/* Bottom Sweeping Navy & Gold Wave Footer */}
-            <svg
-              viewBox="0 0 820 75"
-              className="w-full h-16 block pointer-events-none"
-              preserveAspectRatio="none"
+            {/* 2. Gemstone Photo on Right */}
+            <div
+              style={{
+                top: '30.08%',
+                left: '63.95%',
+                width: '32.87%',
+                height: '28.81%'
+              }}
+              className="absolute flex items-start justify-center z-[4]"
             >
-              <path
-                d="M 0,30 Q 260,65 820,5 L 820,14 Q 260,75 0,40 Z"
-                fill="url(#a4Gold)"
+              <img
+                src={
+                  certificate.imageUrl.includes('sample_sapphire')
+                    ? '/brand/sapphire_a4_full.png'
+                    : certificate.imageUrl
+                }
+                alt={certificate.variety}
+                className={`w-full h-full block ${
+                  certificate.imageUrl.includes('sample_sapphire')
+                    ? 'object-contain'
+                    : 'object-contain rounded-xl'
+                }`}
               />
-              <path d="M 0,36 Q 260,70 820,12 L 820,75 L 0,75 Z" fill="url(#a4Navy)" />
-            </svg>
+              {certificate.showMicroscopeOnReport && certificate.microscopeImageUrl && (
+                <div className="absolute bottom-[4%] right-[4%] w-[26%] aspect-square rounded-lg border-2 border-[#C5A059] overflow-hidden shadow-md bg-slate-950 z-10">
+                  <img
+                    src={certificate.microscopeImageUrl}
+                    alt="Inclusion"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              )}
+            </div>
+
+            {/* 3. Gemstone Identification 7 Rows */}
+            <div
+              style={{
+                top: '44.73%',
+                left: '4.83%',
+                width: '59.5%',
+                height: '16.5%',
+                fontSize: '1.81cqw'
+              }}
+              className="absolute flex flex-col justify-between font-semibold text-[#0b1936] z-10"
+            >
+              <div
+                style={{ gridTemplateColumns: '39.5% 4.5% 56%' }}
+                className="grid items-center leading-[1.15] whitespace-nowrap"
+              >
+                <span className="text-[#111e38]">Species / Variety</span>
+                <span>:</span>
+                <span className="text-[#061229] truncate">
+                  <InlineEditable
+                    value={`${certificate.species} / ${certificate.variety}`}
+                    onChange={(val) => onChange({ variety: val })}
+                  />
+                </span>
+              </div>
+
+              <div
+                style={{ gridTemplateColumns: '39.5% 4.5% 56%' }}
+                className="grid items-center leading-[1.15] whitespace-nowrap"
+              >
+                <span className="text-[#111e38]">Weight</span>
+                <span>:</span>
+                <span className="text-[#061229]">
+                  <InlineEditable
+                    value={certificate.weight}
+                    onChange={(val) => onChange({ weight: val })}
+                  />
+                </span>
+              </div>
+
+              <div
+                style={{ gridTemplateColumns: '39.5% 4.5% 56%' }}
+                className="grid items-center leading-[1.15] whitespace-nowrap"
+              >
+                <span className="text-[#111e38]">Shape and Cutting Style</span>
+                <span>:</span>
+                <span className="text-[#061229]">
+                  <InlineEditable
+                    value={certificate.shapeAndCut}
+                    onChange={(val) => onChange({ shapeAndCut: val })}
+                  />
+                </span>
+              </div>
+
+              <div
+                style={{ gridTemplateColumns: '39.5% 4.5% 56%' }}
+                className="grid items-center leading-[1.15] whitespace-nowrap"
+              >
+                <span className="text-[#111e38]">Measurements</span>
+                <span>:</span>
+                <span className="text-[#061229]">
+                  <InlineEditable
+                    value={certificate.dimensions}
+                    onChange={(val) => onChange({ dimensions: val })}
+                  />
+                </span>
+              </div>
+
+              <div
+                style={{ gridTemplateColumns: '39.5% 4.5% 56%' }}
+                className="grid items-center leading-[1.15] whitespace-nowrap"
+              >
+                <span className="text-[#111e38]">Colour</span>
+                <span>:</span>
+                <span className="text-[#061229]">
+                  <InlineEditable
+                    value={certificate.color}
+                    onChange={(val) => onChange({ color: val })}
+                  />
+                </span>
+              </div>
+
+              <div
+                style={{ gridTemplateColumns: '39.5% 4.5% 56%' }}
+                className="grid items-center leading-[1.15] whitespace-nowrap"
+              >
+                <span className="text-[#111e38]">Transparency</span>
+                <span>:</span>
+                <span className="text-[#061229]">
+                  <InlineEditable
+                    value={certificate.transparency}
+                    onChange={(val) => onChange({ transparency: val })}
+                  />
+                </span>
+              </div>
+
+              <div
+                style={{ gridTemplateColumns: '39.5% 4.5% 56%' }}
+                className="grid items-center leading-[1.15] whitespace-nowrap"
+              >
+                <span className="text-[#111e38]">Treatment</span>
+                <span>:</span>
+                <span className="text-[#061229] truncate">
+                  <InlineEditable
+                    value={certificate.treatment}
+                    onChange={(val) => onChange({ treatment: val })}
+                  />
+                </span>
+              </div>
+            </div>
+
+            {/* 4. Laboratory Observations */}
+            <div
+              style={{
+                top: '66.8%',
+                left: '4.83%',
+                width: '66.5%',
+                fontSize: '1.76cqw',
+                fontFamily: "Georgia, 'Cormorant Garamond', serif"
+              }}
+              className="absolute font-semibold leading-[1.42] text-[#0b1936] whitespace-pre-line z-10"
+            >
+              <InlineEditable
+                multiline
+                value={
+                  certificate.comments
+                    ? `${certificate.microscopicObservations}\n${certificate.comments}`
+                    : certificate.microscopicObservations
+                }
+                onChange={(val) => onChange({ microscopicObservations: val, comments: '' })}
+              />
+            </div>
+
+            {/* 5. Signature Block */}
+            <div
+              style={{
+                top: '72.46%',
+                left: '4.14%',
+                width: '32.04%'
+              }}
+              className="absolute flex flex-col items-center text-center z-10"
+            >
+              <img
+                src="/brand/signature.png"
+                alt="Authorized Signature"
+                style={{ height: '8.57cqw', maxWidth: '86%', marginBottom: '-0.48cqw' }}
+                className="object-contain select-none pointer-events-none"
+              />
+              <div
+                style={{
+                  height: '1.5px',
+                  marginBottom: '0.71cqw',
+                  background: 'linear-gradient(90deg, #c9a449 0%, #9f731c 50%, #c9a449 100%)'
+                }}
+                className="w-full"
+              />
+              <div
+                style={{ fontSize: '1.76cqw' }}
+                className="font-bold text-[#081633] leading-[1.22]"
+              >
+                Authorized Signatory
+              </div>
+              <div
+                style={{ fontSize: '1.65cqw' }}
+                className="font-medium text-[#1e293b]"
+              >
+                Senior Gemologist
+              </div>
+            </div>
+
+            {/* 6. QR Code Block */}
+            <div
+              style={{
+                top: '72.07%',
+                left: '54.14%',
+                width: '13.54%'
+              }}
+              className="absolute flex flex-col items-center text-center z-10"
+            >
+              {qrDataUrl && (
+                <div
+                  style={{ width: '11.43cqw', height: '11.43cqw', padding: '0.48cqw' }}
+                  className="bg-white flex items-center justify-center"
+                >
+                  <img src={qrDataUrl} alt="Verify QR" className="w-full h-full block" />
+                </div>
+              )}
+              <div
+                style={{
+                  marginTop: '0.57cqw',
+                  fontSize: '1.68cqw',
+                  fontFamily: 'Georgia, serif'
+                }}
+                className="font-bold text-[#081633]"
+              >
+                Verify Report
+              </div>
+            </div>
           </div>
         </div>
       )}
