@@ -470,7 +470,7 @@ export default function EditableReportTemplates({
                   : 'text-slate-300 hover:text-white'
               }`}
             >
-              Back Side (Signature, QR &amp; Contact)
+              Back Side (Logo &amp; Contact)
             </button>
           </div>
 
@@ -731,105 +731,47 @@ export default function EditableReportTemplates({
                 />
               </svg>
 
-              <div className="relative z-10 flex flex-col justify-between flex-1">
-                {/* Back Header */}
-                <div className="flex items-center justify-between gap-4 pb-3 border-b border-amber-400/25">
-                  <div className="flex items-center gap-3">
-                    <img
-                      src="/brand/wtc_crest.png?v=3"
-                      alt="WTC Gem Lab Crest"
-                      className="h-11 w-auto object-contain"
-                    />
-                    <div>
-                      <div className="font-cinzel text-[10px] font-bold tracking-[0.28em] text-[#E5C158] leading-none">
-                        WTC
-                      </div>
-                      <div className="font-cinzel text-lg font-black tracking-wider text-[#F5DC86] leading-tight">
-                        GEM LAB
-                      </div>
-                      <div className="text-[7px] font-mono tracking-[0.2em] text-slate-300 uppercase">
-                        GEMOLOGICAL LABORATORY
-                      </div>
-                    </div>
+              <div className="relative z-10 flex flex-col items-center justify-between flex-1 text-center py-2">
+                {/* Centered WTC Brand Lockup */}
+                <div className="flex flex-col items-center">
+                  <img
+                    src="/brand/wtc_crest.png?v=3"
+                    alt="WTC Gem Lab Crest"
+                    className="h-16 w-auto object-contain mb-1.5 drop-shadow-[0_6px_16px_rgba(0,0,0,0.5)]"
+                  />
+                  <div className="font-cinzel text-xs font-bold tracking-[0.34em] text-[#E5C158] leading-none">
+                    WTC
                   </div>
-
-                  <div className="text-right">
-                    <div className="font-playfair italic font-semibold text-lg sm:text-xl text-[#F5DC86] leading-tight">
-                      Laboratory Notes &amp;
-                    </div>
-                    <div className="font-playfair italic font-semibold text-lg sm:text-xl text-[#F5DC86] leading-tight">
-                      Digital Verification
-                    </div>
+                  <div className="font-cinzel text-3xl font-black tracking-[0.12em] text-[#F5DC86] leading-tight mt-0.5">
+                    GEM LAB
+                  </div>
+                  <div className="text-[9px] font-mono tracking-[0.28em] text-slate-200 uppercase mt-0.5">
+                    GEMOLOGICAL LABORATORY
+                  </div>
+                  <div className="w-56 h-[1px] bg-gradient-to-r from-transparent via-[#E5C158] to-transparent my-3" />
+                  <div className="text-[10px] font-cinzel font-semibold tracking-[0.28em] text-[#F5DC86]/90 uppercase">
+                    ANALYSE &bull; IDENTIFY &bull; ASSURE
                   </div>
                 </div>
 
-                {/* Middle Grid: Observations + Signature (Left) & QR + Contact (Right) */}
-                <div className="grid grid-cols-1 sm:grid-cols-12 gap-5 items-stretch pt-4 pb-2 flex-1">
-                  <div className="sm:col-span-7 flex flex-col justify-between gap-3">
-                    <div>
-                      <div className="text-[10px] font-cinzel font-bold uppercase tracking-[0.18em] text-[#E5C158] mb-1">
-                        Laboratory Observations
-                      </div>
-                      <div className="text-xs text-slate-100 leading-relaxed font-serif">
-                        <InlineEditable
-                          multiline
-                          value={
-                            certificate.comments
-                              ? `${certificate.microscopicObservations} ${certificate.comments}`
-                              : certificate.microscopicObservations
-                          }
-                          onChange={(val) =>
-                            onChange({ microscopicObservations: val, comments: '' })
-                          }
-                        />
-                      </div>
-                    </div>
-
-                    {/* Authorized Signatory */}
-                    <div className="pt-1">
-                      <img
-                        src="/brand/signature.png"
-                        alt="Authorized Signature"
-                        style={{
-                          filter:
-                            'brightness(0) invert(1) sepia(0.35) saturate(2.2) hue-rotate(5deg)'
-                        }}
-                        className="h-10 w-auto object-contain -mb-1 select-none pointer-events-none"
-                      />
-                      <div className="w-48 h-[1px] bg-gradient-to-r from-[#E5C158] to-transparent mb-1" />
-                      <div className="text-[11px] font-bold text-[#F5DC86]">
-                        Authorized Signatory &bull; Senior Gemologist
-                      </div>
-                    </div>
+                {/* Clean Institutional Contact Details */}
+                <div className="space-y-1.5 text-xs sm:text-[13px] text-slate-100">
+                  <div className="font-semibold text-[#F5DC86]">
+                    World Trade Center, Colombo 01, Sri Lanka
                   </div>
-
-                  {/* Right: QR + Contact Info */}
-                  <div className="sm:col-span-5 flex flex-col items-end justify-between text-right gap-2">
-                    <div className="flex flex-col items-end">
-                      {qrDataUrl && (
-                        <div className="bg-white p-1.5 rounded-md shadow-xl border border-amber-300/70">
-                          <img src={qrDataUrl} alt="Verify QR" className="w-16 h-16" />
-                        </div>
-                      )}
-                      <span className="text-[9.5px] font-mono text-[#F5DC86] mt-1 tracking-wider">
-                        SCAN TO VERIFY &bull; {certificate.reportNumber}
-                      </span>
-                    </div>
-
-                    <div className="text-[10.5px] text-slate-200 space-y-0.5 leading-snug">
-                      <div className="font-semibold text-[#F5DC86]">
-                        World Trade Center, Colombo 01, Sri Lanka
-                      </div>
-                      <div className="font-mono">{LAB_CONTACT_INFO.phone}</div>
-                      <div>{LAB_CONTACT_INFO.email}</div>
-                      <div className="font-semibold text-white">{LAB_CONTACT_INFO.website}</div>
-                    </div>
+                  <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-slate-200 font-mono text-[12px]">
+                    <span>{LAB_CONTACT_INFO.phone}</span>
+                    <span className="text-[#E5C158]/60">&bull;</span>
+                    <span>{LAB_CONTACT_INFO.email}</span>
+                  </div>
+                  <div className="font-cinzel font-bold tracking-[0.16em] text-white text-xs sm:text-sm pt-0.5">
+                    {LAB_CONTACT_INFO.website}
                   </div>
                 </div>
 
-                {/* Bottom Legal Disclaimer */}
-                <div className="pt-2 border-t border-amber-400/20 text-[9px] italic text-slate-300/90 text-center">
-                  This report is issued for gemological identification only and does not constitute a valuation.
+                {/* Bottom Tagline */}
+                <div className="w-full pt-2 border-t border-amber-400/20 text-[10px] font-playfair italic text-[#F5DC86]/90">
+                  {LAB_CONTACT_INFO.tagline}
                 </div>
               </div>
             </div>
