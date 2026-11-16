@@ -959,15 +959,16 @@ export default function EditableReportTemplates({
                   </div>
                 </div>
 
-                {/* Bottom Tagline */}
-                <div
-                  className={`w-full pt-1.5 border-t text-xs sm:text-[13px] font-playfair italic ${
-                    isPearl
-                      ? 'border-[#C5A059]/30 text-[#475569]'
-                      : 'border-amber-400/20 text-[#F5DC86]/90'
-                  }`}
-                >
-                  {LAB_CONTACT_INFO.tagline}
+                {/* Bottom Tagline (centered short divider so it never crosses corner ribbons) */}
+                <div className="w-full flex flex-col items-center pt-1">
+                  <div className="w-64 h-[1px] bg-gradient-to-r from-transparent via-[#C5A059]/70 to-transparent mb-1.5" />
+                  <div
+                    className={`text-xs sm:text-[13px] font-playfair italic ${
+                      isPearl ? 'text-[#475569]' : 'text-[#F5DC86]/90'
+                    }`}
+                  >
+                    {LAB_CONTACT_INFO.tagline}
+                  </div>
                 </div>
               </div>
             </div>
