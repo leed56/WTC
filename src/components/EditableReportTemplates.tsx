@@ -719,15 +719,22 @@ export default function EditableReportTemplates({
                     <stop offset="100%" stopColor="#B88625" />
                   </linearGradient>
                 </defs>
+                {/* Top-left subtle gold corner arc (stays clear of centered text) */}
                 <path
-                  d="M 0,430 Q 250,360 460,210 Q 590,115 680,15 L 680,48 Q 570,155 440,255 Q 240,400 75,430 Z"
+                  d="M 0,95 Q 18,22 125,0 L 85,0 Q 15,18 0,68 Z"
                   fill="url(#pvcBackGoldGrad)"
-                  opacity="0.78"
+                  opacity="0.88"
+                />
+                {/* Bottom-right low sweeping gold corner ribbons (stays below text area) */}
+                <path
+                  d="M 380,430 Q 535,402 680,305 L 680,336 Q 555,418 445,430 Z"
+                  fill="url(#pvcBackGoldGrad)"
+                  opacity="0.82"
                 />
                 <path
-                  d="M 210,430 Q 430,310 680,88 L 680,108 Q 445,330 265,430 Z"
+                  d="M 485,430 Q 595,405 680,352 L 680,368 Q 610,415 530,430 Z"
                   fill="url(#pvcBackGoldGrad)"
-                  opacity="0.45"
+                  opacity="0.52"
                 />
               </svg>
 
