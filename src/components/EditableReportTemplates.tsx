@@ -113,6 +113,7 @@ export default function EditableReportTemplates({
   const [showEditHints, setShowEditHints] = useState<boolean>(true);
   const [isDownloading, setIsDownloading] = useState<boolean>(false);
   const [pvcSide, setPvcSide] = useState<'front' | 'back'>('front');
+  const [pvcTheme, setPvcTheme] = useState<'pearl' | 'navy'>('pearl');
 
   useEffect(() => {
     const origin =
@@ -139,7 +140,7 @@ export default function EditableReportTemplates({
         cacheBust: true,
         ...(activeFormat === 'pvc'
           ? {
-              backgroundColor: '#040d26',
+              backgroundColor: pvcTheme === 'pearl' ? '#FFFFFF' : '#040d26',
               style: { borderRadius: '0px', margin: '0' }
             }
           : {})
@@ -452,43 +453,98 @@ export default function EditableReportTemplates({
       {/* =====================================================================
           FORMAT 2: PVC SMART CARD REPORT (ORIGINAL WTC CR80 DESIGN - FRONT/BACK)
          ===================================================================== */}
-      {activeFormat === 'pvc' && (
+      {activeFormat === 'pvc' && (() => {
+        const isPearl = pvcTheme === 'pearl';
+        const goldTextStyle = isPearl
+          ? {
+              background:
+                'linear-gradient(180deg, #D9AA38 0%, #9E731A 60%, #C7972E 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent'
+            }
+          : {
+              background:
+                'linear-gradient(180deg, #FFF2B2 0%, #E8C054 45%, #B88625 80%, #F7DF8D 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent'
+            };
+        const cardBgStyle = isPearl
+          ? { maxWidth: '680px', background: '#FFFFFF' }
+          : {
+              maxWidth: '680px',
+              background:
+                'radial-gradient(circle at 75% 45%, #16397a 0%, #091d4a 45%, #040d26 100%)'
+            };
+        const backBgStyle = isPearl
+          ? { maxWidth: '680px', background: '#FFFFFF' }
+          : {
+              maxWidth: '680px',
+              background:
+                'radial-gradient(circle at 25% 45%, #16397a 0%, #091d4a 45%, #040d26 100%)'
+            };
+
+        return (
         <div className="flex flex-col items-center gap-4 py-4">
-          {/* Front / Back Side Toggle (Hidden when printing/exporting) */}
-          <div className="no-print inline-flex items-center gap-1 p-1 rounded-xl bg-slate-900 border border-amber-500/30 shadow-md">
-            <button
-              type="button"
-              onClick={() => setPvcSide('front')}
-              className={`px-4 py-1.5 rounded-lg text-xs font-cinzel font-bold uppercase tracking-wider transition ${
-                pvcSide === 'front'
-                  ? 'bg-amber-500 text-slate-950 shadow'
-                  : 'text-slate-300 hover:text-white'
-              }`}
-            >
-              Front Side (Stone &amp; Specs)
-            </button>
-            <button
-              type="button"
-              onClick={() => setPvcSide('back')}
-              className={`px-4 py-1.5 rounded-lg text-xs font-cinzel font-bold uppercase tracking-wider transition ${
-                pvcSide === 'back'
-                  ? 'bg-amber-500 text-slate-950 shadow'
-                  : 'text-slate-300 hover:text-white'
-              }`}
-            >
-              Back Side (Logo &amp; Contact)
-            </button>
+          {/* Front / Back & Ink-Saver Theme Toggle (Hidden when printing/exporting) */}
+          <div className="no-print flex flex-wrap items-center justify-center gap-3">
+            <div className="inline-flex items-center gap-1 p-1 rounded-xl bg-slate-900 border border-amber-500/30 shadow-md">
+              <button
+                type="button"
+                onClick={() => setPvcSide('front')}
+                className={`px-4 py-1.5 rounded-lg text-xs font-cinzel font-bold uppercase tracking-wider transition ${
+                  pvcSide === 'front'
+                    ? 'bg-amber-500 text-slate-950 shadow'
+                    : 'text-slate-300 hover:text-white'
+                }`}
+              >
+                Front Side (Stone &amp; Specs)
+              </button>
+              <button
+                type="button"
+                onClick={() => setPvcSide('back')}
+                className={`px-4 py-1.5 rounded-lg text-xs font-cinzel font-bold uppercase tracking-wider transition ${
+                  pvcSide === 'back'
+                    ? 'bg-amber-500 text-slate-950 shadow'
+                    : 'text-slate-300 hover:text-white'
+                }`}
+              >
+                Back Side (Logo &amp; Contact)
+              </button>
+            </div>
+
+            <div className="inline-flex items-center gap-1 p-1 rounded-xl bg-slate-900 border border-emerald-500/30 shadow-md">
+              <button
+                type="button"
+                onClick={() => setPvcTheme('pearl')}
+                className={`px-3.5 py-1.5 rounded-lg text-xs font-cinzel font-bold uppercase tracking-wider transition ${
+                  isPearl
+                    ? 'bg-emerald-500 text-slate-950 shadow'
+                    : 'text-slate-300 hover:text-white'
+                }`}
+              >
+                Pearl White (Ink-Saver)
+              </button>
+              <button
+                type="button"
+                onClick={() => setPvcTheme('navy')}
+                className={`px-3.5 py-1.5 rounded-lg text-xs font-cinzel font-bold uppercase tracking-wider transition ${
+                  !isPearl
+                    ? 'bg-amber-500 text-slate-950 shadow'
+                    : 'text-slate-300 hover:text-white'
+                }`}
+              >
+                Royal Navy
+              </button>
+            </div>
           </div>
 
           {pvcSide === 'front' ? (
             <div
               data-report-format="pvc"
-              style={{
-                maxWidth: '680px',
-                background:
-                  'radial-gradient(circle at 75% 45%, #16397a 0%, #091d4a 45%, #040d26 100%)'
-              }}
-              className="report-print-target w-full max-w-[680px] sm:aspect-[856/540] rounded-2xl border-[10px] border-[#E5C158] text-white p-5 sm:p-6 shadow-[0_20px_50px_rgba(0,0,0,0.75)] relative overflow-hidden flex flex-col justify-between"
+              style={cardBgStyle}
+              className={`report-print-target w-full max-w-[680px] sm:aspect-[856/540] rounded-2xl border-[10px] ${
+                isPearl ? 'border-[#D4AF37] text-[#0B1B3E]' : 'border-[#E5C158] text-white'
+              } p-5 sm:p-6 shadow-[0_20px_50px_rgba(0,0,0,0.75)] relative overflow-hidden flex flex-col justify-between`}
             >
             {/* Original Gold Sweeping Ribbons (Top-Left & Bottom-Right SVG) */}
             <svg
@@ -506,25 +562,29 @@ export default function EditableReportTemplates({
               {/* Top-left gold corner arc */}
               <path
                 d="M 0,95 Q 15,20 115,0 L 80,0 Q 12,18 0,68 Z"
-                fill="url(#pvcGoldGrad)"
+                fill={isPearl ? '#0B1B3E' : 'url(#pvcGoldGrad)'}
                 opacity="0.92"
               />
               {/* Bottom-right sweeping gold ribbons */}
               <path
                 d="M 220,430 Q 470,380 680,145 L 680,175 Q 490,395 275,430 Z"
-                fill="url(#pvcGoldGrad)"
+                fill={isPearl ? '#0B1B3E' : 'url(#pvcGoldGrad)'}
                 opacity="0.95"
               />
               <path
                 d="M 425,430 Q 570,360 680,220 L 680,235 Q 580,368 455,430 Z"
                 fill="url(#pvcGoldGrad)"
-                opacity="0.75"
+                opacity="0.85"
               />
             </svg>
 
             <div className="relative z-10">
               {/* Top Header Row: Left Logo + Vertical Gold Line + Right Italic Title */}
-              <div className="flex items-center justify-between gap-4 pb-4 mb-3 border-b border-amber-400/20">
+              <div
+                className={`flex items-center justify-between gap-4 pb-4 mb-3 border-b ${
+                  isPearl ? 'border-[#C5A059]/35' : 'border-amber-400/20'
+                }`}
+              >
                 <div className="flex items-center gap-3">
                   <img
                     src="/brand/wtc_crest.png?v=3"
@@ -533,37 +593,39 @@ export default function EditableReportTemplates({
                   />
                   <div>
                     <div
-                      style={{
-                        background:
-                          'linear-gradient(180deg, #FFF2B2 0%, #E8C054 45%, #B88625 80%, #F7DF8D 100%)',
-                        WebkitBackgroundClip: 'text',
-                        WebkitTextFillColor: 'transparent'
-                      }}
-                      className="text-[11px] font-cinzel font-extrabold tracking-[0.28em] text-center drop-shadow-[0_2px_4px_rgba(0,0,0,0.7)]"
+                      style={goldTextStyle}
+                      className={`text-[11px] font-cinzel font-extrabold tracking-[0.28em] text-center ${
+                        isPearl ? '' : 'drop-shadow-[0_2px_4px_rgba(0,0,0,0.7)]'
+                      }`}
                     >
                       WTC
                     </div>
                     <div
-                      style={{
-                        background:
-                          'linear-gradient(180deg, #FFF2B2 0%, #E8C054 45%, #B88625 80%, #F7DF8D 100%)',
-                        WebkitBackgroundClip: 'text',
-                        WebkitTextFillColor: 'transparent'
-                      }}
-                      className="font-cinzel text-xl font-black tracking-wider leading-none drop-shadow-[0_2px_4px_rgba(0,0,0,0.7)]"
+                      style={goldTextStyle}
+                      className={`font-cinzel text-xl font-black tracking-wider leading-none ${
+                        isPearl ? '' : 'drop-shadow-[0_2px_4px_rgba(0,0,0,0.7)]'
+                      }`}
                     >
                       GEM LAB
                     </div>
-                    <div className="text-[7px] font-mono tracking-[0.22em] text-amber-200/90 uppercase mt-1">
+                    <div
+                      className={`text-[7px] font-mono tracking-[0.22em] uppercase mt-1 ${
+                        isPearl ? 'text-[#0B1B3E] font-bold' : 'text-amber-200/90'
+                      }`}
+                    >
                       GEMOLOGICAL LABORATORY
                     </div>
                   </div>
                 </div>
 
-                <div className="h-12 w-[1.5px] bg-gradient-to-b from-transparent via-[#E5C158] to-transparent hidden sm:block" />
+                <div className="h-12 w-[1.5px] bg-gradient-to-b from-transparent via-[#C5A059] to-transparent hidden sm:block" />
 
                 <div className="text-right pr-1">
-                  <div className="font-playfair italic font-bold text-xl sm:text-2xl text-[#F4D06F] leading-tight drop-shadow">
+                  <div
+                    className={`font-playfair italic font-bold text-xl sm:text-2xl leading-tight ${
+                      isPearl ? 'text-[#0B1B3E]' : 'text-[#F4D06F] drop-shadow'
+                    }`}
+                  >
                     Gem Identification
                     <br />
                     Certificate
@@ -576,8 +638,18 @@ export default function EditableReportTemplates({
                 {/* Left Specs (7 cols) */}
                 <div className="sm:col-span-7 space-y-1.5 text-xs sm:text-[13px] font-playfair">
                   <div className="grid grid-cols-12 items-baseline">
-                    <span className="col-span-5 text-[#F4D06F] font-semibold">Report No.</span>
-                    <span className="col-span-7 text-white font-mono font-bold text-xs">
+                    <span
+                      className={`col-span-5 font-semibold ${
+                        isPearl ? 'text-[#8C6414]' : 'text-[#F4D06F]'
+                      }`}
+                    >
+                      Report No.
+                    </span>
+                    <span
+                      className={`col-span-7 font-mono font-bold text-xs ${
+                        isPearl ? 'text-[#0B1B3E]' : 'text-white'
+                      }`}
+                    >
                       :{' '}
                       <InlineEditable
                         value={certificate.reportNumber}
@@ -587,8 +659,18 @@ export default function EditableReportTemplates({
                   </div>
 
                   <div className="grid grid-cols-12 items-baseline">
-                    <span className="col-span-5 text-[#F4D06F] font-semibold">Gemstone</span>
-                    <span className="col-span-7 text-white font-bold">
+                    <span
+                      className={`col-span-5 font-semibold ${
+                        isPearl ? 'text-[#8C6414]' : 'text-[#F4D06F]'
+                      }`}
+                    >
+                      Gemstone
+                    </span>
+                    <span
+                      className={`col-span-7 font-bold ${
+                        isPearl ? 'text-[#0B1B3E]' : 'text-white'
+                      }`}
+                    >
                       :{' '}
                       <InlineEditable
                         value={certificate.variety}
@@ -598,8 +680,18 @@ export default function EditableReportTemplates({
                   </div>
 
                   <div className="grid grid-cols-12 items-baseline">
-                    <span className="col-span-5 text-[#F4D06F] font-semibold">Weight</span>
-                    <span className="col-span-7 text-white font-semibold">
+                    <span
+                      className={`col-span-5 font-semibold ${
+                        isPearl ? 'text-[#8C6414]' : 'text-[#F4D06F]'
+                      }`}
+                    >
+                      Weight
+                    </span>
+                    <span
+                      className={`col-span-7 font-semibold ${
+                        isPearl ? 'text-[#0B1B3E]' : 'text-white'
+                      }`}
+                    >
                       :{' '}
                       <InlineEditable
                         value={certificate.weight}
@@ -609,8 +701,14 @@ export default function EditableReportTemplates({
                   </div>
 
                   <div className="grid grid-cols-12 items-baseline">
-                    <span className="col-span-5 text-[#F4D06F] font-semibold">Shape</span>
-                    <span className="col-span-7 text-white">
+                    <span
+                      className={`col-span-5 font-semibold ${
+                        isPearl ? 'text-[#8C6414]' : 'text-[#F4D06F]'
+                      }`}
+                    >
+                      Shape
+                    </span>
+                    <span className={`col-span-7 ${isPearl ? 'text-[#0B1B3E]' : 'text-white'}`}>
                       :{' '}
                       <InlineEditable
                         value={certificate.shapeAndCut}
@@ -620,8 +718,18 @@ export default function EditableReportTemplates({
                   </div>
 
                   <div className="grid grid-cols-12 items-baseline">
-                    <span className="col-span-5 text-[#F4D06F] font-semibold">Measurements</span>
-                    <span className="col-span-7 text-white font-mono text-[11.5px]">
+                    <span
+                      className={`col-span-5 font-semibold ${
+                        isPearl ? 'text-[#8C6414]' : 'text-[#F4D06F]'
+                      }`}
+                    >
+                      Measurements
+                    </span>
+                    <span
+                      className={`col-span-7 font-mono text-[11.5px] ${
+                        isPearl ? 'text-[#0B1B3E]' : 'text-white'
+                      }`}
+                    >
                       :{' '}
                       <InlineEditable
                         value={certificate.dimensions}
@@ -631,8 +739,18 @@ export default function EditableReportTemplates({
                   </div>
 
                   <div className="grid grid-cols-12 items-baseline">
-                    <span className="col-span-5 text-[#F4D06F] font-semibold">R.I. / S.G.</span>
-                    <span className="col-span-7 text-amber-100 font-mono text-[11px]">
+                    <span
+                      className={`col-span-5 font-semibold ${
+                        isPearl ? 'text-[#8C6414]' : 'text-[#F4D06F]'
+                      }`}
+                    >
+                      R.I. / S.G.
+                    </span>
+                    <span
+                      className={`col-span-7 font-mono text-[11px] ${
+                        isPearl ? 'text-[#0B1B3E]' : 'text-amber-100'
+                      }`}
+                    >
                       :{' '}
                       <InlineEditable
                         value={certificate.refractiveIndex || '1.762–1.770'}
@@ -647,8 +765,18 @@ export default function EditableReportTemplates({
                   </div>
 
                   <div className="grid grid-cols-12 items-start">
-                    <span className="col-span-5 text-[#F4D06F] font-semibold">Treatment</span>
-                    <span className="col-span-7 text-emerald-300 font-semibold text-[11px] leading-snug flex items-start gap-1">
+                    <span
+                      className={`col-span-5 font-semibold ${
+                        isPearl ? 'text-[#8C6414]' : 'text-[#F4D06F]'
+                      }`}
+                    >
+                      Treatment
+                    </span>
+                    <span
+                      className={`col-span-7 font-semibold text-[11px] leading-snug flex items-start gap-1 ${
+                        isPearl ? 'text-emerald-700' : 'text-emerald-300'
+                      }`}
+                    >
                       <span className="shrink-0">:</span>
                       <InlineEditable
                         value={certificate.treatment}
@@ -658,7 +786,11 @@ export default function EditableReportTemplates({
                   </div>
 
                   {/* Original Bottom-Left Italic Tagline */}
-                  <div className="pt-4 font-playfair italic text-sm sm:text-base text-[#F4D06F] leading-snug">
+                  <div
+                    className={`pt-4 font-playfair italic text-sm sm:text-base leading-snug ${
+                      isPearl ? 'text-[#8C6414]' : 'text-[#F4D06F]'
+                    }`}
+                  >
                     International Standards.
                     <br />
                     Trusted Certainty.
@@ -721,12 +853,10 @@ export default function EditableReportTemplates({
           ) : (
             <div
               data-report-format="pvc"
-              style={{
-                maxWidth: '680px',
-                background:
-                  'radial-gradient(circle at 25% 45%, #16397a 0%, #091d4a 45%, #040d26 100%)'
-              }}
-              className="report-print-target w-full max-w-[680px] sm:aspect-[856/540] rounded-2xl border-[10px] border-[#E5C158] text-white p-5 sm:p-6 shadow-[0_20px_50px_rgba(0,0,0,0.75)] relative overflow-hidden flex flex-col justify-between"
+              style={backBgStyle}
+              className={`report-print-target w-full max-w-[680px] sm:aspect-[856/540] rounded-2xl border-[10px] ${
+                isPearl ? 'border-[#D4AF37] text-[#0B1B3E]' : 'border-[#E5C158] text-white'
+              } p-5 sm:p-6 shadow-[0_20px_50px_rgba(0,0,0,0.75)] relative overflow-hidden flex flex-col justify-between`}
             >
               {/* Sweeping Gold Ribbons (Mirrored Back Accent) */}
               <svg
@@ -741,22 +871,22 @@ export default function EditableReportTemplates({
                     <stop offset="100%" stopColor="#B88625" />
                   </linearGradient>
                 </defs>
-                {/* Top-left subtle gold corner arc (stays clear of centered text) */}
+                {/* Top-left subtle corner arc (stays clear of centered text) */}
                 <path
                   d="M 0,95 Q 18,22 125,0 L 85,0 Q 15,18 0,68 Z"
-                  fill="url(#pvcBackGoldGrad)"
-                  opacity="0.88"
+                  fill={isPearl ? '#0B1B3E' : 'url(#pvcBackGoldGrad)'}
+                  opacity="0.92"
                 />
-                {/* Bottom-right low sweeping gold corner ribbons (stays below text area) */}
+                {/* Bottom-right low sweeping corner ribbons (stays below text area) */}
                 <path
                   d="M 380,430 Q 535,402 680,305 L 680,336 Q 555,418 445,430 Z"
-                  fill="url(#pvcBackGoldGrad)"
-                  opacity="0.82"
+                  fill={isPearl ? '#0B1B3E' : 'url(#pvcBackGoldGrad)'}
+                  opacity="0.9"
                 />
                 <path
                   d="M 485,430 Q 595,405 680,352 L 680,368 Q 610,415 530,430 Z"
                   fill="url(#pvcBackGoldGrad)"
-                  opacity="0.52"
+                  opacity="0.75"
                 />
               </svg>
 
@@ -766,62 +896,85 @@ export default function EditableReportTemplates({
                   <img
                     src="/brand/wtc_crest.png?v=3"
                     alt="WTC Gem Lab Crest"
-                    className="h-16 w-auto object-contain mb-1.5 drop-shadow-[0_6px_16px_rgba(0,0,0,0.5)]"
+                    className={`h-16 w-auto object-contain mb-1.5 ${
+                      isPearl ? '' : 'drop-shadow-[0_6px_16px_rgba(0,0,0,0.5)]'
+                    }`}
                   />
                   <div
-                    style={{
-                      background:
-                        'linear-gradient(180deg, #FFF2B2 0%, #E8C054 45%, #B88625 80%, #F7DF8D 100%)',
-                      WebkitBackgroundClip: 'text',
-                      WebkitTextFillColor: 'transparent'
-                    }}
-                    className="font-cinzel text-base sm:text-lg font-extrabold tracking-[0.38em] leading-none mb-0.5 drop-shadow-[0_2px_5px_rgba(0,0,0,0.75)]"
+                    style={goldTextStyle}
+                    className={`font-cinzel text-base sm:text-lg font-extrabold tracking-[0.38em] leading-none mb-0.5 ${
+                      isPearl ? '' : 'drop-shadow-[0_2px_5px_rgba(0,0,0,0.75)]'
+                    }`}
                   >
                     WTC
                   </div>
                   <div
-                    style={{
-                      background:
-                        'linear-gradient(180deg, #FFF2B2 0%, #E8C054 45%, #B88625 80%, #F7DF8D 100%)',
-                      WebkitBackgroundClip: 'text',
-                      WebkitTextFillColor: 'transparent'
-                    }}
-                    className="font-cinzel text-3xl font-black tracking-[0.12em] leading-tight drop-shadow-[0_2px_6px_rgba(0,0,0,0.75)]"
+                    style={goldTextStyle}
+                    className={`font-cinzel text-3xl font-black tracking-[0.12em] leading-tight ${
+                      isPearl ? '' : 'drop-shadow-[0_2px_6px_rgba(0,0,0,0.75)]'
+                    }`}
                   >
                     GEM LAB
                   </div>
-                  <div className="text-[9px] font-mono tracking-[0.28em] text-slate-200 uppercase mt-0.5">
+                  <div
+                    className={`text-[9px] font-mono tracking-[0.28em] uppercase mt-0.5 ${
+                      isPearl ? 'text-[#0B1B3E] font-bold' : 'text-slate-200'
+                    }`}
+                  >
                     GEMOLOGICAL LABORATORY
                   </div>
-                  <div className="w-56 h-[1px] bg-gradient-to-r from-transparent via-[#E5C158] to-transparent my-3" />
-                  <div className="text-[10px] font-cinzel font-semibold tracking-[0.28em] text-[#F5DC86]/90 uppercase">
+                  <div className="w-56 h-[1px] bg-gradient-to-r from-transparent via-[#C5A059] to-transparent my-3" />
+                  <div
+                    className={`text-[10px] font-cinzel font-semibold tracking-[0.28em] uppercase ${
+                      isPearl ? 'text-[#8C6414]' : 'text-[#F5DC86]/90'
+                    }`}
+                  >
                     ANALYSE &bull; IDENTIFY &bull; ASSURE
                   </div>
                 </div>
 
                 {/* Clean Institutional Contact Details */}
-                <div className="space-y-1 text-xs sm:text-[13px] text-slate-100 px-2">
-                  <div className="font-semibold text-[#F5DC86] leading-snug">
+                <div className="space-y-1 text-xs sm:text-[13px] px-2">
+                  <div
+                    className={`font-semibold leading-snug ${
+                      isPearl ? 'text-[#8C6414]' : 'text-[#F5DC86]'
+                    }`}
+                  >
                     <div>World Trade Center, No. 26, 5th Floor</div>
                     <div>Colombo 01, Sri Lanka</div>
                   </div>
-                  <div className="text-slate-200 font-mono text-[12px] pt-1">
+                  <div
+                    className={`font-mono text-[12px] pt-1 ${
+                      isPearl ? 'text-[#0B1B3E]' : 'text-slate-200'
+                    }`}
+                  >
                     {LAB_CONTACT_INFO.email}
                   </div>
-                  <div className="font-cinzel font-bold tracking-[0.16em] text-white text-xs sm:text-sm pt-0.5">
+                  <div
+                    className={`font-cinzel font-bold tracking-[0.16em] text-xs sm:text-sm pt-0.5 ${
+                      isPearl ? 'text-[#0B1B3E]' : 'text-white'
+                    }`}
+                  >
                     {LAB_CONTACT_INFO.website}
                   </div>
                 </div>
 
                 {/* Bottom Tagline */}
-                <div className="w-full pt-2 border-t border-amber-400/20 text-[10px] font-playfair italic text-[#F5DC86]/90">
+                <div
+                  className={`w-full pt-2 border-t text-[10px] font-playfair italic ${
+                    isPearl
+                      ? 'border-[#C5A059]/30 text-[#475569]'
+                      : 'border-amber-400/20 text-[#F5DC86]/90'
+                  }`}
+                >
                   {LAB_CONTACT_INFO.tagline}
                 </div>
               </div>
             </div>
           )}
         </div>
-      )}
+        );
+      })()}
 
       {/* =====================================================================
           FORMAT 3: FULL A4 GEMOLOGICAL CERTIFICATE (EXACT WTC A4 TEMPLATE)
