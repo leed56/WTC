@@ -542,8 +542,8 @@ export default function EditableReportTemplates({
             <div
               data-report-format="pvc"
               style={cardBgStyle}
-              className={`report-print-target w-full max-w-[680px] sm:aspect-[856/540] rounded-2xl border-[10px] ${
-                isPearl ? 'border-[#D4AF37] text-[#0B1B3E]' : 'border-[#E5C158] text-white'
+              className={`report-print-target w-full max-w-[680px] sm:aspect-[856/540] rounded-2xl ${
+                isPearl ? 'text-[#0B1B3E]' : 'border-[10px] border-[#E5C158] text-white'
               } p-5 sm:p-6 shadow-[0_20px_50px_rgba(0,0,0,0.75)] relative overflow-hidden flex flex-col justify-between`}
             >
             {/* Original Gold Sweeping Ribbons (Top-Left & Bottom-Right SVG) */}
@@ -854,8 +854,8 @@ export default function EditableReportTemplates({
             <div
               data-report-format="pvc"
               style={backBgStyle}
-              className={`report-print-target w-full max-w-[680px] sm:aspect-[856/540] rounded-2xl border-[10px] ${
-                isPearl ? 'border-[#D4AF37] text-[#0B1B3E]' : 'border-[#E5C158] text-white'
+              className={`report-print-target w-full max-w-[680px] sm:aspect-[856/540] rounded-2xl ${
+                isPearl ? 'text-[#0B1B3E]' : 'border-[10px] border-[#E5C158] text-white'
               } p-5 sm:p-6 shadow-[0_20px_50px_rgba(0,0,0,0.75)] relative overflow-hidden flex flex-col justify-between`}
             >
               {/* Sweeping Gold Ribbons (Mirrored Back Accent) */}
