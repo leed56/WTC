@@ -112,6 +112,7 @@ export default function EditableReportTemplates({
   const [qrDataUrl, setQrDataUrl] = useState<string>('');
   const [showEditHints, setShowEditHints] = useState<boolean>(true);
   const [isDownloading, setIsDownloading] = useState<boolean>(false);
+  const [pvcSide, setPvcSide] = useState<'front' | 'back'>('front');
 
   useEffect(() => {
     const origin =
@@ -139,7 +140,8 @@ export default function EditableReportTemplates({
       });
       const link = document.createElement('a');
       const safeId = (certificate.reportNumber || 'WTC-Report').replace(/[^a-zA-Z0-9_-]/g, '_');
-      link.download = `${safeId}-${activeFormat}.png`;
+      const suffix = activeFormat === 'pvc' ? `pvc-${pvcSide}` : activeFormat;
+      link.download = `${safeId}-${suffix}.png`;
       link.href = dataUrl;
       link.click();
     } catch (err) {
@@ -442,18 +444,45 @@ export default function EditableReportTemplates({
       )}
 
       {/* =====================================================================
-          FORMAT 2: PVC SMART CARD REPORT (ORIGINAL WTC CR80 DESIGN)
+          FORMAT 2: PVC SMART CARD REPORT (ORIGINAL WTC CR80 DESIGN - FRONT/BACK)
          ===================================================================== */}
       {activeFormat === 'pvc' && (
-        <div className="flex justify-center py-4">
-          <div
-            style={{
-              maxWidth: '680px',
-              background:
-                'radial-gradient(circle at 75% 45%, #16397a 0%, #091d4a 45%, #040d26 100%)'
-            }}
-            className="report-print-target w-full max-w-[680px] rounded-2xl border-2 border-[#E5C158] text-white p-5 sm:p-6 shadow-[0_20px_50px_rgba(0,0,0,0.75)] relative overflow-hidden"
-          >
+        <div className="flex flex-col items-center gap-4 py-4">
+          {/* Front / Back Side Toggle (Hidden when printing/exporting) */}
+          <div className="no-print inline-flex items-center gap-1 p-1 rounded-xl bg-slate-900 border border-amber-500/30 shadow-md">
+            <button
+              type="button"
+              onClick={() => setPvcSide('front')}
+              className={`px-4 py-1.5 rounded-lg text-xs font-cinzel font-bold uppercase tracking-wider transition ${
+                pvcSide === 'front'
+                  ? 'bg-amber-500 text-slate-950 shadow'
+                  : 'text-slate-300 hover:text-white'
+              }`}
+            >
+              Front Side (Stone &amp; Specs)
+            </button>
+            <button
+              type="button"
+              onClick={() => setPvcSide('back')}
+              className={`px-4 py-1.5 rounded-lg text-xs font-cinzel font-bold uppercase tracking-wider transition ${
+                pvcSide === 'back'
+                  ? 'bg-amber-500 text-slate-950 shadow'
+                  : 'text-slate-300 hover:text-white'
+              }`}
+            >
+              Back Side (Signature, QR &amp; Contact)
+            </button>
+          </div>
+
+          {pvcSide === 'front' ? (
+            <div
+              style={{
+                maxWidth: '680px',
+                background:
+                  'radial-gradient(circle at 75% 45%, #16397a 0%, #091d4a 45%, #040d26 100%)'
+              }}
+              className="report-print-target w-full max-w-[680px] rounded-2xl border-2 border-[#E5C158] text-white p-5 sm:p-6 shadow-[0_20px_50px_rgba(0,0,0,0.75)] relative overflow-hidden"
+            >
             {/* Original Gold Sweeping Ribbons (Top-Left & Bottom-Right SVG) */}
             <svg
               viewBox="0 0 680 430"
@@ -666,6 +695,144 @@ export default function EditableReportTemplates({
               </div>
             </div>
           </div>
+          ) : (
+            <div
+              style={{
+                maxWidth: '680px',
+                minHeight: '420px',
+                background:
+                  'radial-gradient(circle at 25% 45%, #16397a 0%, #091d4a 45%, #040d26 100%)'
+              }}
+              className="report-print-target w-full max-w-[680px] rounded-2xl border-2 border-[#E5C158] text-white p-5 sm:p-6 shadow-[0_20px_50px_rgba(0,0,0,0.75)] relative overflow-hidden flex flex-col justify-between"
+            >
+              {/* Sweeping Gold Ribbons (Mirrored Back Accent) */}
+              <svg
+                viewBox="0 0 680 430"
+                className="absolute inset-0 w-full h-full pointer-events-none"
+                preserveAspectRatio="none"
+              >
+                <defs>
+                  <linearGradient id="pvcBackGoldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#9A6E1C" />
+                    <stop offset="45%" stopColor="#F5DC86" />
+                    <stop offset="100%" stopColor="#B88625" />
+                  </linearGradient>
+                </defs>
+                <path
+                  d="M 0,430 Q 250,360 460,210 Q 590,115 680,15 L 680,48 Q 570,155 440,255 Q 240,400 75,430 Z"
+                  fill="url(#pvcBackGoldGrad)"
+                  opacity="0.78"
+                />
+                <path
+                  d="M 210,430 Q 430,310 680,88 L 680,108 Q 445,330 265,430 Z"
+                  fill="url(#pvcBackGoldGrad)"
+                  opacity="0.45"
+                />
+              </svg>
+
+              <div className="relative z-10 flex flex-col justify-between flex-1">
+                {/* Back Header */}
+                <div className="flex items-center justify-between gap-4 pb-3 border-b border-amber-400/25">
+                  <div className="flex items-center gap-3">
+                    <img
+                      src="/brand/wtc_crest.png?v=3"
+                      alt="WTC Gem Lab Crest"
+                      className="h-11 w-auto object-contain"
+                    />
+                    <div>
+                      <div className="font-cinzel text-[10px] font-bold tracking-[0.28em] text-[#E5C158] leading-none">
+                        WTC
+                      </div>
+                      <div className="font-cinzel text-lg font-black tracking-wider text-[#F5DC86] leading-tight">
+                        GEM LAB
+                      </div>
+                      <div className="text-[7px] font-mono tracking-[0.2em] text-slate-300 uppercase">
+                        GEMOLOGICAL LABORATORY
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="text-right">
+                    <div className="font-playfair italic font-semibold text-lg sm:text-xl text-[#F5DC86] leading-tight">
+                      Laboratory Notes &amp;
+                    </div>
+                    <div className="font-playfair italic font-semibold text-lg sm:text-xl text-[#F5DC86] leading-tight">
+                      Digital Verification
+                    </div>
+                  </div>
+                </div>
+
+                {/* Middle Grid: Observations + Signature (Left) & QR + Contact (Right) */}
+                <div className="grid grid-cols-1 sm:grid-cols-12 gap-5 items-stretch pt-4 pb-2 flex-1">
+                  <div className="sm:col-span-7 flex flex-col justify-between gap-3">
+                    <div>
+                      <div className="text-[10px] font-cinzel font-bold uppercase tracking-[0.18em] text-[#E5C158] mb-1">
+                        Laboratory Observations
+                      </div>
+                      <div className="text-xs text-slate-100 leading-relaxed font-serif">
+                        <InlineEditable
+                          multiline
+                          value={
+                            certificate.comments
+                              ? `${certificate.microscopicObservations} ${certificate.comments}`
+                              : certificate.microscopicObservations
+                          }
+                          onChange={(val) =>
+                            onChange({ microscopicObservations: val, comments: '' })
+                          }
+                        />
+                      </div>
+                    </div>
+
+                    {/* Authorized Signatory */}
+                    <div className="pt-1">
+                      <img
+                        src="/brand/signature.png"
+                        alt="Authorized Signature"
+                        style={{
+                          filter:
+                            'brightness(0) invert(1) sepia(0.35) saturate(2.2) hue-rotate(5deg)'
+                        }}
+                        className="h-10 w-auto object-contain -mb-1 select-none pointer-events-none"
+                      />
+                      <div className="w-48 h-[1px] bg-gradient-to-r from-[#E5C158] to-transparent mb-1" />
+                      <div className="text-[11px] font-bold text-[#F5DC86]">
+                        Authorized Signatory &bull; Senior Gemologist
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Right: QR + Contact Info */}
+                  <div className="sm:col-span-5 flex flex-col items-end justify-between text-right gap-2">
+                    <div className="flex flex-col items-end">
+                      {qrDataUrl && (
+                        <div className="bg-white p-1.5 rounded-md shadow-xl border border-amber-300/70">
+                          <img src={qrDataUrl} alt="Verify QR" className="w-16 h-16" />
+                        </div>
+                      )}
+                      <span className="text-[9.5px] font-mono text-[#F5DC86] mt-1 tracking-wider">
+                        SCAN TO VERIFY &bull; {certificate.reportNumber}
+                      </span>
+                    </div>
+
+                    <div className="text-[10.5px] text-slate-200 space-y-0.5 leading-snug">
+                      <div className="font-semibold text-[#F5DC86]">
+                        World Trade Center, Colombo 01, Sri Lanka
+                      </div>
+                      <div className="font-mono">{LAB_CONTACT_INFO.phone}</div>
+                      <div>{LAB_CONTACT_INFO.email}</div>
+                      <div className="font-semibold text-white">{LAB_CONTACT_INFO.website}</div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Bottom Legal Disclaimer */}
+                <div className="pt-2 border-t border-amber-400/20 text-[9px] italic text-slate-300/90 text-center">
+                  This report is issued for gemological identification only and does not constitute a valuation.
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       )}
 

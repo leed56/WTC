@@ -37,9 +37,9 @@ export const LAB_CONTACT_INFO = {
   subtagline: "Your Trusted Gemological Partner in Sri Lanka and Beyond",
   motto: "ANALYSE • IDENTIFY • ASSURE",
   address: "World Trade Center, No 26, 5th floor, Colombo 01, Sri Lanka",
-  phone: "+94 11 234 5678",
-  mobile: "+94 77 123 4567",
-  email: "reports@wtcgemlab.lk",
+  phone: "+94 77 058 5935",
+  mobile: "+94 77 058 5935",
+  email: "inquiry@wtcgemlab.lk",
   website: "www.wtcgemlab.lk",
   hours: "Monday – Friday: 9:00 AM – 6:00 PM (Sat: 9:00 AM – 2:00 PM)"
 };
