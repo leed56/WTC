@@ -896,13 +896,13 @@ export default function EditableReportTemplates({
                   <img
                     src="/brand/wtc_crest.png?v=3"
                     alt="WTC Gem Lab Crest"
-                    className={`h-16 w-auto object-contain mb-1.5 ${
+                    className={`h-14 w-auto object-contain mb-1 ${
                       isPearl ? '' : 'drop-shadow-[0_6px_16px_rgba(0,0,0,0.5)]'
                     }`}
                   />
                   <div
                     style={goldTextStyle}
-                    className={`font-cinzel text-base sm:text-lg font-extrabold tracking-[0.38em] leading-none mb-0.5 ${
+                    className={`font-cinzel text-xl sm:text-2xl font-extrabold tracking-[0.36em] leading-none mb-0.5 ${
                       isPearl ? '' : 'drop-shadow-[0_2px_5px_rgba(0,0,0,0.75)]'
                     }`}
                   >
@@ -910,22 +910,22 @@ export default function EditableReportTemplates({
                   </div>
                   <div
                     style={goldTextStyle}
-                    className={`font-cinzel text-3xl font-black tracking-[0.12em] leading-tight ${
+                    className={`font-cinzel text-3xl sm:text-[36px] font-black tracking-[0.12em] leading-tight ${
                       isPearl ? '' : 'drop-shadow-[0_2px_6px_rgba(0,0,0,0.75)]'
                     }`}
                   >
                     GEM LAB
                   </div>
                   <div
-                    className={`text-[9px] font-mono tracking-[0.28em] uppercase mt-0.5 ${
+                    className={`text-xs sm:text-[12.5px] font-mono tracking-[0.24em] uppercase mt-0.5 ${
                       isPearl ? 'text-[#0B1B3E] font-bold' : 'text-slate-200'
                     }`}
                   >
                     GEMOLOGICAL LABORATORY
                   </div>
-                  <div className="w-56 h-[1px] bg-gradient-to-r from-transparent via-[#C5A059] to-transparent my-3" />
+                  <div className="w-60 h-[1px] bg-gradient-to-r from-transparent via-[#C5A059] to-transparent my-2" />
                   <div
-                    className={`text-[10px] font-cinzel font-semibold tracking-[0.28em] uppercase ${
+                    className={`text-xs sm:text-[12.5px] font-cinzel font-semibold tracking-[0.24em] uppercase ${
                       isPearl ? 'text-[#8C6414]' : 'text-[#F5DC86]/90'
                     }`}
                   >
@@ -933,8 +933,8 @@ export default function EditableReportTemplates({
                   </div>
                 </div>
 
-                {/* Clean Institutional Contact Details */}
-                <div className="space-y-1 text-xs sm:text-[13px] px-2">
+                {/* Clean Institutional Contact Details (Standard CR80 Print Sizes: 6-7pt physical) */}
+                <div className="space-y-1 text-sm sm:text-[16px] px-2">
                   <div
                     className={`font-semibold leading-snug ${
                       isPearl ? 'text-[#8C6414]' : 'text-[#F5DC86]'
@@ -944,14 +944,14 @@ export default function EditableReportTemplates({
                     <div>Colombo 01, Sri Lanka</div>
                   </div>
                   <div
-                    className={`font-mono text-[12px] pt-1 ${
+                    className={`font-mono text-sm sm:text-[15px] pt-0.5 ${
                       isPearl ? 'text-[#0B1B3E]' : 'text-slate-200'
                     }`}
                   >
                     {LAB_CONTACT_INFO.email}
                   </div>
                   <div
-                    className={`font-cinzel font-bold tracking-[0.16em] text-xs sm:text-sm pt-0.5 ${
+                    className={`font-cinzel font-bold tracking-[0.16em] text-base sm:text-[17px] pt-0.5 ${
                       isPearl ? 'text-[#0B1B3E]' : 'text-white'
                     }`}
                   >
@@ -961,7 +961,7 @@ export default function EditableReportTemplates({
 
                 {/* Bottom Tagline */}
                 <div
-                  className={`w-full pt-2 border-t text-[10px] font-playfair italic ${
+                  className={`w-full pt-1.5 border-t text-xs sm:text-[13px] font-playfair italic ${
                     isPearl
                       ? 'border-[#C5A059]/30 text-[#475569]'
                       : 'border-amber-400/20 text-[#F5DC86]/90'
