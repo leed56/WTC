@@ -762,11 +762,12 @@ export default function EditableReportTemplates({
                 </div>
 
                 {/* Clean Institutional Contact Details */}
-                <div className="space-y-1.5 text-xs sm:text-[13px] text-slate-100 px-2">
-                  <div className="font-semibold text-[#F5DC86]">
-                    {LAB_CONTACT_INFO.address}
+                <div className="space-y-1 text-xs sm:text-[13px] text-slate-100 px-2">
+                  <div className="font-semibold text-[#F5DC86] leading-snug">
+                    <div>World Trade Center, No. 26, 5th Floor</div>
+                    <div>Colombo 01, Sri Lanka</div>
                   </div>
-                  <div className="text-slate-200 font-mono text-[12px]">
+                  <div className="text-slate-200 font-mono text-[12px] pt-1">
                     {LAB_CONTACT_INFO.email}
                   </div>
                   <div className="font-cinzel font-bold tracking-[0.16em] text-white text-xs sm:text-sm pt-0.5">
