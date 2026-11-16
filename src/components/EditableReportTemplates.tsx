@@ -490,8 +490,6 @@ export default function EditableReportTemplates({
               }}
               className="report-print-target w-full max-w-[680px] sm:aspect-[856/540] rounded-2xl text-white p-6 sm:p-7 shadow-[0_20px_50px_rgba(0,0,0,0.75)] relative overflow-hidden flex flex-col justify-between"
             >
-              {/* Safe Inset Gold Foil Frame (stays clear of Borderless printer bleed) */}
-              <div className="pointer-events-none absolute inset-[14px] rounded-xl border-[1.5px] border-[#E5C158]/90 z-20" />
             {/* Original Gold Sweeping Ribbons (Top-Left & Bottom-Right SVG) */}
             <svg
               viewBox="0 0 680 430"
@@ -730,8 +728,6 @@ export default function EditableReportTemplates({
               }}
               className="report-print-target w-full max-w-[680px] sm:aspect-[856/540] rounded-2xl text-white p-6 sm:p-7 shadow-[0_20px_50px_rgba(0,0,0,0.75)] relative overflow-hidden flex flex-col justify-between"
             >
-              {/* Safe Inset Gold Foil Frame (stays clear of Borderless printer bleed) */}
-              <div className="pointer-events-none absolute inset-[14px] rounded-xl border-[1.5px] border-[#E5C158]/90 z-20" />
               {/* Sweeping Gold Ribbons (Mirrored Back Accent) */}
               <svg
                 viewBox="0 0 680 430"
