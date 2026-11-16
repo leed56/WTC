@@ -647,6 +647,7 @@ export default function EditableReportTemplates({
               backgroundRepeat: 'no-repeat'
             }}
             className="report-print-target w-full aspect-[210/297] bg-[#fafbfd] text-[#0b1936] relative overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.65)] select-text"
+            data-report-format="a4"
           >
             {/* 1. Report Number & Date of Issue */}
             <div

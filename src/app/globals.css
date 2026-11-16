@@ -64,13 +64,25 @@ body {
 /* Print Styles */
 @media print {
   @page {
-    margin: 8mm;
+    margin: 0;
   }
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  html,
   body {
     background: #ffffff !important;
-    color: #000000 !important;
+    margin: 0 !important;
+    padding: 0 !important;
   }
+  header,
+  nav,
+  footer,
   .no-print {
+    display: none !important;
+  }
+  body *:not(:has(.report-print-target)):not(.report-print-target):not(.report-print-target *) {
     display: none !important;
   }
   .print-only {
@@ -78,8 +90,15 @@ body {
   }
   .report-print-target {
     box-shadow: none !important;
-    border: 2px solid #222 !important;
-    margin: 0 auto !important;
+    margin: 10mm auto !important;
     page-break-inside: avoid;
+    break-inside: avoid;
+  }
+  .report-print-target[data-report-format="a4"] {
+    width: 210mm !important;
+    height: 297mm !important;
+    max-width: none !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
   }
 }
