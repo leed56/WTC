@@ -136,7 +136,13 @@ export default function EditableReportTemplates({
     try {
       const dataUrl = await toPng(target, {
         pixelRatio: 3,
-        cacheBust: true
+        cacheBust: true,
+        ...(activeFormat === 'pvc'
+          ? {
+              backgroundColor: '#040d26',
+              style: { borderRadius: '0px', margin: '0' }
+            }
+          : {})
       });
       const link = document.createElement('a');
       const safeId = (certificate.reportNumber || 'WTC-Report').replace(/[^a-zA-Z0-9_-]/g, '_');
