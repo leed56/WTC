@@ -85,6 +85,14 @@ body {
   body *:not(:has(.report-print-target)):not(.report-print-target):not(.report-print-target *) {
     display: none !important;
   }
+  body *:has(.report-print-target) {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    min-height: 0 !important;
+  }
   .print-only {
     display: block !important;
   }
