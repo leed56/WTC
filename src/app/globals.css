@@ -102,6 +102,13 @@ body {
     page-break-inside: avoid;
     break-inside: avoid;
   }
+  .report-print-target[data-report-format="pvc"] {
+    width: 680px !important;
+    height: 429px !important;
+    max-width: none !important;
+    zoom: 0.4757;
+    margin: 10mm auto !important;
+  }
   .report-print-target[data-report-format="a4"] {
     width: 210mm !important;
     height: 297mm !important;

@@ -476,12 +476,13 @@ export default function EditableReportTemplates({
 
           {pvcSide === 'front' ? (
             <div
+              data-report-format="pvc"
               style={{
                 maxWidth: '680px',
                 background:
                   'radial-gradient(circle at 75% 45%, #16397a 0%, #091d4a 45%, #040d26 100%)'
               }}
-              className="report-print-target w-full max-w-[680px] rounded-2xl border-2 border-[#E5C158] text-white p-5 sm:p-6 shadow-[0_20px_50px_rgba(0,0,0,0.75)] relative overflow-hidden"
+              className="report-print-target w-full max-w-[680px] sm:aspect-[856/540] rounded-2xl border-2 border-[#E5C158] text-white p-5 sm:p-6 shadow-[0_20px_50px_rgba(0,0,0,0.75)] relative overflow-hidden flex flex-col justify-between"
             >
             {/* Original Gold Sweeping Ribbons (Top-Left & Bottom-Right SVG) */}
             <svg
@@ -697,13 +698,13 @@ export default function EditableReportTemplates({
           </div>
           ) : (
             <div
+              data-report-format="pvc"
               style={{
                 maxWidth: '680px',
-                minHeight: '420px',
                 background:
                   'radial-gradient(circle at 25% 45%, #16397a 0%, #091d4a 45%, #040d26 100%)'
               }}
-              className="report-print-target w-full max-w-[680px] rounded-2xl border-2 border-[#E5C158] text-white p-5 sm:p-6 shadow-[0_20px_50px_rgba(0,0,0,0.75)] relative overflow-hidden flex flex-col justify-between"
+              className="report-print-target w-full max-w-[680px] sm:aspect-[856/540] rounded-2xl border-2 border-[#E5C158] text-white p-5 sm:p-6 shadow-[0_20px_50px_rgba(0,0,0,0.75)] relative overflow-hidden flex flex-col justify-between"
             >
               {/* Sweeping Gold Ribbons (Mirrored Back Accent) */}
               <svg
