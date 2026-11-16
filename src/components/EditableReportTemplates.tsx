@@ -565,14 +565,14 @@ export default function EditableReportTemplates({
                 fill={isPearl ? '#0B1B3E' : 'url(#pvcGoldGrad)'}
                 opacity="0.92"
               />
-              {/* Bottom-right sweeping gold ribbons */}
+              {/* Bottom-right sweeping ribbons (kept cleanly below the sapphire) */}
               <path
-                d="M 220,430 Q 470,380 680,145 L 680,175 Q 490,395 275,430 Z"
+                d="M 330,430 Q 520,395 680,225 L 680,254 Q 535,408 380,430 Z"
                 fill={isPearl ? '#0B1B3E' : 'url(#pvcGoldGrad)'}
                 opacity="0.95"
               />
               <path
-                d="M 425,430 Q 570,360 680,220 L 680,235 Q 580,368 455,430 Z"
+                d="M 470,430 Q 595,392 680,285 L 680,302 Q 605,398 500,430 Z"
                 fill="url(#pvcGoldGrad)"
                 opacity="0.85"
               />
@@ -594,7 +594,7 @@ export default function EditableReportTemplates({
                   <div>
                     <div
                       style={goldTextStyle}
-                      className={`text-[11px] font-cinzel font-extrabold tracking-[0.28em] text-center ${
+                      className={`text-xs sm:text-[13px] font-cinzel font-extrabold tracking-[0.28em] text-center ${
                         isPearl ? '' : 'drop-shadow-[0_2px_4px_rgba(0,0,0,0.7)]'
                       }`}
                     >
@@ -602,14 +602,14 @@ export default function EditableReportTemplates({
                     </div>
                     <div
                       style={goldTextStyle}
-                      className={`font-cinzel text-xl font-black tracking-wider leading-none ${
+                      className={`font-cinzel text-xl sm:text-[22px] font-black tracking-wider leading-none ${
                         isPearl ? '' : 'drop-shadow-[0_2px_4px_rgba(0,0,0,0.7)]'
                       }`}
                     >
                       GEM LAB
                     </div>
                     <div
-                      className={`text-[7px] font-mono tracking-[0.22em] uppercase mt-1 ${
+                      className={`text-[8.5px] font-mono tracking-[0.2em] uppercase mt-1 ${
                         isPearl ? 'text-[#0B1B3E] font-bold' : 'text-amber-200/90'
                       }`}
                     >
@@ -636,7 +636,7 @@ export default function EditableReportTemplates({
               {/* Card Body: Left Gold-Labeled Specs + Right Stone Photo & QR */}
               <div className="grid grid-cols-1 sm:grid-cols-12 gap-4 items-center">
                 {/* Left Specs (7 cols) */}
-                <div className="sm:col-span-7 space-y-1.5 text-xs sm:text-[13px] font-playfair">
+                <div className="sm:col-span-7 space-y-1.5 text-[13px] sm:text-[14.5px] font-playfair">
                   <div className="grid grid-cols-12 items-baseline">
                     <span
                       className={`col-span-5 font-semibold ${
@@ -773,7 +773,7 @@ export default function EditableReportTemplates({
                       Treatment
                     </span>
                     <span
-                      className={`col-span-7 font-semibold text-[11px] leading-snug flex items-start gap-1 ${
+                      className={`col-span-7 font-semibold text-[12px] leading-snug flex items-start gap-1 ${
                         isPearl ? 'text-emerald-700' : 'text-emerald-300'
                       }`}
                     >
