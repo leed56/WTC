@@ -746,10 +746,10 @@ export default function EditableReportTemplates({
                     alt="WTC Gem Lab Crest"
                     className="h-16 w-auto object-contain mb-1.5 drop-shadow-[0_6px_16px_rgba(0,0,0,0.5)]"
                   />
-                  <div className="font-cinzel text-xs font-bold tracking-[0.34em] text-[#E5C158] leading-none">
+                  <div className="font-cinzel text-base sm:text-lg font-extrabold tracking-[0.38em] text-[#E5C158] leading-none mb-0.5">
                     WTC
                   </div>
-                  <div className="font-cinzel text-3xl font-black tracking-[0.12em] text-[#F5DC86] leading-tight mt-0.5">
+                  <div className="font-cinzel text-3xl font-black tracking-[0.12em] text-[#F5DC86] leading-tight">
                     GEM LAB
                   </div>
                   <div className="text-[9px] font-mono tracking-[0.28em] text-slate-200 uppercase mt-0.5">
@@ -762,14 +762,12 @@ export default function EditableReportTemplates({
                 </div>
 
                 {/* Clean Institutional Contact Details */}
-                <div className="space-y-1.5 text-xs sm:text-[13px] text-slate-100">
+                <div className="space-y-1.5 text-xs sm:text-[13px] text-slate-100 px-2">
                   <div className="font-semibold text-[#F5DC86]">
-                    World Trade Center, Colombo 01, Sri Lanka
+                    {LAB_CONTACT_INFO.address}
                   </div>
-                  <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-slate-200 font-mono text-[12px]">
-                    <span>{LAB_CONTACT_INFO.phone}</span>
-                    <span className="text-[#E5C158]/60">&bull;</span>
-                    <span>{LAB_CONTACT_INFO.email}</span>
+                  <div className="text-slate-200 font-mono text-[12px]">
+                    {LAB_CONTACT_INFO.email}
                   </div>
                   <div className="font-cinzel font-bold tracking-[0.16em] text-white text-xs sm:text-sm pt-0.5">
                     {LAB_CONTACT_INFO.website}
