@@ -1,10 +1,12 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import { toPng } from 'html-to-image';
 import { GemCertificate, LAB_CONTACT_INFO } from '@/lib/gemData';
 import { generateQrDataUrl } from '@/lib/certificateStore';
 import {
   Printer,
+  Download,
   Tag,
   CreditCard,
   FileText,
@@ -109,6 +111,7 @@ export default function EditableReportTemplates({
 }: EditableReportTemplatesProps) {
   const [qrDataUrl, setQrDataUrl] = useState<string>('');
   const [showEditHints, setShowEditHints] = useState<boolean>(true);
+  const [isDownloading, setIsDownloading] = useState<boolean>(false);
 
   useEffect(() => {
     const origin =
@@ -120,6 +123,30 @@ export default function EditableReportTemplates({
   const handlePrintOrPdf = () => {
     if (typeof window !== 'undefined') {
       window.print();
+    }
+  };
+
+  const handleDownloadPng = async () => {
+    if (typeof document === 'undefined' || isDownloading) return;
+    const target = document.querySelector('.report-print-target') as HTMLElement | null;
+    if (!target) return;
+
+    setIsDownloading(true);
+    try {
+      const dataUrl = await toPng(target, {
+        pixelRatio: 3,
+        cacheBust: true
+      });
+      const link = document.createElement('a');
+      const safeId = (certificate.reportNumber || 'WTC-Report').replace(/[^a-zA-Z0-9_-]/g, '_');
+      link.download = `${safeId}-${activeFormat}.png`;
+      link.href = dataUrl;
+      link.click();
+    } catch (err) {
+      console.error('Failed to export report PNG:', err);
+      alert('Could not export PNG. Please try Print / Save PDF instead.');
+    } finally {
+      setIsDownloading(false);
     }
   };
 
@@ -218,6 +245,16 @@ export default function EditableReportTemplates({
           >
             <Printer className="w-3.5 h-3.5" />
             <span>Print / Save PDF</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={handleDownloadPng}
+            disabled={isDownloading}
+            className="px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 disabled:opacity-60 text-slate-950 text-xs font-mono font-bold flex items-center gap-1.5 shadow-md transition"
+          >
+            <Download className="w-3.5 h-3.5" />
+            <span>{isDownloading ? 'Exporting...' : 'Download PNG'}</span>
           </button>
 
           {onOpenWhatsApp && (
