@@ -580,24 +580,56 @@ export default function InvoiceModal({
                     </div>
                   </div>
 
-                  {/* Two-Party Stone Handover Signatures */}
-                  <div className="grid grid-cols-2 gap-8 pt-4 border-t border-slate-200 text-[11px]">
-                    <div className="text-center">
-                      <div className="h-9 border-b border-[#C5A059] mb-1.5 flex items-end justify-center pb-1 font-semibold text-[#0B1B3E]">
-                        {receivedBy}
+                  {/* Stage 1 (Submission) & Stage 2 (Client Collection Sign-Off) */}
+                  <div className="space-y-3 pt-3 border-t border-slate-200 text-[11px]">
+                    <div className="grid grid-cols-2 gap-6">
+                      <div className="text-center">
+                        <div className="h-8 border-b border-slate-400 mb-1" />
+                        <div className="font-bold text-[#0B1B3E]">
+                          1. Submitted By (Client Signature)
+                        </div>
+                        <div className="text-[10px] text-slate-500">
+                          Stone(s) left for testing &bull; Date: {issuedDate}
+                        </div>
                       </div>
-                      <div className="font-bold text-[#0B1B3E]">Lab Intake Officer (WTC Gem Lab)</div>
-                      <div className="text-[10px] text-slate-500">
-                        Stone(s) accepted for testing &bull; {issuedDate}
+                      <div className="text-center">
+                        <div className="h-8 border-b border-[#C5A059] mb-1 flex items-end justify-center pb-1 font-semibold text-[#0B1B3E]">
+                          {receivedBy}
+                        </div>
+                        <div className="font-bold text-[#0B1B3E]">
+                          Accepted By (WTC Gem Lab Staff)
+                        </div>
+                        <div className="text-[10px] text-slate-500">
+                          Lab Intake Officer &bull; Date: {issuedDate}
+                        </div>
                       </div>
                     </div>
-                    <div className="text-center">
-                      <div className="h-9 border-b border-slate-500 mb-1.5" />
-                      <div className="font-bold text-[#0B1B3E]">
-                        Client Signature (Upon Collecting Stone)
+
+                    <div className="p-3 rounded-xl bg-[#FDFBF5] border border-[#D4AF37]/80">
+                      <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
+                        <span className="font-mono font-bold uppercase text-[10px] text-[#0B1B3E]">
+                          2. Client Stone Collection Sign-Off (Sign When Taking Stone Back)
+                        </span>
+                        <span className="text-[10px] text-slate-600">
+                          Date Received: _____ / _____ / 2026
+                        </span>
                       </div>
-                      <div className="text-[10px] text-slate-500">
-                        I confirm I received all stone(s) above &bull; Date: ____/____/2026
+                      <p className="text-[10.5px] text-slate-700 mb-3">
+                        I confirm that I have received back all gemstone(s) listed on this invoice in full and in good order.
+                      </p>
+                      <div className="grid grid-cols-2 gap-6 pt-1">
+                        <div>
+                          <div className="h-7 border-b border-slate-500 mb-1" />
+                          <div className="text-[10px] font-bold text-[#0B1B3E]">
+                            Client Signature (Received Stone)
+                          </div>
+                        </div>
+                        <div>
+                          <div className="h-7 border-b border-slate-400 mb-1" />
+                          <div className="text-[10px] font-semibold text-slate-700">
+                            Client Name / NIC No.
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
