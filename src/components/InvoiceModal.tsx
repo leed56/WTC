@@ -402,20 +402,20 @@ export default function InvoiceModal({
                 {/* Ink-Saver Pearl White Header with WTC Logo & Gold Accent Line */}
                 <div className="bg-white px-7 py-5 border-b-2 border-[#D4AF37]">
                   <div className="flex flex-wrap items-center justify-between gap-4">
-                    <div className="flex items-center gap-3.5">
+                    <div className="flex items-center gap-4">
                       <img
                         src="/brand/wtc_crest.png?v=3"
                         alt="WTC Gem Lab"
-                        className="h-14 w-auto object-contain shrink-0"
+                        className="h-16 sm:h-20 w-auto object-contain shrink-0"
                       />
                       <div>
-                        <div className="text-xl font-cinzel font-black tracking-wide text-[#9E731A]">
+                        <div className="text-2xl sm:text-3xl font-cinzel font-black tracking-wider text-[#9E731A] leading-none">
                           WTC GEM LAB
                         </div>
-                        <div className="text-[10px] font-mono tracking-[0.22em] text-[#0B1B3E] font-bold uppercase">
+                        <div className="text-[11px] font-mono tracking-[0.22em] text-[#0B1B3E] font-bold uppercase mt-1">
                           Gemological Laboratory &bull; Analyse &bull; Identify &bull; Assure
                         </div>
-                        <div className="text-[11px] text-slate-600 mt-0.5">
+                        <div className="text-[11.5px] text-slate-600 mt-1">
                           {LAB_CONTACT_INFO.address} &bull; {LAB_CONTACT_INFO.phone}
                         </div>
                       </div>
