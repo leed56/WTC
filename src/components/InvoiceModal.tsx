@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useMemo, useState } from 'react';
+import { toPng } from 'html-to-image';
 import {
   X,
   Receipt,
@@ -8,6 +9,7 @@ import {
   Users,
   CheckCircle2,
   Printer,
+  Download,
   Send,
   Loader2,
   ExternalLink,
@@ -54,10 +56,18 @@ export default function InvoiceModal({
   const [paymentStatus, setPaymentStatus] = useState<'Paid' | 'Unpaid'>('Paid');
   const [paymentMethod, setPaymentMethod] = useState<string>('Cash');
   const [notes, setNotes] = useState<string>('');
+  const [stoneCondition, setStoneCondition] = useState<string>(
+    'Loose gemstone received in parcel — good condition'
+  );
+  const [estimatedCollection, setEstimatedCollection] = useState<string>('Same Day / 24 Hours');
+  const [receivedBy, setReceivedBy] = useState<string>(
+    certificate.gemologistName || 'WTC Lab Intake Officer'
+  );
   const [invoiceNumber, setInvoiceNumber] = useState<string>('');
 
   const [saving, setSaving] = useState(false);
   const [sendingWa, setSendingWa] = useState(false);
+  const [downloadingPng, setDownloadingPng] = useState(false);
   const [statusMsg, setStatusMsg] = useState<{ ok: boolean; text: string; waUrl?: string } | null>(null);
   const [showPrintPreview, setShowPrintPreview] = useState(false);
 
@@ -249,8 +259,31 @@ export default function InvoiceModal({
         text: `Invoice saved. Use WhatsApp link below to send:`,
         waUrl: `https://wa.me/${cleanPhone}`,
       });
+    setSendingWa(false);
+    }
+  };
+
+  const handleDownloadInvoicePng = async () => {
+    if (typeof document === 'undefined' || downloadingPng) return;
+    const target = document.getElementById('wtc-premium-invoice');
+    if (!target) return;
+    setDownloadingPng(true);
+    try {
+      const dataUrl = await toPng(target, {
+        pixelRatio: 2.5,
+        cacheBust: true,
+        backgroundColor: '#FCFBF7'
+      });
+      const link = document.createElement('a');
+      const safeInv = (invoiceNumber || 'WTC-Invoice').replace(/[^a-zA-Z0-9_-]/g, '_');
+      link.download = `${safeInv}-A4.png`;
+      link.href = dataUrl;
+      link.click();
+    } catch (err) {
+      console.error('Failed to export invoice PNG:', err);
+      alert('Could not export PNG. Please use Print A4 Invoice instead.');
     } finally {
-      setSendingWa(false);
+      setDownloadingPng(false);
     }
   };
 
@@ -287,25 +320,24 @@ export default function InvoiceModal({
         </div>
 
         {/* Body */}
-        <div className="p-6 space-y-6 max-h-[80vh] overflow-y-auto">
+        <div className="p-6 space-y-6 max-h-[80vh] overflow-y-auto print:p-0 print:max-h-none print:overflow-visible">
           {showPrintPreview ? (
             <div className="space-y-4">
               <div
                 id="wtc-premium-invoice"
+                data-report-format="a4"
                 style={{ WebkitPrintColorAdjust: 'exact', printColorAdjust: 'exact' }}
-                className="relative rounded-2xl overflow-hidden bg-[#FCFBF7] text-slate-900 border-2 border-[#D4AF37]/60 shadow-2xl"
+                className="report-print-target relative rounded-2xl overflow-hidden bg-[#FCFBF7] text-slate-900 border-2 border-[#D4AF37]/60 shadow-2xl flex flex-col justify-between"
               >
                 {/* Top Royal Navy & Gold Ribbon Header */}
                 <div className="relative bg-gradient-to-r from-[#070D1B] via-[#0E1B3D] to-[#132554] text-white px-7 py-6 border-b-4 border-[#D4AF37]">
                   <div className="flex flex-wrap items-center justify-between gap-4">
                     <div className="flex items-center gap-3.5">
-                      <div className="w-14 h-14 rounded-xl bg-white/10 border border-[#D4AF37]/60 p-1.5 flex items-center justify-center shrink-0">
-                        <img
-                          src="/brand/wtc_crest.png"
-                          alt="WTC Gem Lab"
-                          className="w-full h-full object-contain"
-                        />
-                      </div>
+                      <img
+                        src="/brand/wtc_crest.png?v=3"
+                        alt="WTC Gem Lab"
+                        className="h-14 w-auto object-contain shrink-0"
+                      />
                       <div>
                         <div className="text-xl font-cinzel font-black tracking-wide text-[#F3D574]">
                           WTC GEM LAB
@@ -321,13 +353,13 @@ export default function InvoiceModal({
 
                     <div className="text-right">
                       <span className="inline-block px-3.5 py-1 rounded-full bg-gradient-to-r from-[#D4AF37] to-[#F3D574] text-[#070D1B] font-cinzel font-black text-xs tracking-widest uppercase shadow">
-                        Official Invoice
+                        Stone Receipt &amp; Invoice
                       </span>
                       <div className="text-sm font-mono font-bold text-white mt-2">
                         {invoiceNumber}
                       </div>
                       <div className="text-[11px] font-mono text-amber-200/80">
-                        Date: {issuedDate}
+                        Submitted: {issuedDate}
                       </div>
                     </div>
                   </div>
@@ -412,14 +444,50 @@ export default function InvoiceModal({
                     </table>
                   </div>
 
+                  {/* Stone Submission & Received Details */}
+                  <div className="p-4 rounded-xl bg-white border border-[#D4AF37]/40 shadow-sm text-xs space-y-2">
+                    <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 pb-1.5">
+                      <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#0E1B3D]">
+                        Stone Submission &amp; Intake Receipt Details
+                      </span>
+                      <span className="text-[10px] font-mono text-emerald-700 font-bold">
+                        Est. Collection: {estimatedCollection}
+                      </span>
+                    </div>
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-[11px]">
+                      <div>
+                        <span className="text-slate-500 block">Stone / Variety</span>
+                        <span className="font-bold text-[#0B132B]">{certificate.variety}</span>
+                      </div>
+                      <div>
+                        <span className="text-slate-500 block">Weight / Shape</span>
+                        <span className="font-semibold text-slate-800">
+                          {certificate.weight} &bull; {certificate.shapeAndCut}
+                        </span>
+                      </div>
+                      <div>
+                        <span className="text-slate-500 block">Measurements</span>
+                        <span className="font-mono text-slate-800">{certificate.dimensions}</span>
+                      </div>
+                      <div>
+                        <span className="text-slate-500 block">Received By</span>
+                        <span className="font-semibold text-[#0B132B]">{receivedBy}</span>
+                      </div>
+                    </div>
+                    <div className="text-[11px] text-slate-600 pt-1 border-t border-slate-100">
+                      <span className="font-semibold text-[#0E1B3D]">Declared Condition:</span>{' '}
+                      {stoneCondition}
+                    </div>
+                  </div>
+
                   {/* Totals & Notes */}
                   <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
                     <div className="text-[11px] text-slate-600 space-y-1 max-w-sm">
                       <div className="font-bold text-[#0B132B] uppercase font-mono text-[10px]">
-                        Online Report Verification
+                        Collection &amp; Online Verification
                       </div>
                       <p>
-                        Verify authenticity anytime at{' '}
+                        Present this receipt when collecting your stone, or verify online at{' '}
                         <span className="font-mono font-semibold text-[#0E1B3D]">
                           www.wtcgemlab.lk/verify
                         </span>
@@ -448,6 +516,26 @@ export default function InvoiceModal({
                       </div>
                     </div>
                   </div>
+
+                  {/* Two-Party Stone Handover Signatures */}
+                  <div className="grid grid-cols-2 gap-8 pt-4 border-t border-slate-200 text-[11px]">
+                    <div className="text-center">
+                      <div className="h-8 border-b border-slate-400 mb-1.5" />
+                      <div className="font-bold text-[#0B132B]">Client / Depositor Signature</div>
+                      <div className="text-[10px] text-slate-500">
+                        Stone(s) submitted for gemological testing
+                      </div>
+                    </div>
+                    <div className="text-center">
+                      <div className="h-8 border-b border-[#C5A059] mb-1.5 flex items-end justify-center pb-1 font-semibold text-[#0E1B3D]">
+                        {receivedBy}
+                      </div>
+                      <div className="font-bold text-[#0B132B]">Received By (WTC Gem Lab)</div>
+                      <div className="text-[10px] text-slate-500">
+                        Stone received in good order &bull; {issuedDate}
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
                 {/* Bottom Gold & Navy Ribbon */}
@@ -457,7 +545,7 @@ export default function InvoiceModal({
                 </div>
               </div>
 
-              <div className="no-print flex items-center justify-between pt-2">
+              <div className="no-print flex flex-wrap items-center justify-between gap-3 pt-2">
                 <button
                   type="button"
                   onClick={() => setShowPrintPreview(false)}
@@ -465,14 +553,25 @@ export default function InvoiceModal({
                 >
                   &larr; Back to Edit
                 </button>
-                <button
-                  type="button"
-                  onClick={() => window.print()}
-                  className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-slate-950 text-xs font-bold flex items-center gap-2 shadow-lg"
-                >
-                  <Printer className="w-4 h-4" />
-                  <span>Print / Save Luxury PDF</span>
-                </button>
+                <div className="flex flex-wrap items-center gap-2.5">
+                  <button
+                    type="button"
+                    onClick={handleDownloadInvoicePng}
+                    disabled={downloadingPng}
+                    className="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-500/40 text-xs font-bold flex items-center gap-2 disabled:opacity-50"
+                  >
+                    <Download className="w-4 h-4" />
+                    <span>{downloadingPng ? 'Exporting...' : 'Download A4 PNG'}</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => window.print()}
+                    className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-slate-950 text-xs font-bold flex items-center gap-2 shadow-lg"
+                  >
+                    <Printer className="w-4 h-4" />
+                    <span>Print A4 Invoice / Save PDF</span>
+                  </button>
+                </div>
               </div>
             </div>
           ) : (
@@ -613,6 +712,36 @@ export default function InvoiceModal({
                       <option value="Card">Card</option>
                       <option value="Bank Transfer">Bank Transfer</option>
                     </select>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+                  <div>
+                    <label className="block text-slate-400 font-mono mb-1">Received By (Staff)</label>
+                    <input
+                      type="text"
+                      value={receivedBy}
+                      onChange={(e) => setReceivedBy(e.target.value)}
+                      className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-700 text-white"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-slate-400 font-mono mb-1">Est. Collection</label>
+                    <input
+                      type="text"
+                      value={estimatedCollection}
+                      onChange={(e) => setEstimatedCollection(e.target.value)}
+                      className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-700 text-white"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-slate-400 font-mono mb-1">Stone Condition on Intake</label>
+                    <input
+                      type="text"
+                      value={stoneCondition}
+                      onChange={(e) => setStoneCondition(e.target.value)}
+                      className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-700 text-white"
+                    />
                   </div>
                 </div>
 
