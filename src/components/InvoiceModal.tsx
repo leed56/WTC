@@ -56,6 +56,9 @@ export default function InvoiceModal({
   const [paymentStatus, setPaymentStatus] = useState<'Paid' | 'Unpaid'>('Paid');
   const [paymentMethod, setPaymentMethod] = useState<string>('Cash');
   const [notes, setNotes] = useState<string>('');
+  const [stoneNumber, setStoneNumber] = useState<string>(certificate.reportNumber || '');
+  const [stoneWeight, setStoneWeight] = useState<string>(certificate.weight || '');
+  const [stoneColor, setStoneColor] = useState<string>(certificate.color || '');
   const [stoneCondition, setStoneCondition] = useState<string>(
     'Loose gemstone received in parcel — good condition'
   );
@@ -74,6 +77,9 @@ export default function InvoiceModal({
   useEffect(() => {
     if (!isOpen) return;
     setTierId(defaultFormat);
+    setStoneNumber(certificate.reportNumber || '');
+    setStoneWeight(certificate.weight || '');
+    setStoneColor(certificate.color || '');
     const suffix = certificate.reportNumber.replace(/[^0-9A-Z]/gi, '').slice(-6) || String(Date.now()).slice(-6);
     setInvoiceNumber(`INV-${suffix}`);
     if (certificate.clientName && !customerName) setCustomerName(certificate.clientName);
@@ -149,13 +155,13 @@ export default function InvoiceModal({
 
       const invoicePayload: InvoiceRecord = {
         invoice_number: invoiceNumber.trim().toUpperCase(),
-        report_number: certificate.reportNumber.trim().toUpperCase(),
+        report_number: (stoneNumber || certificate.reportNumber).trim().toUpperCase(),
         customer_id: resolvedCustomerId,
         customer_name: customerName.trim(),
         customer_company: customerCompany.trim() || null,
         customer_phone: customerPhone.trim(),
         customer_email: customerEmail.trim() || null,
-        stone_summary: `${certificate.variety} (${certificate.weight})`,
+        stone_summary: `${certificate.variety} | ${stoneWeight} | ${stoneColor}`,
         report_format: selectedTier.label,
         unit_price_lkr: selectedTier.priceLkr,
         quantity: Math.max(1, quantity),
@@ -327,10 +333,10 @@ export default function InvoiceModal({
                 id="wtc-premium-invoice"
                 data-report-format="a4"
                 style={{ WebkitPrintColorAdjust: 'exact', printColorAdjust: 'exact' }}
-                className="report-print-target relative rounded-2xl overflow-hidden bg-[#FCFBF7] text-slate-900 border-2 border-[#D4AF37]/60 shadow-2xl flex flex-col justify-between"
+                className="report-print-target relative rounded-2xl overflow-hidden bg-white text-[#0B1B3E] border-2 border-[#D4AF37] shadow-2xl flex flex-col justify-between"
               >
-                {/* Top Royal Navy & Gold Ribbon Header */}
-                <div className="relative bg-gradient-to-r from-[#070D1B] via-[#0E1B3D] to-[#132554] text-white px-7 py-6 border-b-4 border-[#D4AF37]">
+                {/* Ink-Saver Pearl White Header with WTC Logo & Gold Accent Line */}
+                <div className="bg-white px-7 py-5 border-b-2 border-[#D4AF37]">
                   <div className="flex flex-wrap items-center justify-between gap-4">
                     <div className="flex items-center gap-3.5">
                       <img
@@ -339,83 +345,84 @@ export default function InvoiceModal({
                         className="h-14 w-auto object-contain shrink-0"
                       />
                       <div>
-                        <div className="text-xl font-cinzel font-black tracking-wide text-[#F3D574]">
+                        <div className="text-xl font-cinzel font-black tracking-wide text-[#9E731A]">
                           WTC GEM LAB
                         </div>
-                        <div className="text-[10px] font-mono tracking-[0.22em] text-amber-200/90 uppercase">
+                        <div className="text-[10px] font-mono tracking-[0.22em] text-[#0B1B3E] font-bold uppercase">
                           Gemological Laboratory &bull; Analyse &bull; Identify &bull; Assure
                         </div>
-                        <div className="text-[11px] text-slate-300 mt-1">
+                        <div className="text-[11px] text-slate-600 mt-0.5">
                           {LAB_CONTACT_INFO.address} &bull; {LAB_CONTACT_INFO.phone}
                         </div>
                       </div>
                     </div>
 
                     <div className="text-right">
-                      <span className="inline-block px-3.5 py-1 rounded-full bg-gradient-to-r from-[#D4AF37] to-[#F3D574] text-[#070D1B] font-cinzel font-black text-xs tracking-widest uppercase shadow">
+                      <span className="inline-block px-3.5 py-1 rounded-full border-2 border-[#D4AF37] bg-[#FDF8EC] text-[#0B1B3E] font-cinzel font-black text-xs tracking-widest uppercase">
                         Stone Receipt &amp; Invoice
                       </span>
-                      <div className="text-sm font-mono font-bold text-white mt-2">
+                      <div className="text-sm font-mono font-bold text-[#0B1B3E] mt-2">
                         {invoiceNumber}
                       </div>
-                      <div className="text-[11px] font-mono text-amber-200/80">
-                        Submitted: {issuedDate}
+                      <div className="text-[11px] font-mono text-slate-600">
+                        Stone No: <span className="font-bold text-[#9E731A]">{stoneNumber}</span> &bull; {issuedDate}
                       </div>
                     </div>
                   </div>
                 </div>
 
                 {/* Body Content */}
-                <div className="p-7 space-y-6">
-                  {/* Billed To & Report Summary Cards */}
+                <div className="p-7 space-y-5 flex-1">
+                  {/* Billed To & Stone Tracking Summary Cards */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-                    <div className="p-4 rounded-xl bg-white border border-slate-200 shadow-sm space-y-1">
-                      <div className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#0E1B3D]">
-                        Billed To
+                    <div className="p-4 rounded-xl bg-white border border-slate-300 space-y-1">
+                      <div className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#9E731A]">
+                        Billed To / Depositor
                       </div>
-                      <div className="text-base font-bold text-[#0B132B]">
+                      <div className="text-base font-bold text-[#0B1B3E]">
                         {customerName || 'Walk-In Client'}
                       </div>
                       {customerCompany && (
-                        <div className="font-semibold text-amber-700">{customerCompany}</div>
+                        <div className="font-semibold text-[#9E731A]">{customerCompany}</div>
                       )}
-                      <div className="font-mono text-slate-600">{customerPhone}</div>
+                      <div className="font-mono text-slate-700">{customerPhone}</div>
                       {customerEmail && <div className="text-slate-600">{customerEmail}</div>}
                       {customerAddress && <div className="text-slate-600">{customerAddress}</div>}
                     </div>
 
-                    <div className="p-4 rounded-xl bg-gradient-to-br from-[#0B132B]/5 to-amber-500/10 border border-[#D4AF37]/40 shadow-sm space-y-1.5 sm:text-right">
+                    <div className="p-4 rounded-xl bg-[#FDFBF5] border border-[#D4AF37]/70 space-y-1.5 sm:text-right">
                       <div className="flex sm:justify-end items-center gap-2">
-                        <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#0E1B3D]">
-                          Report &amp; Payment Status
+                        <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#0B1B3E]">
+                          Stone Track &amp; Payment Status
                         </span>
                         <span
-                          className={`px-2.5 py-0.5 rounded-full text-[10px] font-mono font-black uppercase ${
+                          className={`px-2.5 py-0.5 rounded-full text-[10px] font-mono font-black uppercase border ${
                             paymentStatus === 'Paid'
-                              ? 'bg-emerald-600 text-white'
-                              : 'bg-amber-500 text-slate-950'
+                              ? 'border-emerald-600 bg-emerald-50 text-emerald-700'
+                              : 'border-amber-600 bg-amber-50 text-amber-800'
                           }`}
                         >
                           {paymentStatus}
                         </span>
                       </div>
-                      <div className="font-mono font-bold text-sm text-[#0B132B]">
-                        {certificate.reportNumber}
+                      <div className="font-mono font-bold text-sm text-[#0B1B3E]">
+                        Stone No: {stoneNumber}
                       </div>
                       <div className="font-semibold text-slate-800">{certificate.variety}</div>
-                      <div className="text-slate-600">
-                        Weight: <span className="font-mono font-semibold">{certificate.weight}</span> &bull;{' '}
+                      <div className="text-slate-700">
+                        Weight: <span className="font-mono font-semibold">{stoneWeight}</span> &bull;{' '}
+                        Color: <span className="font-semibold">{stoneColor}</span> &bull;{' '}
                         Method: <span className="font-semibold">{paymentMethod}</span>
                       </div>
                     </div>
                   </div>
 
-                  {/* Colorful Luxury Itemized Table */}
-                  <div className="rounded-xl overflow-hidden border border-[#D4AF37]/40 shadow-sm">
+                  {/* Ink-Saver Ivory & Gold Itemized Table */}
+                  <div className="rounded-xl overflow-hidden border border-[#D4AF37]/80">
                     <table className="w-full text-xs border-collapse">
                       <thead>
-                        <tr className="bg-gradient-to-r from-[#0B132B] to-[#162752] text-[#F3D574] text-left font-mono uppercase text-[11px]">
-                          <th className="py-3 px-4">Service &amp; Report Description</th>
+                        <tr className="bg-[#FDF8EC] text-[#0B1B3E] border-b border-[#D4AF37]/70 text-left font-mono uppercase text-[11px]">
+                          <th className="py-3 px-4">Service &amp; Stone Details</th>
                           <th className="py-3 px-4 text-right">Qty</th>
                           <th className="py-3 px-4 text-right">Unit (LKR)</th>
                           <th className="py-3 px-4 text-right">Amount (LKR)</th>
@@ -424,19 +431,28 @@ export default function InvoiceModal({
                       <tbody className="bg-white divide-y divide-slate-200">
                         <tr>
                           <td className="py-4 px-4">
-                            <div className="font-bold text-[#0B132B] text-sm">
+                            <div className="font-bold text-[#0B1B3E] text-sm">
                               {selectedTier.label}
                             </div>
-                            <div className="text-slate-600 mt-0.5">
-                              Certificate Ref: <span className="font-mono font-semibold text-[#0E1B3D]">{certificate.reportNumber}</span> &mdash;{' '}
-                              {certificate.variety} ({certificate.weight})
+                            <div className="text-slate-700 mt-1 space-x-2">
+                              <span>
+                                Stone No: <strong className="font-mono text-[#0B1B3E]">{stoneNumber}</strong>
+                              </span>
+                              <span>&bull;</span>
+                              <span>
+                                Weight: <strong className="font-mono text-[#0B1B3E]">{stoneWeight}</strong>
+                              </span>
+                              <span>&bull;</span>
+                              <span>
+                                Color: <strong className="text-[#0B1B3E]">{stoneColor}</strong>
+                              </span>
                             </div>
                           </td>
                           <td className="py-4 px-4 text-right font-mono font-semibold">{quantity}</td>
                           <td className="py-4 px-4 text-right font-mono">
                             {selectedTier.priceLkr.toLocaleString()}
                           </td>
-                          <td className="py-4 px-4 text-right font-mono font-bold text-[#0B132B]">
+                          <td className="py-4 px-4 text-right font-mono font-bold text-[#0B1B3E]">
                             {subtotalLkr.toLocaleString()}
                           </td>
                         </tr>
@@ -445,9 +461,9 @@ export default function InvoiceModal({
                   </div>
 
                   {/* Stone Submission & Received Details */}
-                  <div className="p-4 rounded-xl bg-white border border-[#D4AF37]/40 shadow-sm text-xs space-y-2">
+                  <div className="p-4 rounded-xl bg-white border border-[#D4AF37]/60 text-xs space-y-2">
                     <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 pb-1.5">
-                      <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#0E1B3D]">
+                      <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#0B1B3E]">
                         Stone Submission &amp; Intake Receipt Details
                       </span>
                       <span className="text-[10px] font-mono text-emerald-700 font-bold">
@@ -456,26 +472,28 @@ export default function InvoiceModal({
                     </div>
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-[11px]">
                       <div>
-                        <span className="text-slate-500 block">Stone / Variety</span>
-                        <span className="font-bold text-[#0B132B]">{certificate.variety}</span>
+                        <span className="text-slate-500 block">Stone Track No.</span>
+                        <span className="font-mono font-bold text-[#0B1B3E]">{stoneNumber}</span>
                       </div>
                       <div>
-                        <span className="text-slate-500 block">Weight / Shape</span>
+                        <span className="text-slate-500 block">Weight &amp; Color</span>
                         <span className="font-semibold text-slate-800">
-                          {certificate.weight} &bull; {certificate.shapeAndCut}
+                          {stoneWeight} &bull; {stoneColor}
                         </span>
                       </div>
                       <div>
-                        <span className="text-slate-500 block">Measurements</span>
-                        <span className="font-mono text-slate-800">{certificate.dimensions}</span>
+                        <span className="text-slate-500 block">Variety &amp; Cut</span>
+                        <span className="font-semibold text-slate-800">
+                          {certificate.variety} ({certificate.shapeAndCut})
+                        </span>
                       </div>
                       <div>
                         <span className="text-slate-500 block">Received By</span>
-                        <span className="font-semibold text-[#0B132B]">{receivedBy}</span>
+                        <span className="font-semibold text-[#0B1B3E]">{receivedBy}</span>
                       </div>
                     </div>
-                    <div className="text-[11px] text-slate-600 pt-1 border-t border-slate-100">
-                      <span className="font-semibold text-[#0E1B3D]">Declared Condition:</span>{' '}
+                    <div className="text-[11px] text-slate-700 pt-1 border-t border-slate-100">
+                      <span className="font-semibold text-[#0B1B3E]">Declared Condition:</span>{' '}
                       {stoneCondition}
                     </div>
                   </div>
@@ -483,34 +501,34 @@ export default function InvoiceModal({
                   {/* Totals & Notes */}
                   <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
                     <div className="text-[11px] text-slate-600 space-y-1 max-w-sm">
-                      <div className="font-bold text-[#0B132B] uppercase font-mono text-[10px]">
+                      <div className="font-bold text-[#0B1B3E] uppercase font-mono text-[10px]">
                         Collection &amp; Online Verification
                       </div>
                       <p>
-                        Present this receipt when collecting your stone, or verify online at{' '}
-                        <span className="font-mono font-semibold text-[#0E1B3D]">
+                        Present this receipt when collecting your stone, or track &amp; verify at{' '}
+                        <span className="font-mono font-semibold text-[#0B1B3E]">
                           www.wtcgemlab.lk/verify
                         </span>
                       </p>
                       {notes && <p className="italic text-slate-500">Note: {notes}</p>}
                     </div>
 
-                    <div className="w-full sm:w-72 rounded-xl bg-gradient-to-br from-[#070D1B] to-[#132554] text-white p-4 border border-[#D4AF37]/60 shadow-lg space-y-2 text-xs">
-                      <div className="flex justify-between text-slate-300">
+                    <div className="w-full sm:w-72 rounded-xl bg-[#FDFBF5] text-[#0B1B3E] p-4 border-2 border-[#D4AF37] space-y-2 text-xs">
+                      <div className="flex justify-between text-slate-700">
                         <span>Subtotal</span>
                         <span className="font-mono">LKR {subtotalLkr.toLocaleString()}</span>
                       </div>
                       {discountLkr > 0 && (
-                        <div className="flex justify-between text-emerald-300">
+                        <div className="flex justify-between text-emerald-700">
                           <span>Discount</span>
                           <span className="font-mono">- LKR {discountLkr.toLocaleString()}</span>
                         </div>
                       )}
-                      <div className="flex justify-between items-center border-t border-[#D4AF37]/40 pt-2">
-                        <span className="font-cinzel font-bold text-amber-200 uppercase text-xs">
+                      <div className="flex justify-between items-center border-t border-[#D4AF37]/60 pt-2">
+                        <span className="font-cinzel font-bold text-[#0B1B3E] uppercase text-xs">
                           Total (LKR)
                         </span>
-                        <span className="text-xl font-mono font-black text-[#F3D574]">
+                        <span className="text-xl font-mono font-black text-[#9E731A]">
                           LKR {totalLkr.toLocaleString()}
                         </span>
                       </div>
@@ -521,16 +539,16 @@ export default function InvoiceModal({
                   <div className="grid grid-cols-2 gap-8 pt-4 border-t border-slate-200 text-[11px]">
                     <div className="text-center">
                       <div className="h-8 border-b border-slate-400 mb-1.5" />
-                      <div className="font-bold text-[#0B132B]">Client / Depositor Signature</div>
+                      <div className="font-bold text-[#0B1B3E]">Client / Depositor Signature</div>
                       <div className="text-[10px] text-slate-500">
                         Stone(s) submitted for gemological testing
                       </div>
                     </div>
                     <div className="text-center">
-                      <div className="h-8 border-b border-[#C5A059] mb-1.5 flex items-end justify-center pb-1 font-semibold text-[#0E1B3D]">
+                      <div className="h-8 border-b border-[#C5A059] mb-1.5 flex items-end justify-center pb-1 font-semibold text-[#0B1B3E]">
                         {receivedBy}
                       </div>
-                      <div className="font-bold text-[#0B132B]">Received By (WTC Gem Lab)</div>
+                      <div className="font-bold text-[#0B1B3E]">Received By (WTC Gem Lab)</div>
                       <div className="text-[10px] text-slate-500">
                         Stone received in good order &bull; {issuedDate}
                       </div>
@@ -538,8 +556,8 @@ export default function InvoiceModal({
                   </div>
                 </div>
 
-                {/* Bottom Gold & Navy Ribbon */}
-                <div className="bg-gradient-to-r from-[#070D1B] via-[#0E1B3D] to-[#070D1B] border-t-2 border-[#D4AF37] px-7 py-3 flex flex-wrap items-center justify-between text-[10px] font-mono text-amber-200/90">
+                {/* Clean Ink-Saver White Footer */}
+                <div className="bg-white border-t-2 border-[#D4AF37] px-7 py-3 flex flex-wrap items-center justify-between text-[10px] font-mono text-[#0B1B3E]">
                   <span>Thank you for choosing WTC Gemological Laboratory</span>
                   <span>{LAB_CONTACT_INFO.email} &bull; www.wtcgemlab.lk</span>
                 </div>
@@ -712,6 +730,38 @@ export default function InvoiceModal({
                       <option value="Card">Card</option>
                       <option value="Bank Transfer">Bank Transfer</option>
                     </select>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+                  <div>
+                    <label className="block text-slate-400 font-mono mb-1">Stone Track / Report No. *</label>
+                    <input
+                      type="text"
+                      value={stoneNumber}
+                      onChange={(e) => setStoneNumber(e.target.value)}
+                      className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-700 text-amber-300 font-mono font-bold"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-slate-400 font-mono mb-1">Stone Weight *</label>
+                    <input
+                      type="text"
+                      value={stoneWeight}
+                      onChange={(e) => setStoneWeight(e.target.value)}
+                      placeholder="2.40 Carats"
+                      className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-700 text-white font-mono"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-slate-400 font-mono mb-1">Stone Color *</label>
+                    <input
+                      type="text"
+                      value={stoneColor}
+                      onChange={(e) => setStoneColor(e.target.value)}
+                      placeholder="Vivid Royal Blue"
+                      className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-700 text-white"
+                    />
                   </div>
                 </div>
 
