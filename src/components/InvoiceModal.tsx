@@ -30,7 +30,7 @@ export const REPORT_FEE_TIERS = [
 export interface InvoiceStoneItem {
   id: string;
   stoneNumber: string;
-  variety: string;
+  stoneForm: string;
   weight: string;
   color: string;
   tierId: string;
@@ -96,7 +96,7 @@ export default function InvoiceModal({
       {
         id: `stone-${Date.now()}`,
         stoneNumber: certificate.reportNumber || '',
-        variety: certificate.variety || '',
+        stoneForm: 'Cut & Polished',
         weight: certificate.weight || '',
         color: certificate.color || '',
         tierId: defaultFormat,
@@ -136,7 +136,7 @@ export default function InvoiceModal({
       {
         id: `stone-${Date.now()}-${prev.length + 1}`,
         stoneNumber: nextNo,
-        variety: last?.variety || certificate.variety || 'Natural Blue Sapphire',
+        stoneForm: last?.stoneForm || 'Cut & Polished',
         weight: '',
         color: last?.color || certificate.color || '',
         tierId: last?.tierId || defaultFormat,
@@ -208,7 +208,7 @@ export default function InvoiceModal({
       const stoneSummaryText = stoneItems
         .map(
           (s, idx) =>
-            `#${idx + 1} ${s.stoneNumber.trim().toUpperCase()}: ${s.variety} | ${s.weight || 'N/A'} | ${s.color || 'N/A'} (${getTier(s.tierId).label})`
+            `#${idx + 1} ${s.stoneNumber.trim().toUpperCase()}: ${s.stoneForm} | ${s.weight || 'N/A'} | ${s.color || 'N/A'} (${getTier(s.tierId).label})`
         )
         .join('; ');
       const formatLabel =
@@ -491,7 +491,7 @@ export default function InvoiceModal({
                         <tr className="bg-[#FDF8EC] text-[#0B1B3E] border-b border-[#D4AF37]/70 text-left font-mono uppercase text-[10px]">
                           <th className="py-2.5 px-3">#</th>
                           <th className="py-2.5 px-3">Stone Track No.</th>
-                          <th className="py-2.5 px-3">Stone / Variety</th>
+                          <th className="py-2.5 px-3">Stone Form</th>
                           <th className="py-2.5 px-3">Weight</th>
                           <th className="py-2.5 px-3">Color</th>
                           <th className="py-2.5 px-3">Service Tier</th>
@@ -508,7 +508,7 @@ export default function InvoiceModal({
                                 {item.stoneNumber}
                               </td>
                               <td className="py-2.5 px-3 font-semibold text-slate-800">
-                                {item.variety}
+                                {item.stoneForm}
                               </td>
                               <td className="py-2.5 px-3 font-mono text-slate-700">
                                 {item.weight || '—'}
@@ -775,16 +775,20 @@ export default function InvoiceModal({
                       </div>
                       <div className="sm:col-span-3">
                         <label className="block text-[10px] text-slate-400 font-mono mb-1">
-                          Variety / Stone
+                          Stone Form *
                         </label>
-                        <input
-                          type="text"
-                          value={item.variety}
+                        <select
+                          value={item.stoneForm}
                           onChange={(e) =>
-                            handleUpdateStoneItem(item.id, { variety: e.target.value })
+                            handleUpdateStoneItem(item.id, { stoneForm: e.target.value })
                           }
                           className="w-full px-2.5 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-white text-xs"
-                        />
+                        >
+                          <option value="Cut & Polished">Cut &amp; Polished</option>
+                          <option value="Rough">Rough</option>
+                          <option value="Cabochon">Cabochon</option>
+                          <option value="Mounted / Parcel">Mounted / Parcel</option>
+                        </select>
                       </div>
                       <div className="sm:col-span-2">
                         <label className="block text-[10px] text-slate-400 font-mono mb-1">
