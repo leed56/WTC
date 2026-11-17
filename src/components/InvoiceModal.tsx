@@ -13,6 +13,8 @@ import {
   Send,
   Loader2,
   ExternalLink,
+  Plus,
+  Trash2,
 } from 'lucide-react';
 import { GemCertificate, LAB_CONTACT_INFO } from '@/lib/gemData';
 import type { CustomerRecord } from '@/app/api/customers/route';
@@ -24,6 +26,24 @@ export const REPORT_FEE_TIERS = [
   { id: 'a4', label: 'Official A4 Certificate', priceLkr: 4500 },
   { id: 'advanced', label: 'Advanced Report', priceLkr: 30000 },
 ] as const;
+
+export interface InvoiceStoneItem {
+  id: string;
+  stoneNumber: string;
+  variety: string;
+  weight: string;
+  color: string;
+  tierId: string;
+}
+
+function incrementStoneNumber(prevNo: string): string {
+  const match = prevNo.trim().match(/^(.*?)(\d+)$/);
+  if (!match) return `${prevNo || 'WTC-26'}-2`;
+  const prefix = match[1];
+  const digits = match[2];
+  const next = String(Number(digits) + 1).padStart(digits.length, '0');
+  return `${prefix}${next}`;
+}
 
 interface InvoiceModalProps {
   isOpen: boolean;
@@ -50,17 +70,13 @@ export default function InvoiceModal({
   const [customerEmail, setCustomerEmail] = useState('');
   const [customerAddress, setCustomerAddress] = useState('');
 
-  const [tierId, setTierId] = useState<string>(defaultFormat);
-  const [quantity, setQuantity] = useState<number>(1);
+  const [stoneItems, setStoneItems] = useState<InvoiceStoneItem[]>([]);
   const [discountLkr, setDiscountLkr] = useState<number>(0);
   const [paymentStatus, setPaymentStatus] = useState<'Paid' | 'Unpaid'>('Paid');
   const [paymentMethod, setPaymentMethod] = useState<string>('Cash');
   const [notes, setNotes] = useState<string>('');
-  const [stoneNumber, setStoneNumber] = useState<string>(certificate.reportNumber || '');
-  const [stoneWeight, setStoneWeight] = useState<string>(certificate.weight || '');
-  const [stoneColor, setStoneColor] = useState<string>(certificate.color || '');
   const [stoneCondition, setStoneCondition] = useState<string>(
-    'Loose gemstone received in parcel — good condition'
+    'Loose gemstone(s) received in parcel — good condition'
   );
   const [estimatedCollection, setEstimatedCollection] = useState<string>('Same Day / 24 Hours');
   const [receivedBy, setReceivedBy] = useState<string>(
@@ -76,10 +92,16 @@ export default function InvoiceModal({
 
   useEffect(() => {
     if (!isOpen) return;
-    setTierId(defaultFormat);
-    setStoneNumber(certificate.reportNumber || '');
-    setStoneWeight(certificate.weight || '');
-    setStoneColor(certificate.color || '');
+    setStoneItems([
+      {
+        id: `stone-${Date.now()}`,
+        stoneNumber: certificate.reportNumber || '',
+        variety: certificate.variety || '',
+        weight: certificate.weight || '',
+        color: certificate.color || '',
+        tierId: defaultFormat,
+      },
+    ]);
     const suffix = certificate.reportNumber.replace(/[^0-9A-Z]/gi, '').slice(-6) || String(Date.now()).slice(-6);
     setInvoiceNumber(`INV-${suffix}`);
     if (certificate.clientName && !customerName) setCustomerName(certificate.clientName);
@@ -96,14 +118,40 @@ export default function InvoiceModal({
       .catch(() => {});
   }, [isOpen, defaultFormat, certificate.reportNumber]);
 
-  const selectedTier = useMemo(
-    () => REPORT_FEE_TIERS.find((t) => t.id === tierId) || REPORT_FEE_TIERS[1],
-    [tierId]
-  );
+  const getTier = (id: string) =>
+    REPORT_FEE_TIERS.find((t) => t.id === id) || REPORT_FEE_TIERS[1];
 
-  const subtotalLkr = selectedTier.priceLkr * Math.max(1, quantity);
+  const subtotalLkr = useMemo(
+    () => stoneItems.reduce((sum, item) => sum + getTier(item.tierId).priceLkr, 0),
+    [stoneItems]
+  );
   const totalLkr = Math.max(0, subtotalLkr - Math.max(0, discountLkr));
   const issuedDate = new Date().toISOString().split('T')[0];
+
+  const handleAddStoneItem = () => {
+    const last = stoneItems[stoneItems.length - 1];
+    const nextNo = last ? incrementStoneNumber(last.stoneNumber) : certificate.reportNumber;
+    setStoneItems((prev) => [
+      ...prev,
+      {
+        id: `stone-${Date.now()}-${prev.length + 1}`,
+        stoneNumber: nextNo,
+        variety: last?.variety || certificate.variety || 'Natural Blue Sapphire',
+        weight: '',
+        color: last?.color || certificate.color || '',
+        tierId: last?.tierId || defaultFormat,
+      },
+    ]);
+  };
+
+  const handleUpdateStoneItem = (id: string, patch: Partial<InvoiceStoneItem>) => {
+    setStoneItems((prev) => prev.map((item) => (item.id === id ? { ...item, ...patch } : item)));
+  };
+
+  const handleRemoveStoneItem = (id: string) => {
+    if (stoneItems.length <= 1) return;
+    setStoneItems((prev) => prev.filter((item) => item.id !== id));
+  };
 
   const handleSelectCustomer = (id: string) => {
     setSelectedCustomerId(id);
@@ -153,18 +201,34 @@ export default function InvoiceModal({
         });
       }
 
+      const stoneNumbersList = stoneItems
+        .map((s) => s.stoneNumber.trim().toUpperCase())
+        .filter(Boolean)
+        .join(', ');
+      const stoneSummaryText = stoneItems
+        .map(
+          (s, idx) =>
+            `#${idx + 1} ${s.stoneNumber.trim().toUpperCase()}: ${s.variety} | ${s.weight || 'N/A'} | ${s.color || 'N/A'} (${getTier(s.tierId).label})`
+        )
+        .join('; ');
+      const formatLabel =
+        stoneItems.length === 1
+          ? getTier(stoneItems[0].tierId).label
+          : `Multi-Stone (${stoneItems.length} stones)`;
+
       const invoicePayload: InvoiceRecord = {
         invoice_number: invoiceNumber.trim().toUpperCase(),
-        report_number: (stoneNumber || certificate.reportNumber).trim().toUpperCase(),
+        report_number: stoneNumbersList || certificate.reportNumber.trim().toUpperCase(),
         customer_id: resolvedCustomerId,
         customer_name: customerName.trim(),
         customer_company: customerCompany.trim() || null,
         customer_phone: customerPhone.trim(),
         customer_email: customerEmail.trim() || null,
-        stone_summary: `${certificate.variety} | ${stoneWeight} | ${stoneColor}`,
-        report_format: selectedTier.label,
-        unit_price_lkr: selectedTier.priceLkr,
-        quantity: Math.max(1, quantity),
+        stone_summary: stoneSummaryText,
+        report_format: formatLabel,
+        unit_price_lkr:
+          stoneItems.length === 1 ? getTier(stoneItems[0].tierId).priceLkr : subtotalLkr,
+        quantity: Math.max(1, stoneItems.length),
         discount_lkr: Math.max(0, discountLkr),
         total_lkr: totalLkr,
         payment_status: paymentStatus,
@@ -365,7 +429,7 @@ export default function InvoiceModal({
                         {invoiceNumber}
                       </div>
                       <div className="text-[11px] font-mono text-slate-600">
-                        Stone No: <span className="font-bold text-[#9E731A]">{stoneNumber}</span> &bull; {issuedDate}
+                        Stones: <span className="font-bold text-[#9E731A]">{stoneItems.length}</span> &bull; {issuedDate}
                       </div>
                     </div>
                   </div>
@@ -406,93 +470,74 @@ export default function InvoiceModal({
                         </span>
                       </div>
                       <div className="font-mono font-bold text-sm text-[#0B1B3E]">
-                        Stone No: {stoneNumber}
+                        {stoneItems.length === 1
+                          ? `Stone No: ${stoneItems[0].stoneNumber}`
+                          : `${stoneItems.length} Stones Submitted`}
                       </div>
-                      <div className="font-semibold text-slate-800">{certificate.variety}</div>
+                      <div className="font-semibold text-slate-800">
+                        {stoneItems.map((s) => s.stoneNumber).join(', ')}
+                      </div>
                       <div className="text-slate-700">
-                        Weight: <span className="font-mono font-semibold">{stoneWeight}</span> &bull;{' '}
-                        Color: <span className="font-semibold">{stoneColor}</span> &bull;{' '}
+                        Total Stones: <span className="font-mono font-semibold">{stoneItems.length}</span> &bull;{' '}
                         Method: <span className="font-semibold">{paymentMethod}</span>
                       </div>
                     </div>
                   </div>
 
-                  {/* Ink-Saver Ivory & Gold Itemized Table */}
+                  {/* Ink-Saver Ivory & Gold Multi-Stone Itemized Table */}
                   <div className="rounded-xl overflow-hidden border border-[#D4AF37]/80">
                     <table className="w-full text-xs border-collapse">
                       <thead>
-                        <tr className="bg-[#FDF8EC] text-[#0B1B3E] border-b border-[#D4AF37]/70 text-left font-mono uppercase text-[11px]">
-                          <th className="py-3 px-4">Service &amp; Stone Details</th>
-                          <th className="py-3 px-4 text-right">Qty</th>
-                          <th className="py-3 px-4 text-right">Unit (LKR)</th>
-                          <th className="py-3 px-4 text-right">Amount (LKR)</th>
+                        <tr className="bg-[#FDF8EC] text-[#0B1B3E] border-b border-[#D4AF37]/70 text-left font-mono uppercase text-[10px]">
+                          <th className="py-2.5 px-3">#</th>
+                          <th className="py-2.5 px-3">Stone Track No.</th>
+                          <th className="py-2.5 px-3">Stone / Variety</th>
+                          <th className="py-2.5 px-3">Weight</th>
+                          <th className="py-2.5 px-3">Color</th>
+                          <th className="py-2.5 px-3">Service Tier</th>
+                          <th className="py-2.5 px-3 text-right">Fee (LKR)</th>
                         </tr>
                       </thead>
                       <tbody className="bg-white divide-y divide-slate-200">
-                        <tr>
-                          <td className="py-4 px-4">
-                            <div className="font-bold text-[#0B1B3E] text-sm">
-                              {selectedTier.label}
-                            </div>
-                            <div className="text-slate-700 mt-1 space-x-2">
-                              <span>
-                                Stone No: <strong className="font-mono text-[#0B1B3E]">{stoneNumber}</strong>
-                              </span>
-                              <span>&bull;</span>
-                              <span>
-                                Weight: <strong className="font-mono text-[#0B1B3E]">{stoneWeight}</strong>
-                              </span>
-                              <span>&bull;</span>
-                              <span>
-                                Color: <strong className="text-[#0B1B3E]">{stoneColor}</strong>
-                              </span>
-                            </div>
-                          </td>
-                          <td className="py-4 px-4 text-right font-mono font-semibold">{quantity}</td>
-                          <td className="py-4 px-4 text-right font-mono">
-                            {selectedTier.priceLkr.toLocaleString()}
-                          </td>
-                          <td className="py-4 px-4 text-right font-mono font-bold text-[#0B1B3E]">
-                            {subtotalLkr.toLocaleString()}
-                          </td>
-                        </tr>
+                        {stoneItems.map((item, idx) => {
+                          const tier = getTier(item.tierId);
+                          return (
+                            <tr key={item.id}>
+                              <td className="py-2.5 px-3 font-mono text-slate-500">{idx + 1}</td>
+                              <td className="py-2.5 px-3 font-mono font-bold text-[#0B1B3E]">
+                                {item.stoneNumber}
+                              </td>
+                              <td className="py-2.5 px-3 font-semibold text-slate-800">
+                                {item.variety}
+                              </td>
+                              <td className="py-2.5 px-3 font-mono text-slate-700">
+                                {item.weight || '—'}
+                              </td>
+                              <td className="py-2.5 px-3 text-slate-700">
+                                {item.color || '—'}
+                              </td>
+                              <td className="py-2.5 px-3 text-slate-700">{tier.label}</td>
+                              <td className="py-2.5 px-3 text-right font-mono font-bold text-[#0B1B3E]">
+                                {tier.priceLkr.toLocaleString()}
+                              </td>
+                            </tr>
+                          );
+                        })}
                       </tbody>
                     </table>
                   </div>
 
-                  {/* Stone Submission & Received Details */}
-                  <div className="p-4 rounded-xl bg-white border border-[#D4AF37]/60 text-xs space-y-2">
-                    <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 pb-1.5">
+                  {/* Stone Submission & Intake Conditions */}
+                  <div className="p-3.5 rounded-xl bg-white border border-[#D4AF37]/60 text-xs space-y-1.5">
+                    <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 pb-1">
                       <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#0B1B3E]">
-                        Stone Submission &amp; Intake Receipt Details
+                        Stone Intake &amp; Collection Instructions
                       </span>
                       <span className="text-[10px] font-mono text-emerald-700 font-bold">
                         Est. Collection: {estimatedCollection}
                       </span>
                     </div>
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-[11px]">
-                      <div>
-                        <span className="text-slate-500 block">Stone Track No.</span>
-                        <span className="font-mono font-bold text-[#0B1B3E]">{stoneNumber}</span>
-                      </div>
-                      <div>
-                        <span className="text-slate-500 block">Weight &amp; Color</span>
-                        <span className="font-semibold text-slate-800">
-                          {stoneWeight} &bull; {stoneColor}
-                        </span>
-                      </div>
-                      <div>
-                        <span className="text-slate-500 block">Variety &amp; Cut</span>
-                        <span className="font-semibold text-slate-800">
-                          {certificate.variety} ({certificate.shapeAndCut})
-                        </span>
-                      </div>
-                      <div>
-                        <span className="text-slate-500 block">Received By</span>
-                        <span className="font-semibold text-[#0B1B3E]">{receivedBy}</span>
-                      </div>
-                    </div>
-                    <div className="text-[11px] text-slate-700 pt-1 border-t border-slate-100">
+                    <div className="text-[11px] text-slate-700">
                       <span className="font-semibold text-[#0B1B3E]">Declared Condition:</span>{' '}
                       {stoneCondition}
                     </div>
@@ -505,7 +550,7 @@ export default function InvoiceModal({
                         Collection &amp; Online Verification
                       </div>
                       <p>
-                        Present this receipt when collecting your stone, or track &amp; verify at{' '}
+                        Please bring this receipt when collecting your stone(s), or verify online at{' '}
                         <span className="font-mono font-semibold text-[#0B1B3E]">
                           www.wtcgemlab.lk/verify
                         </span>
@@ -515,7 +560,7 @@ export default function InvoiceModal({
 
                     <div className="w-full sm:w-72 rounded-xl bg-[#FDFBF5] text-[#0B1B3E] p-4 border-2 border-[#D4AF37] space-y-2 text-xs">
                       <div className="flex justify-between text-slate-700">
-                        <span>Subtotal</span>
+                        <span>Subtotal ({stoneItems.length} {stoneItems.length === 1 ? 'stone' : 'stones'})</span>
                         <span className="font-mono">LKR {subtotalLkr.toLocaleString()}</span>
                       </div>
                       {discountLkr > 0 && (
@@ -538,19 +583,21 @@ export default function InvoiceModal({
                   {/* Two-Party Stone Handover Signatures */}
                   <div className="grid grid-cols-2 gap-8 pt-4 border-t border-slate-200 text-[11px]">
                     <div className="text-center">
-                      <div className="h-8 border-b border-slate-400 mb-1.5" />
-                      <div className="font-bold text-[#0B1B3E]">Client / Depositor Signature</div>
+                      <div className="h-9 border-b border-[#C5A059] mb-1.5 flex items-end justify-center pb-1 font-semibold text-[#0B1B3E]">
+                        {receivedBy}
+                      </div>
+                      <div className="font-bold text-[#0B1B3E]">Lab Intake Officer (WTC Gem Lab)</div>
                       <div className="text-[10px] text-slate-500">
-                        Stone(s) submitted for gemological testing
+                        Stone(s) accepted for testing &bull; {issuedDate}
                       </div>
                     </div>
                     <div className="text-center">
-                      <div className="h-8 border-b border-[#C5A059] mb-1.5 flex items-end justify-center pb-1 font-semibold text-[#0B1B3E]">
-                        {receivedBy}
+                      <div className="h-9 border-b border-slate-500 mb-1.5" />
+                      <div className="font-bold text-[#0B1B3E]">
+                        Client Signature (Upon Collecting Stone)
                       </div>
-                      <div className="font-bold text-[#0B1B3E]">Received By (WTC Gem Lab)</div>
                       <div className="text-[10px] text-slate-500">
-                        Stone received in good order &bull; {issuedDate}
+                        I confirm I received all stone(s) above &bull; Date: ____/____/2026
                       </div>
                     </div>
                   </div>
@@ -659,9 +706,116 @@ export default function InvoiceModal({
                 </div>
               </div>
 
-              {/* Invoice Fee & Payment Details */}
-              <div className="p-4 rounded-xl bg-slate-900/70 border border-slate-800 space-y-3 text-xs">
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              {/* Multi-Stone Line Items + Payment Details */}
+              <div className="p-4 rounded-xl bg-slate-900/70 border border-slate-800 space-y-4 text-xs">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <span className="text-xs font-mono text-amber-400 uppercase font-bold">
+                    Stones Submitted on This Invoice ({stoneItems.length})
+                  </span>
+                  <button
+                    type="button"
+                    onClick={handleAddStoneItem}
+                    className="px-3 py-1.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 border border-amber-400/50 text-amber-300 font-bold text-xs flex items-center gap-1.5 transition"
+                  >
+                    <Plus className="w-3.5 h-3.5" />
+                    <span>Add Another Stone</span>
+                  </button>
+                </div>
+
+                <div className="space-y-2.5">
+                  {stoneItems.map((item, idx) => (
+                    <div
+                      key={item.id}
+                      className="p-3 rounded-xl bg-slate-950/90 border border-slate-800 grid grid-cols-1 sm:grid-cols-12 gap-2 items-end"
+                    >
+                      <div className="sm:col-span-2">
+                        <label className="block text-[10px] text-slate-400 font-mono mb-1">
+                          #{idx + 1} Stone No. *
+                        </label>
+                        <input
+                          type="text"
+                          value={item.stoneNumber}
+                          onChange={(e) =>
+                            handleUpdateStoneItem(item.id, { stoneNumber: e.target.value })
+                          }
+                          className="w-full px-2.5 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-amber-300 font-mono font-bold text-xs"
+                        />
+                      </div>
+                      <div className="sm:col-span-3">
+                        <label className="block text-[10px] text-slate-400 font-mono mb-1">
+                          Variety / Stone
+                        </label>
+                        <input
+                          type="text"
+                          value={item.variety}
+                          onChange={(e) =>
+                            handleUpdateStoneItem(item.id, { variety: e.target.value })
+                          }
+                          className="w-full px-2.5 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-white text-xs"
+                        />
+                      </div>
+                      <div className="sm:col-span-2">
+                        <label className="block text-[10px] text-slate-400 font-mono mb-1">
+                          Weight *
+                        </label>
+                        <input
+                          type="text"
+                          value={item.weight}
+                          onChange={(e) =>
+                            handleUpdateStoneItem(item.id, { weight: e.target.value })
+                          }
+                          placeholder="2.40 ct"
+                          className="w-full px-2.5 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-white font-mono text-xs"
+                        />
+                      </div>
+                      <div className="sm:col-span-2">
+                        <label className="block text-[10px] text-slate-400 font-mono mb-1">
+                          Color *
+                        </label>
+                        <input
+                          type="text"
+                          value={item.color}
+                          onChange={(e) =>
+                            handleUpdateStoneItem(item.id, { color: e.target.value })
+                          }
+                          placeholder="Royal Blue"
+                          className="w-full px-2.5 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-white text-xs"
+                        />
+                      </div>
+                      <div className="sm:col-span-2">
+                        <label className="block text-[10px] text-slate-400 font-mono mb-1">
+                          Report / Fee
+                        </label>
+                        <select
+                          value={item.tierId}
+                          onChange={(e) =>
+                            handleUpdateStoneItem(item.id, { tierId: e.target.value })
+                          }
+                          className="w-full px-2 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-amber-300 font-semibold text-xs"
+                        >
+                          {REPORT_FEE_TIERS.map((t) => (
+                            <option key={t.id} value={t.id}>
+                              {t.id.toUpperCase()} — {t.priceLkr.toLocaleString()}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                      <div className="sm:col-span-1 flex justify-end">
+                        <button
+                          type="button"
+                          disabled={stoneItems.length <= 1}
+                          onClick={() => handleRemoveStoneItem(item.id)}
+                          title="Remove stone"
+                          className="p-2 rounded-lg text-slate-400 hover:text-red-400 hover:bg-red-500/10 disabled:opacity-30"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2 border-t border-slate-800">
                   <div>
                     <label className="block text-slate-400 font-mono mb-1">Invoice Number</label>
                     <input
@@ -669,33 +823,6 @@ export default function InvoiceModal({
                       value={invoiceNumber}
                       onChange={(e) => setInvoiceNumber(e.target.value)}
                       className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-700 text-amber-300 font-mono font-bold focus:border-amber-400 focus:outline-none"
-                    />
-                  </div>
-                  <div className="sm:col-span-2">
-                    <label className="block text-slate-400 font-mono mb-1">Report Format &amp; Fee</label>
-                    <select
-                      value={tierId}
-                      onChange={(e) => setTierId(e.target.value)}
-                      className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-700 text-amber-300 font-semibold focus:border-amber-400 focus:outline-none"
-                    >
-                      {REPORT_FEE_TIERS.map((t) => (
-                        <option key={t.id} value={t.id}>
-                          {t.label} — LKR {t.priceLkr.toLocaleString()}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                  <div>
-                    <label className="block text-slate-400 font-mono mb-1">Qty</label>
-                    <input
-                      type="number"
-                      min={1}
-                      value={quantity}
-                      onChange={(e) => setQuantity(Math.max(1, Number(e.target.value) || 1))}
-                      className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-700 text-white font-mono"
                     />
                   </div>
                   <div>
@@ -735,39 +862,7 @@ export default function InvoiceModal({
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
                   <div>
-                    <label className="block text-slate-400 font-mono mb-1">Stone Track / Report No. *</label>
-                    <input
-                      type="text"
-                      value={stoneNumber}
-                      onChange={(e) => setStoneNumber(e.target.value)}
-                      className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-700 text-amber-300 font-mono font-bold"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-slate-400 font-mono mb-1">Stone Weight *</label>
-                    <input
-                      type="text"
-                      value={stoneWeight}
-                      onChange={(e) => setStoneWeight(e.target.value)}
-                      placeholder="2.40 Carats"
-                      className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-700 text-white font-mono"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-slate-400 font-mono mb-1">Stone Color *</label>
-                    <input
-                      type="text"
-                      value={stoneColor}
-                      onChange={(e) => setStoneColor(e.target.value)}
-                      placeholder="Vivid Royal Blue"
-                      className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-700 text-white"
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
-                  <div>
-                    <label className="block text-slate-400 font-mono mb-1">Received By (Staff)</label>
+                    <label className="block text-slate-400 font-mono mb-1">Intake Staff</label>
                     <input
                       type="text"
                       value={receivedBy}
@@ -796,7 +891,9 @@ export default function InvoiceModal({
                 </div>
 
                 <div className="flex items-center justify-between pt-3 border-t border-slate-800">
-                  <span className="text-slate-400 font-mono">Total Invoice Amount:</span>
+                  <span className="text-slate-400 font-mono">
+                    Total Invoice Amount ({stoneItems.length} {stoneItems.length === 1 ? 'stone' : 'stones'}):
+                  </span>
                   <span className="text-2xl font-bold font-mono text-amber-400">
                     LKR {totalLkr.toLocaleString()}
                   </span>
