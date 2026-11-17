@@ -46,7 +46,7 @@ export default function ServicesPage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Format 1: Verbal Sticker */}
             <div className="p-6 rounded-2xl bg-slate-900 border border-slate-800 hover:border-amber-500/40 transition-all flex flex-col justify-between shadow-xl group">
               <div>
@@ -182,49 +182,6 @@ export default function ServicesPage() {
               </div>
             </div>
 
-            {/* Format 4: Advanced Report */}
-            <div className="p-6 rounded-2xl bg-slate-900 border border-amber-500/30 hover:border-amber-400 transition-all flex flex-col justify-between shadow-xl group">
-              <div>
-                <div className="w-12 h-12 rounded-xl bg-amber-500/15 border border-amber-400/40 flex items-center justify-center text-amber-400 mb-5 group-hover:scale-105 transition-transform">
-                  <Sparkles className="w-6 h-6" />
-                </div>
-                <div className="text-[11px] font-mono text-amber-400 uppercase tracking-wider font-semibold">
-                  Format 04 &bull; Bespoke &amp; Investment
-                </div>
-                <h3 className="text-xl font-cinzel font-bold text-white mt-1 mb-2">
-                  Advanced Report
-                </h3>
-                <p className="text-slate-400 text-xs leading-relaxed mb-4">
-                  In-depth flagship laboratory dossier for rare collector gemstones, featuring extended photomicrography, detailed diagnostic commentary, and priority handling.
-                </p>
-                <ul className="space-y-2 text-xs text-slate-300 mb-6">
-                  <li className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                    <span>Extended microscopic inclusion &amp; treatment dossier</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                    <span>High-resolution stone &amp; photomicrograph plates</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                    <span>Senior Gemologist verification &amp; archival seal</span>
-                  </li>
-                </ul>
-              </div>
-              <div className="pt-4 border-t border-slate-800 flex items-center justify-between">
-                <div>
-                  <span className="text-[10px] text-slate-500 font-mono block">Standard Fee</span>
-                  <span className="text-lg font-bold font-mono text-amber-400">LKR 30,000</span>
-                </div>
-                <Link
-                  href="/submission"
-                  className="text-xs text-amber-400 hover:text-amber-300 font-mono font-semibold"
-                >
-                  Request &rarr;
-                </Link>
-              </div>
-            </div>
           </div>
         </div>
 

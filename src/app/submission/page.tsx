@@ -230,7 +230,6 @@ export default function SubmissionPage() {
                     <option value="pvc-card">PVC Smart Card Report (LKR 1,200)</option>
                     <option value="sticker">Verbal Gem Box Sticker (LKR 300)</option>
                     <option value="a4-cert">Full A4 Certificate (LKR 4,500)</option>
-                    <option value="advance-report">Advanced Report (LKR 30,000)</option>
                   </select>
                 </div>
 
