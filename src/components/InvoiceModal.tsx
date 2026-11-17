@@ -24,7 +24,6 @@ export const REPORT_FEE_TIERS = [
   { id: 'sticker', label: 'Verbal Report (Gem Box Sticker)', priceLkr: 300 },
   { id: 'pvc', label: 'PVC Smart Card Report', priceLkr: 1200 },
   { id: 'a4', label: 'Official A4 Certificate', priceLkr: 4500 },
-  { id: 'advanced', label: 'Advanced Report', priceLkr: 30000 },
 ] as const;
 
 export interface InvoiceStoneItem {

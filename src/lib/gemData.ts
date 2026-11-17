@@ -145,14 +145,14 @@ export const SERVICE_CATEGORIES = [
     title: "Gemstone Identification",
     subtitle: "Accurate Species & Variety Verification",
     description: "Determines whether a gemstone is genuine natural mineral formed in the earth or an imitation, glass, composite, or synthetic counterpart.",
-    turnaround: "24 – 48 Hours",
-    priceRange: "LKR 300 – 30,000",
+    turnaround: "Same Day – 24 Hours",
+    priceRange: "LKR 300 – 4,500",
     features: [
       "Species and mineral variety determination",
       "Optical characterization & Refractive Index testing",
       "Specific gravity & hydrostatic density measurement",
       "Detailed microscopic inclusion mapping",
-      "Official WTC Gem Lab Digital & Hardcopy Certificate"
+      "Official WTC Gem Lab Digital QR & Hardcopy Report"
     ]
   },
   {
@@ -161,7 +161,7 @@ export const SERVICE_CATEGORIES = [
     subtitle: "Heated vs. Unheated Determination",
     description: "Critical screening for Corundum (Sapphire & Ruby) and other gemstones to detect thermal modification, lattice diffusion, lead-glass filling, or clarity oils.",
     turnaround: "24 – 48 Hours",
-    priceRange: "LKR 300 – 30,000",
+    priceRange: "LKR 1,200 – 4,500",
     features: [
       "Discrimination between unheated and thermally heated stones",
       "Inspection of internal stress halos & rutile dissolution",
@@ -175,8 +175,8 @@ export const SERVICE_CATEGORIES = [
     title: "Synthetic & Simulant Discrimination",
     subtitle: "Laboratory-Created & Imitation Detection",
     description: "Definitive separation of natural gemstones from flux-grown, hydrothermal, flame fusion synthetics, glass imitations, and composite stones.",
-    turnaround: "24 – 48 Hours",
-    priceRange: "LKR 300 – 30,000",
+    turnaround: "Same Day – 24 Hours",
+    priceRange: "LKR 300 – 4,500",
     features: [
       "Detection of diagnostic synthetic growth structures",
       "Multi-wavelength ultraviolet luminescence profiling",
@@ -189,8 +189,8 @@ export const SERVICE_CATEGORIES = [
     title: "Physical & Optical Constants Testing",
     subtitle: "Precision Instrument Measurements",
     description: "Systematic scientific assessment using sodium-light refractometry, hydrostatic specific gravity, and polariscopic strain analysis.",
-    turnaround: "24 Hours (Express Available)",
-    priceRange: "LKR 300 – 30,000",
+    turnaround: "Same Day (Express Available)",
+    priceRange: "LKR 300 – 4,500",
     features: [
       "Accurate Refractive Index (R.I.) and birefringence testing",
       "Hydrostatic micro-balance density calculation",

@@ -268,10 +268,12 @@ export default function ServicesPage() {
               </div>
 
               <div className="pt-6 border-t border-slate-800 flex items-center justify-between">
-                <div>
-                  <span className="text-[11px] text-slate-500 block font-mono">Standard Testing Fee</span>
-                  <span className="text-xl font-bold font-mono text-amber-400">{service.priceRange}</span>
-                </div>
+              <div>
+                <span className="text-[11px] text-slate-500 block font-mono">
+                  Testing Fee (By Report Format)
+                </span>
+                <span className="text-xl font-bold font-mono text-amber-400">{service.priceRange}</span>
+              </div>
                 <Link
                   href="/submission"
                   className="px-4 py-2 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-semibold text-xs transition-colors flex items-center gap-1.5"
@@ -303,7 +305,6 @@ export default function ServicesPage() {
                   <th className="py-3 px-4 uppercase">1. Verbal Box Sticker</th>
                   <th className="py-3 px-4 uppercase">2. PVC Smart Card</th>
                   <th className="py-3 px-4 uppercase">3. Full A4 Certificate</th>
-                  <th className="py-3 px-4 uppercase">4. Advanced Report</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-800/80 text-slate-300">
@@ -312,11 +313,10 @@ export default function ServicesPage() {
                   <td className="py-3.5 px-4 text-amber-300 font-bold">LKR 300</td>
                   <td className="py-3.5 px-4 text-amber-300 font-bold">LKR 1,200</td>
                   <td className="py-3.5 px-4 text-amber-300 font-bold">LKR 4,500</td>
-                  <td className="py-3.5 px-4 text-amber-300 font-bold">LKR 30,000</td>
                 </tr>
                 <tr className="hover:bg-slate-800/40 bg-amber-500/5">
                   <td className="py-3.5 px-4 font-bold text-amber-400">Parcel Screening (20+ Stones)</td>
-                  <td className="py-3.5 px-4 text-amber-300" colSpan={4}>
+                  <td className="py-3.5 px-4 text-amber-300" colSpan={3}>
                     Volume trade rates available for bulk verbal box stickers &amp; wholesale lots.
                   </td>
                 </tr>
