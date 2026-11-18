@@ -102,6 +102,13 @@ body {
     page-break-inside: avoid;
     break-inside: avoid;
   }
+  .report-print-target[data-report-format="sticker"] {
+    width: 240px !important;
+    height: 320px !important;
+    max-width: none !important;
+    zoom: 0.4724;
+    margin: 6mm auto !important;
+  }
   .report-print-target[data-report-format="pvc"] {
     width: 680px !important;
     height: 429px !important;

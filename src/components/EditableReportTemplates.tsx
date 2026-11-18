@@ -299,151 +299,111 @@ export default function EditableReportTemplates({
       )}
 
       {/* =====================================================================
-          FORMAT 1: SIMPLE VERBAL REPORT / PARCEL BOX STICKER (50mm x 30mm)
+          FORMAT 1: VERBAL POUCH STICKER (30mm x 40mm PORTRAIT)
          ===================================================================== */}
       {activeFormat === 'sticker' && (
-        <div className="flex justify-center py-4">
+        <div className="flex flex-col items-center gap-2 py-4">
+          <div className="no-print text-[11px] font-mono text-amber-300/80">
+            Exact Pouch Label Size: 30 mm (W) &times; 40 mm (H) &bull; Exported at 720 &times; 960 px (610 DPI)
+          </div>
           <div
-            style={{ maxWidth: '520px' }}
-            className="report-print-target w-full max-w-[520px] bg-[#0B132B] text-white rounded-2xl sticker-border p-5 shadow-2xl relative overflow-hidden"
+            data-report-format="sticker"
+            style={{ width: '240px', height: '320px' }}
+            className="report-print-target bg-white text-[#0B1B3E] rounded-lg border-2 border-[#D4AF37] p-3 shadow-2xl relative overflow-hidden flex flex-col justify-between"
           >
-            {/* Top Header */}
-            <div className="flex items-center justify-between border-b border-amber-500/40 pb-2.5 mb-3">
-              <div className="flex items-center gap-2.5">
-                <img
-                  src="/brand/wtc_crest.png"
-                  alt="WTC Gem Lab Crest"
-                  className="h-9 w-auto object-contain"
-                />
-                <div>
-                  <div className="flex items-baseline gap-1">
-                    <span className="font-cinzel text-[10px] font-bold tracking-[0.2em] text-amber-400">
-                      WTC
-                    </span>
-                    <span className="font-cinzel text-base font-black tracking-wider text-white">
-                      GEM LAB
-                    </span>
-                  </div>
-                  <div className="text-[7.5px] font-mono tracking-[0.2em] text-amber-300/90 uppercase">
-                    SIMPLE VERBAL IDENTIFICATION REPORT
-                  </div>
+            {/* Top Small Logo & Name */}
+            <div className="flex items-center justify-center gap-1.5 border-b border-[#D4AF37]/60 pb-2">
+              <img
+                src="/brand/wtc_crest.png?v=3"
+                alt="WTC Gem Lab Crest"
+                className="h-6 w-auto object-contain shrink-0"
+              />
+              <div className="leading-tight">
+                <div className="font-cinzel text-[11px] font-black tracking-wider text-[#9E731A] leading-none">
+                  WTC GEM LAB
                 </div>
-              </div>
-
-              <div className="text-right font-mono">
-                <div className="text-[9px] text-slate-400 uppercase">Report No</div>
-                <div className="text-xs font-bold text-amber-400">
-                  <InlineEditable
-                    value={certificate.reportNumber}
-                    onChange={(val) => onChange({ reportNumber: val })}
-                  />
+                <div className="text-[6.5px] font-mono tracking-[0.14em] text-[#0B1B3E] font-bold uppercase mt-0.5">
+                  VERBAL IDENTIFICATION
                 </div>
               </div>
             </div>
 
-            {/* Body Grid */}
-            <div className="grid grid-cols-12 gap-3 items-center">
-              {/* Left Specs (8 cols) */}
-              <div className="col-span-8 space-y-1.5 text-xs">
-                <div>
-                  <span className="text-[9px] font-mono uppercase text-slate-400 block">
-                    Identification / Variety
-                  </span>
-                  <div className="font-cinzel font-bold text-sm text-amber-300">
-                    <InlineEditable
-                      value={certificate.variety}
-                      onChange={(val) => onChange({ variety: val })}
-                    />
-                  </div>
+            {/* Middle Spec Rows */}
+            <div className="space-y-1.5 text-[10.5px] flex-1 flex flex-col justify-center py-1.5">
+              <div className="flex items-baseline justify-between gap-1 border-b border-slate-100 pb-1">
+                <span className="text-[8.5px] font-mono uppercase text-[#8C6414] font-bold shrink-0">
+                  ID No:
+                </span>
+                <span className="font-mono font-bold text-[#0B1B3E] text-[10.5px] text-right">
+                  <InlineEditable
+                    value={certificate.reportNumber}
+                    onChange={(val) => onChange({ reportNumber: val })}
+                  />
+                </span>
+              </div>
+
+              <div className="border-b border-slate-100 pb-1">
+                <span className="text-[8px] font-mono uppercase text-[#8C6414] font-bold block">
+                  Identification:
+                </span>
+                <div className="font-cinzel font-bold text-[11.5px] text-[#0B1B3E] leading-tight">
+                  <InlineEditable
+                    value={certificate.variety}
+                    onChange={(val) => onChange({ variety: val })}
+                  />
                 </div>
-
-                <div className="grid grid-cols-2 gap-2 pt-1">
-                  <div className="bg-slate-900/90 p-1.5 rounded border border-slate-800">
-                    <span className="text-[8.5px] font-mono text-slate-400 block uppercase">
-                      Weight / Shape
-                    </span>
-                    <span className="font-mono font-bold text-[11px] text-white">
-                      <InlineEditable
-                        value={certificate.weight}
-                        onChange={(val) => onChange({ weight: val })}
-                      />
-                    </span>
-                    <span className="text-[10px] text-slate-300 block truncate">
-                      <InlineEditable
-                        value={certificate.shapeAndCut}
-                        onChange={(val) => onChange({ shapeAndCut: val })}
-                      />
-                    </span>
-                  </div>
-
-                  <div className="bg-slate-900/90 p-1.5 rounded border border-slate-800">
-                    <span className="text-[8.5px] font-mono text-slate-400 block uppercase">
-                      Color / Constants
-                    </span>
-                    <span className="font-semibold text-[11px] text-white block truncate">
-                      <InlineEditable
-                        value={certificate.color}
-                        onChange={(val) => onChange({ color: val })}
-                      />
-                    </span>
-                    <span className="font-mono text-[9.5px] text-amber-300 block">
-                      R.I:{' '}
-                      <InlineEditable
-                        value={certificate.refractiveIndex || '1.762-1.770'}
-                        onChange={(val) => onChange({ refractiveIndex: val })}
-                      />{' '}
-                      | S.G:{' '}
-                      <InlineEditable
-                        value={certificate.specificGravity || '4.00'}
-                        onChange={(val) => onChange({ specificGravity: val })}
-                      />
-                    </span>
-                  </div>
-                </div>
-
-                <div className="pt-1">
-                  <span className="text-[9px] font-mono uppercase text-slate-400 block">
-                    Treatment / Comment
-                  </span>
-                  <div className="text-[11px] font-semibold text-emerald-400">
-                    <InlineEditable
-                      value={certificate.treatment}
-                      onChange={(val) => onChange({ treatment: val })}
-                    />
-                  </div>
+                <div className="text-[9px] font-semibold text-emerald-700 leading-tight mt-0.5">
+                  <InlineEditable
+                    value={certificate.treatment}
+                    onChange={(val) => onChange({ treatment: val })}
+                  />
                 </div>
               </div>
 
-              {/* Right Stone Thumbnail & QR (4 cols) */}
-              <div className="col-span-4 flex flex-col items-center justify-center gap-2 border-l border-slate-800 pl-3">
-                {certificate.imageUrl.includes('sample_sapphire') ? (
-                  <div className="w-16 h-16 flex items-center justify-center">
-                    <img
-                      src={getDisplayStoneSrc(certificate.imageUrl)}
-                      alt={certificate.variety}
-                      className="w-full h-full object-contain drop-shadow-[0_4px_10px_rgba(0,0,0,0.5)]"
-                    />
-                  </div>
-                ) : (
-                  <div className="w-16 h-16 rounded-lg bg-[#070D1B] border border-amber-500/40 shadow-inner overflow-hidden">
-                    <img
-                      src={getDisplayStoneSrc(certificate.imageUrl)}
-                      alt={certificate.variety}
-                      className="w-full h-full object-cover rounded"
-                    />
-                  </div>
-                )}
-                {qrDataUrl && (
-                  <div className="bg-white p-1 rounded shadow">
-                    <img src={qrDataUrl} alt="QR" className="w-12 h-12" />
-                  </div>
-                )}
-                <span className="text-[8px] font-mono text-slate-400 text-center">
+              <div className="flex items-baseline justify-between gap-1 border-b border-slate-100 pb-1">
+                <span className="text-[8.5px] font-mono uppercase text-[#8C6414] font-bold shrink-0">
+                  Weight:
+                </span>
+                <span className="font-mono font-bold text-[#0B1B3E] text-right">
+                  <InlineEditable
+                    value={certificate.weight}
+                    onChange={(val) => onChange({ weight: val })}
+                  />
+                </span>
+              </div>
+
+              <div className="flex items-baseline justify-between gap-1 border-b border-slate-100 pb-1">
+                <span className="text-[8.5px] font-mono uppercase text-[#8C6414] font-bold shrink-0">
+                  Color:
+                </span>
+                <span className="font-semibold text-[#0B1B3E] text-right">
+                  <InlineEditable
+                    value={certificate.color}
+                    onChange={(val) => onChange({ color: val })}
+                  />
+                </span>
+              </div>
+
+              <div className="flex items-baseline justify-between gap-1">
+                <span className="text-[8.5px] font-mono uppercase text-[#8C6414] font-bold shrink-0">
+                  Date:
+                </span>
+                <span className="font-mono font-semibold text-slate-700 text-[9.5px] text-right">
                   <InlineEditable
                     value={certificate.issueDate}
                     onChange={(val) => onChange({ issueDate: val })}
                   />
                 </span>
+              </div>
+            </div>
+
+            {/* Bottom Lab Address */}
+            <div className="border-t border-[#D4AF37]/60 pt-1.5 text-center leading-tight">
+              <div className="text-[7.5px] font-semibold text-[#0B1B3E]">
+                WTC, No. 26, 5th Floor, Colombo 01
+              </div>
+              <div className="text-[7px] font-mono text-[#8C6414] font-bold">
+                {LAB_CONTACT_INFO.website}
               </div>
             </div>
           </div>
